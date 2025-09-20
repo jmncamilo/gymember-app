@@ -49,6 +49,7 @@ export default [
       sourceType: 'script',
       globals: {
         ...globals.node,
+        ...globals.jest,
       },
     },
     rules: {
