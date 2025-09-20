@@ -1,0 +1,55 @@
+.mainInput {
+    width: 100%;
+    height: auto;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-radius: 0.6rem;
+    outline: none;
+    color: #f0f0f0;
+    font-size: 1.2rem;
+    padding: 1.2rem;
+    box-sizing: border-box;
+    letter-spacing: 0.03em;
+}
+
+.mainInput:focus {
+    animation: rotateShadow 2s infinite linear;
+}
+
+@keyframes rotateShadow {
+    0% {
+        box-shadow: -2px -2px 8px 1px #aa00ff, 2px 2px 8px 1px #3700ff;
+    }
+    25% {
+        box-shadow: -2px 2px 8px 1px #aa00ff, 2px -2px 8px 1px #3700ff;
+    }
+    50% {
+        box-shadow: 2px 2px 8px 1px #aa00ff, -2px -2px 8px 1px #3700ff;
+    }
+    75% {
+        box-shadow: 2px -2px 8px 1px #aa00ff, -2px 2px 8px 1px #3700ff;
+    }
+    100% {
+        box-shadow: -2px -2px 8px 1px #aa00ff, 2px 2px 8px 1px #3700ff;
+    }
+}
+
+.mainInput::-webkit-outer-spin-button,
+.mainInput::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.mainInput[type=number] {
+    -moz-appearance: textfield;
+}
+
+.access {
+    text-align: center;
+    font-weight: 800;
+    letter-spacing: 0.25em;
+    padding-left: calc(1.2rem + 0.25em); /* Padding base + actual letter spacing */
+    font-size: 2rem;
+    background-color: rgba(0, 0, 0, 0.50);
+    backdrop-filter: saturate(125%) blur(50px);
+}

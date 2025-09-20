@@ -1,0 +1,67 @@
+/*
+SIDEBAR 250PX -> expanded
+SIDEBAR 90PX -> collapsed
+*/
+
+:root {
+    --sidebarExpanded: 250px;
+    --sidebarCollapsed: 90px;
+}
+
+/* Main container of the main layout */
+.mainContainer {
+    max-width: 100%;
+    width: 100%;
+    /*min-width: 80%;*/
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    /*background-color: #111317;*/
+    /*overflow: hidden;*/
+    --purpleColor: 170, 40, 247, 0.39;
+    position: relative;
+    background-color: #100f11;
+}
+
+.mainContainer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 55%;
+    width: 75%;
+    transform: none;
+    background: radial-gradient(circle at top right, rgba(var(--purpleColor)), transparent 42%);
+    filter: blur(180px);
+    z-index: 0;
+}
+
+.mainContainer::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 55%;
+    width: 75%;
+    transform: none;
+    background: radial-gradient(circle at bottom left, rgba(var(--purpleColor)), transparent 42%);
+    filter: blur(180px);
+    z-index: 0;
+}
+
+/* Handling page container */
+.pagesContainerExpanded {
+    max-width: calc(100% - var(--sidebarExpanded));
+    height: auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    /*background-color: red;*/
+}
+
+.pagesContainerCollapsed {
+    /*background-color: blue;*/
+    max-width: calc(100% - var(--sidebarCollapsed));
+}

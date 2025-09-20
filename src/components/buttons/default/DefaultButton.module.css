@@ -1,0 +1,35 @@
+.gymemberButton {
+    min-width: 40px;
+    min-height: 20px;
+    background-color: #f0f0f0;
+    border: none;
+    outline: transparent;
+    padding: 0.8rem 1.55rem;
+    cursor: pointer;
+    border-radius: 2rem;
+    box-sizing: border-box;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #070309;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: transform 0.16s ease-in-out, background-color 0.15s ease-in, color 0.185s ease;
+
+    &:hover {
+        background-color: #ff1a64;
+        color: #f0f0f0;
+        transform: translateY(-2px);
+        text-shadow: 0 0 3px #fff, 0 0 5px #ff1a64;
+    }
+
+    &:focus {
+        filter: brightness(87%);
+        box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
+    }
+
+    &:focus-visible {
+        outline: 2px solid #bc7efb;
+        /*outline: 2px solid rgba(255, 255, 255, 0.7);*/
+    }
+}

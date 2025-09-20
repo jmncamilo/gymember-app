@@ -1,0 +1,135 @@
+.generalWrapper {
+    --vwElements: 33vw;
+    width: 100%;
+    height: 100vh;
+    background-color: #100f11;
+    background-image: url("../../assets/gradients/bg-gradient-01.svg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation: bgMove 20s linear infinite;
+    filter: hue-rotate(0deg);
+    animation-name: bgMove, hueShift;
+    animation-duration: 90s, 90s;
+    animation-timing-function: ease-in-out, linear;
+    animation-iteration-count: infinite, infinite;
+}
+
+@keyframes bgMove {
+    0% {
+        background-size: 100% 100%;
+        background-position: center;
+    }
+    25% {
+        background-size: 140% 140%;
+        background-position: top left;
+    }
+    50% {
+        background-size: 130% 130%;
+        background-position: bottom right;
+    }
+    75% {
+        background-size: 115% 115%;
+        background-position: top right;
+    }
+    100% {
+        background-size: 100% 100%;
+        background-position: center;
+    }
+}
+
+@keyframes hueShift {
+    0% { filter: hue-rotate(0deg);}
+    100% { filter: hue-rotate(40deg);}
+}
+
+.logoApp {
+    height: 8.20vh;
+    width: var(--vwElements);
+    background-color: transparent;
+    /*padding: 1rem;*/
+    padding-bottom: 1rem;
+    min-height: 65px;
+}
+
+.logoApp > img {
+    width: auto;
+    height: 100%;
+}
+
+.loginContainer {
+    width: var(--vwElements);
+    height: 66vh;
+    background-color: rgba(0, 0, 0, 0.1);
+    backdrop-filter: saturate(180%) blur(33px);
+    border-radius: 2.4rem;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-sizing: border-box;
+    box-shadow: 0 0 20px 4px rgba(255, 255, 255, 0.15);
+    max-height: 800px;
+    max-width: 750px;
+    overflow: hidden;
+}
+
+.loginContainerGap {
+    gap: 1.5rem;
+}
+
+.titleH1 {
+    /*background-color: rgba(157, 11, 11, 0.18);*/
+    font-size: 1.8rem;
+    font-weight: 700;
+    /*padding: 1rem;*/
+    box-sizing: border-box;
+}
+
+.boxLoginElements {
+    width: 75%;
+    height: auto;
+    /*background-color: brown;*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+}
+
+.boxLoginElements > p > a,
+.boxLoginElements > p {
+    font-size: 1.2rem;
+    font-weight: 400;
+    width: 76%;
+    height: auto;
+    color: #f0f0f0;
+}
+
+.boxLoginElements > p > a {
+    color: #9B7EDA;
+    font-weight: 600;
+}
+
+
+
+
+/* Fixing animation in small devices */
+@media (max-width: 1200px), (max-height: 675px) {
+    .generalWrapper {
+        animation: none !important;
+        animation-name: none !important;
+        overflow: hidden;
+    }
+
+    .logoApp {
+        height: 9vh;
+        min-height: 55px;
+    }
+
+    .loginContainer {
+        width: 60vw;
+        height: 50vh;
+        overflow: hidden;
+        min-width: 330px;
+        min-height: 500px;
+        max-height: 400px;
+    }
+}

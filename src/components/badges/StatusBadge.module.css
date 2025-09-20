@@ -1,0 +1,89 @@
+.badgeWrapper {
+    /*width: 100%;*/
+    width: auto;
+    background-color: rgba(51, 193, 95, 0.18);
+    gap: 3px;
+    padding: 4px 1rem;
+    border-radius: 0.7rem;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.095), inset 0 -1px 2px rgba(0, 0, 0, 0.25), 2px 1px 3px rgba(0,0,0,0.1);
+    color: rgb(51, 195, 95);
+}
+
+.badgeIconStyle {
+    display: inline-block;
+    padding: 0;
+    width: 1.35rem;
+    aspect-ratio: 1/1;
+    /*background-color: yellow;*/
+    background-image: url("../../assets/icons/badge-active.svg");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    /*opacity: 0.99;*/
+}
+
+.badgeTextStyle {
+    /*background-color: #3d6c86;*/
+    font-size: 1.05rem;
+    color: inherit;
+}
+
+/* Active badge */
+.active {
+    background-color: rgba(51, 193, 95, 0.18);
+    color: rgb(51, 195, 95);
+}
+
+.activeIcon {
+    background-image: url("../../assets/icons/badge-active.svg");
+}
+
+/* Expired badge */
+.expired {
+    background-color: rgba(193, 51, 51, 0.18);
+    color: rgb(238, 107, 98);
+}
+
+.expiredIcon {
+    background-image: url("../../assets/icons/badge-expired.svg");
+}
+
+/* Pending badge */
+.pending {
+    background-color: rgba(231, 213, 33, 0.18);
+    color: rgb(199, 188, 31);
+}
+
+.pendingIcon {
+    background-image: url("../../assets/icons/badge-pending-03.svg");
+}
+
+/* Cancelled badge */
+.cancelled {
+    background-color: rgba(231, 109, 33, 0.18);
+    color: rgb(228, 139, 49);
+}
+
+.cancelledIcon {
+    background-image: url("../../assets/icons/badge-cancel.svg");
+}
+
+/* Frozen badge */
+.frozen {
+    background-color: rgba(33, 172, 231, 0.18);
+    color: rgb(39, 162, 253);
+}
+
+.frozenIcon {
+    background-image: url("../../assets/icons/badge-frozen.svg");
+}
+
+/* Trial badge */
+.trial {
+    background-color: rgba(71, 31, 213, 0.18);
+    color: rgb(141, 107, 253);
+}
+
+.trialIcon {
+    background-image: url("../../assets/icons/badge-trial.svg");
+}

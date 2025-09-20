@@ -1,0 +1,15 @@
+/* Reusable classes */
+.flexCenterAlign {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.justifyStart {
+    justify-content: flex-start;
+}
+
+.flexRowToColum {
+    flex-direction: column;
+}

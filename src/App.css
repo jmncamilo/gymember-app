@@ -1,0 +1,21 @@
+#root {
+  max-width: 100%;
+  width: 100%;
+  background-color: #100f11;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  display: flex;
+  align-items: flex-start;
+}
+
+::selection {
+  background-color: #beb0ff;
+  color: #0f0f0f;
+}
+
+input::-webkit-calendar-picker-indicator {
+  filter: invert(38%) sepia(98%) saturate(749%) hue-rotate(210deg) brightness(95%) contrast(92%);
+  cursor: pointer;
+  transition: filter 0.2s;
+}

@@ -1,0 +1,176 @@
+.globalPageWrapper {
+    overflow: hidden;
+    /*background-color: #3a2e65;*/
+    align-items: center;
+    color: #f0f0f0;
+}
+
+.contentPageWrapper {
+    width: 94%;
+    min-width: 1040px;
+    height: max(600px, 90vh);
+    display: flex;
+    gap: 2px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    z-index: 1;
+    /*background-color: darkslategrey;*/
+}
+
+/* --- Header title styles --- */
+.contentPageWrapper > header {
+    /*background-color: rgba(127, 255, 0, 0.4);*/
+    width: 100%;
+    height: auto;
+    text-align: left;
+    /*border-bottom: 1px solid rgba(255, 255, 255, 0.2);*/
+    box-sizing: border-box;
+
+    & > h1 {
+        font-weight: 700;
+        font-size: 1.5rem;
+        padding-bottom: 0.5rem;
+    }
+}
+
+/* --- Main content styles --- */
+.contentPageWrapper > main {
+    /*background-color: rgba(19, 12, 21, 0.2);*/
+    width: 100%;
+    flex-grow: 1;
+    overflow-y: auto;
+    /*overflow-x: hidden;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.firstMainBox, .secondMainBox, .transactionBoxContent {
+    background-color: rgba(188, 127, 251, 0.09);
+    width: 100%;
+    height: 50%;
+    font-size: 1.32rem;
+    box-sizing: border-box;
+    /*border-radius: 0.5rem;*/
+    display: grid;
+    justify-content: center;
+    justify-items: center;
+    /*align-content: space-between;*/
+    align-content: start;
+    align-items: start;
+    /*grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));*/
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.35rem;
+    overflow-y: auto;
+    padding: 0.3rem 0.6rem;
+    /*overflow-x: hidden;*/
+
+    & > h3 {
+        font-weight: 600;
+        /*background-color: rgba(166, 16, 208, 0.25);*/
+    }
+
+    /* No scrollbar in Firefox */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE y Edge */
+    &::-webkit-scrollbar {
+        display: none; /* Chrome, Safari y Opera */
+    }
+}
+
+.secondMainBox {
+    /*background-color: darkorange;*/
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 0 0 2.4rem 2.4rem;
+    padding: 0;
+    gap: 0;
+
+    & > h3 {
+        font-size: inherit;
+        width: 100%;
+        text-align: left;
+        padding-left: 1.2rem;
+        padding-bottom: 0.4rem;
+        padding-top: 0.4rem;
+        box-sizing: border-box;
+        font-style: italic;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        background-color: rgba(100, 0, 255, 0.07);
+    }
+
+    & > h5 {
+        background-color: rgba(255, 57, 74, 0.34);
+        width: 100%;
+        text-align: center;
+        font-size: 1.18rem;
+        padding: 0.15rem 0;
+    }
+}
+
+.inputBox {
+    width: 96%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: 0.2rem;
+    /*background-color: #0b080e;*/
+    padding: 0.2rem 0;
+    text-align: left;
+    /*overflow: hidden;*/
+
+    & > label {
+        font-size: 1.1rem;
+        color: #cccccc;
+    }
+}
+
+.badgeBox {
+    /*background-color: #1d1825;*/
+    align-items: stretch;
+
+    & > p {
+        font-size: 1.1rem;
+        color: #cccccc;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    & > div {
+        padding: 0.56rem;
+
+        & > span:first-child{
+            width: 1.55rem;
+        }
+
+        & > span:last-child{
+            font-size: 1.25rem;
+        }
+    }
+}
+
+.transactionBoxContent {
+    flex-grow: 1;
+    width: 100%;
+    background-color: rgba(100, 0, 255, 0.07);
+    height: auto;
+}
+
+.buttonBox {
+    height: 75%;
+    align-self: end;
+
+    & > button {
+        height: 100%;
+        font-size: 1.2rem;
+        letter-spacing: 1px;
+    }
+}
