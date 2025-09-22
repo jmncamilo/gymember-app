@@ -60,4 +60,12 @@ describe('email validation', () => {
     test('with slash at the end', () => {
         expect(validateEmail('/juan-cAMI0_Lo@gmail.com')).toBe(false);
     });
+
+    test('with type of int', () => {
+        expect(validateEmail(232311)).toBe(false);
+    });
+
+    test('with type of array', () => {
+        expect(validateEmail([])).toBe(false);
+    });
 });
