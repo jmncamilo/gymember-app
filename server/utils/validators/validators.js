@@ -23,12 +23,21 @@ const validatePhoneNumber = data => {
     return baseValidation(data, 'string', regex);
 };
 
-// TODO: crear validador para cadenas permisivas (ciudad, nombre, apellidos, dirección), donde pase todo, pero que haya un mínimo de longitud y de tipo string
-// TODO: crear validador para la edad, ya que el formatter va a tener problemas si es NaN
+const validateAge = data => {
+    const regex = /^(?:[1-9]|[1-9][0-9]|1[0-2][0-9]|130)$/;
+    return baseValidation(data, 'string', regex);
+};
+
+const validateBasicString = data => {
+    if (!data) return false;
+    return typeof data === 'string' && data.trim().length >= 2;
+};
 
 module.exports = {
     validateEmail,
     validateNuip,
     validateNit,
-    validatePhoneNumber
+    validatePhoneNumber,
+    validateAge,
+    validateBasicString
 };
