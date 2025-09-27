@@ -1,4 +1,4 @@
-const { validateEmail } = require('../utils/validators/validators.js');
+const { validateEmail } = require('../../utils/validators/validators.js');
 
 describe('email validation', () => {
     test('of normal email', () => {

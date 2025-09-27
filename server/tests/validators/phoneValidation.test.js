@@ -1,4 +1,4 @@
-const { validatePhoneNumber } = require("../utils/validators/validators");
+const { validatePhoneNumber } = require("../../utils/validators/validators");
 
 describe('nit validation', () => {
     test('of standard colombian phone number', () => {

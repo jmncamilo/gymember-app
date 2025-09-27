@@ -1,4 +1,4 @@
-const { validateNuip } = require('../utils/validators/validators');
+const { validateNuip } = require('../../utils/validators/validators');
 
 describe('nuip validation', () => {
     test('of standard colombian dni called nuip', () => {

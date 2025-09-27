@@ -33,11 +33,17 @@ const validateBasicString = data => {
     return typeof data === 'string' && data.trim().length >= 2;
 };
 
+const validateCurrency = data => {
+    const regex = /^(?:\d+|\d*\.\d+)$/;
+    return baseValidation(data, 'string', regex);
+};
+
 module.exports = {
     validateEmail,
     validateNuip,
     validateNit,
     validatePhoneNumber,
     validateAge,
-    validateBasicString
+    validateBasicString,
+    validateCurrency
 };

@@ -1,4 +1,4 @@
-const { validateBasicString } = require('../utils/validators/validators.js');
+const { validateBasicString } = require('../../utils/validators/validators.js');
 
 describe('different cases of strings validation', () => {
     test('like basic address', () => {

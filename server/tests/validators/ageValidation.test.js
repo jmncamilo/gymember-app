@@ -1,4 +1,4 @@
-const { validateAge } = require('../utils/validators/validators.js');
+const { validateAge } = require('../../utils/validators/validators.js');
 
 describe('age validation', () => {
     test('of valid string age', () => {

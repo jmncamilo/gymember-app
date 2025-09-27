@@ -1,4 +1,4 @@
-const { validateNit } = require('../utils/validators/validators');
+const { validateNit } = require('../../utils/validators/validators');
 
 describe('nit validation', () => {
     test('of standard colombian nit with verification digit', () => {
