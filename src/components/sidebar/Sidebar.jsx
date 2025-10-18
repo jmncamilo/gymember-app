@@ -25,7 +25,7 @@ export function Sidebar({ isExpanded, handleSidebarMode }) {
 
                     <NavLink className={({ isActive }) => `${styles.navElement} ${!isExpanded ? styles.navElementCollapsed : ''} ${isActive ? styles.isActiveRouter : ''}`} to="/registro">
                         <div className={`${styles.iconSidebar} ${styles.iconAddUser}`}></div>
-                        {isExpanded && <h4>Registrar Usuario</h4>}
+                        {isExpanded && <h4>Registrar</h4>}
                     </NavLink>
 
                     <NavLink className={({ isActive }) => `${styles.navElement} ${!isExpanded ? styles.navElementCollapsed : ''} ${isActive ? styles.isActiveRouter : ''}`} to="/vencimientos">
