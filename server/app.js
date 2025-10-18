@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: './.env' });
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -19,5 +19,5 @@ app.use(cors({
 app.use("/employees", employeesRoutes);
 
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en el puerto ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
