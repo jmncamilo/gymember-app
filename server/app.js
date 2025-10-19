@@ -3,9 +3,23 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const employeesRoutes = require('./routes/employeesRoutes.js');
+const pool = require("./db/connection");
 
 const app = express();
 const PORT = process.env.PORT || 6100;
+
+// Testing connection
+(async () => {
+    try {
+        const connection = await pool.getConnection();
+        console.log('✅ Successfully connected...');
+        const [rows] = await pool.query('SELECT NOW() AS fecha'); // Test
+        console.log(rows);
+        connection.release(); // muy importante
+    } catch (error) {
+        console.error('❌ Error connecting to database:', error.message);
+    }
+})();
 
 // Necessary middlewares
 app.use(express.json());
