@@ -1,8 +1,13 @@
 import styles from "./AccessPage.module.css";
 import logo from "../../assets/logos/logo_complete_base.png";
 import { MainInput } from "../../components/inputs/heading/MainInput.jsx";
+import { Loader } from "../../components/loader/Loader.jsx";
+import { useState } from "react";
 
 export function AccessPage() {
+    // State to show or hide the loader
+    const [isLoading, setIsLoading] = useState(false);
+
     return (
         <>
             <div className={styles.mainWrapper}>
@@ -20,6 +25,9 @@ export function AccessPage() {
                         <img title={'Haz clic para acceder'} className={styles.isotype} src={logo} alt="gymember-logo"/>
                     </div>
                 </footer>
+
+                {/* Loader dynamic render */}
+                {isLoading && <Loader/>}
             </div>
         </>
     );

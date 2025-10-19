@@ -15,7 +15,7 @@ app.use(cors({
     credentials: true
 }));
 
-// Section to register routes as middlewares
+// Section to register private routes as middlewares
 app.use("/employees", employeesRoutes);
 
 app.listen(PORT, () => {
