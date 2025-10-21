@@ -16,13 +16,38 @@ const validatorsList = {
     phone_number: validatePhoneNumber,
     age: validateAge,
     string: validateBasicString,
-    amount: validateCurrency
+    amount: validateCurrency,
+    hash_pass: validateBasicString
 };
 
+// Validator function for a single field
 const validateField = (value, type = 'string') => {
-    return validatorsList[type](value);
+    const result = validatorsList[type](value);
+
+    if(!result) return { success: false, message: `The field ${type} does not meet the required conditions.` };
+
+    return { success: true };
 };
 
-module.exports = validateField;
+// Iterates over all fields of body and validates them
+const validateBody = body => {
+    let errors = {};
+    let isSuccess = true;
+    const validators = Object.keys(validatorsList); // Get array with available validators
+
+    for(const [key, value] of Object.entries(body)) {
+        if (!validators.includes(key)) continue; // Only validate what is on the validator list
+
+        const result = validateField(value, key);
+        if (!result.success) {
+            errors[key] = result.message;
+            isSuccess = false;
+        }
+    }
+
+    return isSuccess === true ? { isSuccess } : {isSuccess, errors};
+};
+
+module.exports = { validateField, validateBody };
 
 // TODO: same thing with formatters...
