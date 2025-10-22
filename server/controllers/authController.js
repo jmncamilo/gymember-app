@@ -1,6 +1,9 @@
 const pool = require("../db/connection.js");
 const isEmptyBody = require("../utils/validators/emptyBody.js");
 const { validateBody } = require("../utils/validators/validateField.js");
+const { generateToken } = require("../lib/jwt.js");
+const { hashPassword } = require("../lib/bcrypt.js");
+
 
 class AuthController {
     constructor() {
@@ -40,18 +43,35 @@ class AuthController {
             // TODO: search password and compara hash
             console.log(hash_pass);
 
-            // TODO: sign token
+            // Sign access token
+            const { id, gym_name, nit, role, logo_url} = result[0];
+            const payload = {
+                id,
+                gym_name,
+                nit,
+                role,
+                logo_url
+            };
 
-            // Just for testing
+            const accessToken = generateToken(payload, { expiresIn: '10m' });
+
+            // Sign refresh token
+            const refreshToken = generateToken({ id, nit }, { expiresIn: '7d' });
+
+            // TODO: set tokens in the cookie using cookie-parser
+
+            // Send final response if the auth process is correct
             return res.status(200).json({
                 message: 'User found...',
-                data: result
+                data: result,
+                accessToken, // Testing
+                refreshToken // Testing
             });
 
         } catch (err) {
             return res.status(500).json({
                 message: 'Internal server error. Please try again later...',
-                error: err?.message
+                error: err?.message || err
             });
         }
 
