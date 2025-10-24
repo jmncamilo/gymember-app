@@ -40,7 +40,7 @@ class AuthController {
                 });
             }
 
-            // TODO: search password and compara hash
+            // TODO: search password and compare hash. Then create endpoint POST to register an account
             console.log(hash_pass);
 
             // Sign access token
@@ -92,5 +92,3 @@ class AuthController {
 }
 
 module.exports = new AuthController();
-
-// Usaremos execute() con el pool
