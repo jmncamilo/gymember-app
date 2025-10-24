@@ -1,7 +1,7 @@
 const isEmptyBody = require("../utils/validators/emptyBody.js");
 const { validateBody } = require("../utils/validators/validateField.js");
 const { generateToken } = require("../lib/jwt.js");
-const { hashPassword } = require("../lib/bcrypt.js");
+const { comparePassword } = require("../lib/bcrypt.js");
 const AuthModel = require("../models/authModel.js");
 
 
@@ -39,7 +39,6 @@ class AuthController {
                 });
             }
 
-            // TODO: search password and compare hash. Then create endpoint POST to register an account
             console.log(hash_pass);
 
             // Sign access token

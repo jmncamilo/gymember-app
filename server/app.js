@@ -4,6 +4,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes.js");
 const employeesRoutes = require("./routes/employeesRoutes.js");
+const masterRoutes = require("./routes/masterRoutes.js");
 
 const app = express();
 const PORT = process.env.PORT || 6100; // Port config
@@ -20,6 +21,7 @@ app.use(cors({
 app.use('/auth', authRoutes);
 
 // Section to register private routes as middlewares
+app.use('/master', masterRoutes);
 app.use('/employees', employeesRoutes);
 
 // Listening the port

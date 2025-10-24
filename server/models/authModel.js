@@ -1,4 +1,5 @@
 const pool = require("../db/connection.js");
+const { hashPassword } = require("../lib/bcrypt.js");
 
 class AuthModel {
     // Find gym or developer user by email
@@ -13,6 +14,14 @@ class AuthModel {
         const query = 'SELECT * FROM Gym_Dev_Accounts';
         const [result] = await pool.query(query);
         return result;
+    }
+
+    // Grant new user account
+    static async createNewUser(gym_name, nit, plain_pass, email, role) {
+        const query = 'INSERT INTO Gym_Dev_Accounts (gym_name, nit, hash_pass, email, role) VALUES (?, ?, ?, ?, ?)';
+        const hashedPass = await hashPassword(plain_pass);
+        const [result] = await pool.execute(query, [gym_name, nit, hashedPass, email, role]);
+        return result?.affectedRows === 0 ? null : result;
     }
 
 }

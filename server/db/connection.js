@@ -1,4 +1,4 @@
-require('dotenv').config();
+// require('dotenv').config(); // Probar si puede ser eliminado
 
 const mysql = require("mysql2/promise");
 
