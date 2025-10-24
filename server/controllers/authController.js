@@ -13,7 +13,7 @@ class AuthController {
         // Validate that body is not empty
         if (isEmptyBody(req.body)) {
             return res.status(400).json({
-                message: 'Body must not be empty...'
+                message: 'El cuerpo de la solicitud no puede estar vacío...'
             });
         }
 
@@ -21,13 +21,13 @@ class AuthController {
         const validation = validateBody(req.body);
         if (!validation.isSuccess) {
             return res.status(400).json({
-                message: 'Validation failed',
+                message: '¡Error validando los datos!',
                 errors: validation?.errors
             });
         }
 
         // Destructuring body request
-        const { email, hash_pass } = req.body;
+        const { email, plain_pass } = req.body;
 
         // Start db process
         try {
@@ -35,14 +35,21 @@ class AuthController {
             const result = await AuthModel.getByEmail(email);
             if(!result) {
                 return res.status(404).json({
-                    message: 'Email is not registered...'
+                    message: 'El email ingresado no está registrado...'
                 });
             }
 
-            console.log(hash_pass);
+            const { id, gym_name, nit, hash_pass, role, logo_url} = result;
+
+            // Verifying password
+            const isValidPassword = await comparePassword(plain_pass, hash_pass);
+            if(!isValidPassword) {
+                return res.status(401).json({
+                    message: 'Error de inicio de sesión. Verifica tu contraseña...'
+                });
+            }
 
             // Sign access token
-            const { id, gym_name, nit, role, logo_url} = result;
             const payload = {
                 id,
                 gym_name,
@@ -73,7 +80,7 @@ class AuthController {
 
             // Send final response if the auth process is correct
             return res.status(200).json({
-                message: 'User found...',
+                message: 'Usuario encontrado...',
                 data: result,
                 accessToken, // Testing
                 refreshToken // Testing
@@ -81,7 +88,7 @@ class AuthController {
 
         } catch (err) {
             return res.status(500).json({
-                message: 'Internal server error. Please try again later...',
+                message: 'Error en el servidor. Vuelve a intentarlo en unos minutos...',
                 error: err?.message || err
             });
         }

@@ -17,14 +17,15 @@ const validatorsList = {
     age: validateAge,
     string: validateBasicString,
     amount: validateCurrency,
-    hash_pass: validateBasicString
+    hash_pass: validateBasicString,
+    plain_pass: validateBasicString
 };
 
-// Validator function for a single field
+// Validator function for a single field ('type' is the same thing that key)
 const validateField = (value, type = 'string') => {
     const result = validatorsList[type](value);
 
-    if(!result) return { success: false, message: `The field ${type} does not meet the required conditions.` };
+    if(!result) return { success: false, message: `El campo ${type} no cumple con las condiciones.` };
 
     return { success: true };
 };

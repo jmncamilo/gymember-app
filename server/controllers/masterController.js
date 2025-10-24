@@ -9,7 +9,7 @@ class MasterController {
         // Validate that body is not empty
         if (isEmptyBody(req.body)) {
             return res.status(400).json({
-                message: 'Body must not be empty...'
+                message: 'El cuerpo de la solicitud no puede estar vacío...'
             });
         }
 
@@ -20,18 +20,18 @@ class MasterController {
             const result = await AuthModel.createNewUser(gym_name, nit, plain_pass, email, role);
             if (result === null) {
                 return res.status(400).json({
-                    message: 'Error creating the account. Try again...'
+                    message: 'Error al crear la cuenta. Por favor, inténtalo de nuevo...'
                 });
             }
 
             return res.status(201).json({
-                message: 'Account created successfully!',
+                message: '¡La cuenta ha sido creada!',
                 result: result
             });
 
         } catch (err) {
             return res.status(500).json({
-                message: 'Internal server error. Please try again later...',
+                message: 'Error en el servidor. Vuelve a intentarlo en unos minutos...',
                 error: err?.message || err
             });
         }
