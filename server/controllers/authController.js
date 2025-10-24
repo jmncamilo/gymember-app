@@ -1,8 +1,8 @@
-const pool = require("../db/connection.js");
 const isEmptyBody = require("../utils/validators/emptyBody.js");
 const { validateBody } = require("../utils/validators/validateField.js");
 const { generateToken } = require("../lib/jwt.js");
 const { hashPassword } = require("../lib/bcrypt.js");
+const AuthModel = require("../models/authModel.js");
 
 
 class AuthController {
@@ -29,12 +29,11 @@ class AuthController {
         // Destructuring body request
         const { email, hash_pass } = req.body;
 
-        // Start the database query
+        // Start db process
         try {
-            const query = 'SELECT * FROM Gym_Dev_Accounts WHERE email = ?';
-            const [result] = await pool.execute(query, [email]);
-
-            if(result.length === 0) {
+            // Finding user by email and validating the query result
+            const result = await AuthModel.getByEmail(email);
+            if(!result) {
                 return res.status(404).json({
                     message: 'Email is not registered...'
                 });
@@ -44,7 +43,7 @@ class AuthController {
             console.log(hash_pass);
 
             // Sign access token
-            const { id, gym_name, nit, role, logo_url} = result[0];
+            const { id, gym_name, nit, role, logo_url} = result;
             const payload = {
                 id,
                 gym_name,
