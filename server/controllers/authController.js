@@ -79,6 +79,7 @@ class AuthController {
             });
 
             // Send final response if the auth process is correct
+            // TODO: conectar el frontend...
             return res.status(200).json({
                 message: 'Usuario encontrado...',
                 data: result,

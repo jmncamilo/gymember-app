@@ -9,6 +9,13 @@ class AuthModel {
         return result.length === 0 ? null : result[0];
     }
 
+    // Find gym or developer user by id
+    static async getById(id) {
+        const query = 'SELECT * FROM Gym_Dev_Accounts WHERE id = ?';
+        const [result] = await pool.execute(query, [id]);
+        return result.length === 0 ? null : result[0];
+    }
+
     // Get all gym and developer accounts
     static async getAllUsers() {
         const query = 'SELECT * FROM Gym_Dev_Accounts';
