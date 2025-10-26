@@ -5,6 +5,13 @@ class MasterController {
     constructor() {
     }
 
+    async checkAuth(req, res) {
+        return res.status(200).json({
+            message: 'El token de acceso es válido...',
+            access: true
+        });
+    }
+
     async newAccount(req, res) {
         // Validate that body is not empty
         if (isEmptyBody(req.body)) {

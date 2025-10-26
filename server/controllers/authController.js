@@ -3,10 +3,83 @@ const { validateBody } = require("../utils/validators/validateField.js");
 const { generateToken } = require("../lib/jwt.js");
 const { comparePassword } = require("../lib/bcrypt.js");
 const AuthModel = require("../models/authModel.js");
+const { verifyToken } = require("../lib/jwt");
 
 
 class AuthController {
     constructor() {
+    }
+
+    async validateRefreshToken(req, res) {
+        const token = req.cookies.refreshToken;
+        if(!token) {
+            return res.status(401).json({
+                message: 'El token de acceso no existe...',
+                access: false
+            });
+        }
+        // Verify refresh token and extract payload
+        try {
+            const validPayload = verifyToken(token);
+            console.log('El token de refresco se ha validado correctamente:', validPayload);
+
+            // Finding user in the db by id
+            if(!validPayload?.id) {
+                return res.status(401).json({
+                    message: 'Token inválido, el id de usuario no existe...',
+                    access: false
+                });
+            }
+            const result = await AuthModel.getById(validPayload.id); // Executing query
+            if(!result) {
+                return res.status(404).json({
+                    message: 'El usuario no ha sido encontrado...',
+                    access: false
+                });
+            }
+
+            // Generate new access token with the same payload structure that login
+            const newAccessToken = generateToken({
+                id: validPayload.id,
+                gym_name: result.gym_name,
+                nit: validPayload.nit,
+                role: result.role,
+                logo_url: result.logo_url
+            }, { expiresIn: '10m' });
+
+            res.cookie('accessToken', newAccessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'none',
+                maxAge: 10 * 60 * 1000
+            });
+
+            return res.status(200).json({
+                message: 'Token de acceso renovado correctamente...',
+                access: true
+            });
+
+        } catch (err) {
+            if(err.name === 'TokenExpiredError') {
+                return res.status(401).json({
+                    message: 'El token de refresco ha expirado. Inicia sesión nuevamente...',
+                    access: false
+                });
+            }
+
+            if(err.name === 'JsonWebTokenError') {
+                return res.status(401).json({
+                    message: 'Token inválido...',
+                    access: false
+                });
+            }
+
+            return res.status(500).json({
+                message: 'Error en el servidor. Vuelve a intentarlo en unos minutos...',
+                access: false,
+                error: err?.message || err
+            });
+        }
     }
 
     async validateCredentials(req, res) {
@@ -79,7 +152,6 @@ class AuthController {
             });
 
             // Send final response if the auth process is correct
-            // TODO: conectar el frontend...
             return res.status(200).json({
                 message: 'Usuario encontrado...',
                 data: result,

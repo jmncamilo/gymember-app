@@ -4,8 +4,11 @@ const AuthModel = require("../models/authModel");
 async function authAccessVerify(req, res, next) {
     const token = req.cookies.accessToken;
     if(!token) {
+        console.log('🚫 No se encontró token de acceso.');
         return res.status(401).json({
-            message: 'El token de acceso no existe...' });
+            message: 'El token de acceso no existe...',
+            access: false
+        });
     }
 
     try {
@@ -14,15 +17,19 @@ async function authAccessVerify(req, res, next) {
         // Finding user by id in the db
         const result = await AuthModel.getById(validPayload.id);
         if(!result) {
+            console.log('🚫 El usuario no fue encontrado.');
             return res.status(404).json({
-                message: 'El id del usuario no ha sido encontrado...'
+                message: 'El id del usuario no ha sido encontrado...',
+                access: false
             });
         }
         next();
         
     } catch (err) {
+        console.log('🚨 Se obtuvo el siguiente error:', err);
         return res.status(500).json({
             message: 'Error en el servidor. Vuelve a intentarlo en unos minutos...',
+            access: false,
             error: err?.message || err
         });
     }
@@ -30,3 +37,5 @@ async function authAccessVerify(req, res, next) {
 }
 
 module.exports = authAccessVerify;
+
+// TODO: de momento integrar el front para verificar que la autenticación ya está tomando forma...

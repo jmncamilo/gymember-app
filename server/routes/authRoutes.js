@@ -3,7 +3,7 @@ const authController = require("../controllers/authController.js");
 
 const router = express.Router();
 
-
+router.get('/token/refresh', authController.validateRefreshToken);
 router.post('/', authController.validateCredentials);
 
 // These routes are placeholders for future features, so controller methods should be added

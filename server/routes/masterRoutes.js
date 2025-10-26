@@ -4,7 +4,7 @@ const masterPermission = require("../middlewares/masterPermission.js");
 
 const router = express.Router();
 
-
-router.post('/', masterPermission ,masterController.newAccount);
+router.get('/token/access', masterController.checkAuth);
+router.post('/', masterPermission, masterController.newAccount);
 
 module.exports = router;
