@@ -14,7 +14,7 @@ class AuthController {
         const token = req.cookies.refreshToken;
         if(!token) {
             return res.status(401).json({
-                message: 'El token de acceso no existe...',
+                message: 'El token de refresco no existe...',
                 access: false
             });
         }
@@ -25,8 +25,8 @@ class AuthController {
 
             // Finding user in the db by id
             if(!validPayload?.id) {
-                return res.status(401).json({
-                    message: 'Token inválido, el id de usuario no existe...',
+                return res.status(403).json({
+                    message: 'Token de refresco inválido, el id de usuario no existe...',
                     access: false
                 });
             }
@@ -69,7 +69,7 @@ class AuthController {
 
             if(err.name === 'JsonWebTokenError') {
                 return res.status(401).json({
-                    message: 'Token inválido...',
+                    message: 'Token de refresco inválido...',
                     access: false
                 });
             }

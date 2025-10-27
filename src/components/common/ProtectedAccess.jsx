@@ -3,7 +3,7 @@ import { useContext } from "react";
 import AuthContext from "../../context/AuthContext.jsx";
 
 export function ProtectedAccess() {
-    // let isAuth = true;
+    // La idea es que con un useEffect se dispare la validación de middleware token en el back mediante useFetch (custom hook)
 
     const { isAuth } = useContext(AuthContext);
 
