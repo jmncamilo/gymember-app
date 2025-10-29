@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
 
 export function useFetch(url, options = {}) {
+    const apiUrl = import.meta.env.VITE_API_URL; // Backend url
     const { autoFetch = false, ...fetchOptions } = options;
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(autoFetch);
 
     const executeFetch = async (overrideOptions = {}) => {
+        console.log('Requested endpoint:', apiUrl + url) // Testing
         setError(null);
         setIsLoading(true);
-
         try {
-            const res = await fetch(url, {
+            const res = await fetch(apiUrl + url, {
                 ...fetchOptions,
                 ...overrideOptions,
                 credentials: 'include',

@@ -100,15 +100,15 @@ class AuthController {
         }
 
         // Destructuring body request
-        const { email, plain_pass } = req.body;
+        const { nit: nitBody, plain_pass } = req.body;
 
         // Start db process
         try {
-            // Finding user by email and validating the query result
-            const result = await AuthModel.getByEmail(email);
+            // Finding user by NIT and validating the query result
+            const result = await AuthModel.getByNit(nitBody);
             if(!result) {
                 return res.status(404).json({
-                    message: 'El email ingresado no está registrado...'
+                    message: 'El NIT ingresado no está registrado...'
                 });
             }
 
@@ -153,7 +153,7 @@ class AuthController {
 
             // Send final response if the auth process is correct
             return res.status(200).json({
-                message: 'Usuario encontrado...',
+                message: 'Credenciales validadas correctamente. Accediendo...',
                 data: result,
                 accessToken, // Testing
                 refreshToken // Testing

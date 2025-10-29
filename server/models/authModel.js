@@ -9,6 +9,13 @@ class AuthModel {
         return result.length === 0 ? null : result[0];
     }
 
+    //Find gym or developer user by NIT
+    static async getByNit(nit) {
+        const query = 'SELECT * FROM Gym_Dev_Accounts WHERE nit = ?';
+        const [result] = await pool.execute(query, [nit]);
+        return result.length === 0 ? null : result[0];
+    }
+
     // Find gym or developer user by id
     static async getById(id) {
         const query = 'SELECT * FROM Gym_Dev_Accounts WHERE id = ?';
