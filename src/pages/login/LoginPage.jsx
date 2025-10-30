@@ -13,26 +13,24 @@ import AuthContext from "../../context/AuthContext.jsx";
 
 export function LoginPage() {
     const { form, handlerSetForm } = useForm({ nit: '', plain_pass: '' });
-    // Creamos en memoria el custom hook para el fetching con el wrapper de autenticación (en este caso no se usa porque es el login)
+    // Define the custom fetch hook in memory with the authentication wrapper (don't use the wrapper here since this is the login)
     const { data, error, isLoading, executeFetch } = useFetchWithAuth('/auth', optionsWithBody(form, 'POST'));
-    // Traemos el contexto
+    // Get auth context
     const { setAuth } = useContext(AuthContext);
 
     // Login handler testing
     const handleLogin = async () => {
         try {
-            // Empecemos a consumir esta monda
-            console.log('Empezamos el proceso de login...');
-            // Verificamos que la data que se envía al backend no esté vacía (como capa extra de seguridad)
-            console.log(form);
+            console.log('Login starting process...'); // Testing
+            // Verify that the data sent to the backend is not empty (as an extra layer of security)
             if(!checkRequestData(form)) return alert('Debes ingresar datos...');
-            // Si hay data que enviar empezamos el proceso de fetching y consumir los endpoints correspondientes
+            // If there is data to send, we begin the fetching process and consume the corresponding endpoints
             const data = await executeFetch();
             alert(data?.message);
-            // Seteamos el contexto para dar paso
+            // Set the global auth context to grant frontend access
             setAuth(true);
         } catch (err) {
-            alert('Hubo un error, imprimiendo en consola...');
+            alert('Hubo un error, vuelve a intentarlo más tarde...');
             console.error(err);
         }
     };

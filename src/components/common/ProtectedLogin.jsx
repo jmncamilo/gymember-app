@@ -1,15 +1,14 @@
 import { Outlet, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import AuthContext from "../../context/AuthContext.jsx";
+import { Loader } from "../loader/Loader.jsx";
 
 export function ProtectedLogin() {
-    // let isAuth = true;
+    const { isAuth, isLoading } = useContext(AuthContext);
 
-    const { isAuth } = useContext(AuthContext);
+    if (isLoading) return <Loader />;
 
-    if(isAuth) {
-        return <Navigate to={'/acceso'} replace/>;
-    }
+    if (isAuth) return <Navigate to="/acceso" replace />;
 
-    return <Outlet/>;
+    return <Outlet />;
 }

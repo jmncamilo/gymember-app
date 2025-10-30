@@ -7,3 +7,11 @@ export const optionsWithBody = (body, method, headers = {}) => ({
 export const deleteOptions = {
     method: "DELETE"
 };
+
+export const getOptions = {
+    method: "GET",
+    headers: {
+        "Accept": "application/json",
+    },
+    credentials: "include",
+};

@@ -1,15 +1,14 @@
-import { Outlet, Navigate } from "react-router-dom";
 import { useContext } from "react";
+import { Outlet, Navigate } from "react-router-dom";
 import AuthContext from "../../context/AuthContext.jsx";
+import { Loader } from "../loader/Loader.jsx";
 
 export function ProtectedAccess() {
-    // La idea es que con un useEffect se dispare la validación de middleware token en el back mediante useFetch (custom hook)
+    const { isAuth, isLoading } = useContext(AuthContext);
 
-    const { isAuth } = useContext(AuthContext);
+    if (isLoading) return <Loader />;
 
-    if(!isAuth) {
-        return <Navigate to={'/login'} replace/>;
-    }
+    if (!isAuth) return <Navigate to={'/login'} replace />;
 
-    return <Outlet/>;
+    return <Outlet />;
 }
