@@ -1,4 +1,4 @@
-const isEmptyBody = require("../utils/validators/emptyBody");
+const isEmptyBody = require("../utils/validators/emptyBody.js");
 const AuthModel = require("../models/authModel.js");
 const EmployeesModel = require("../models/employeesModel.js");
 
@@ -22,7 +22,7 @@ class MasterController {
             });
         }
 
-        // TODO: Add some extra validation later...
+        // TODO: add validation for granting gym accounts once the dev-admin module is ready...
         const { gym_name, nit, plain_pass, email, role } = req.body;
 
         try {
@@ -54,7 +54,7 @@ class MasterController {
             });
         }
 
-        // Desestructurar body. Agregar validaciones después, no son necesarias, ya que el dev envía la info como debe ser
+        // TODO: add validation for granting employee accounts once the dev-admin module is ready...
         const { gym_id_fk, nuip, employee_name, role, plain_access_code, email, phone_number } = req.body;
         try {
             // Llamar al modelo
@@ -64,7 +64,7 @@ class MasterController {
                     message: 'Error al crear la cuenta de empleado. Por favor, inténtalo de nuevo...'
                 });
             }
-            // Respuesta Exitosa
+
             console.log(`🌟 Otorgando cuenta de empleado con rol ${role}...`);
             return res.status(201).json({
                 message: '¡La cuenta de empleado ha sido creada!',
@@ -82,6 +82,3 @@ class MasterController {
 }
 
 module.exports = new MasterController();
-
-// TODO: también limpiar los comentarios que hay en newEmployeeAccount y volver a testear este endpoint, verificando que no haya doble solicitud...
-// TODO: crear endpoint para verificar el código de acceso del empleado y dar acceso total a la app...

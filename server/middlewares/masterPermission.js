@@ -17,6 +17,8 @@ function masterPermission(req, res, next) {
         });
     }
 
+    // TODO: create validation to verify that the request was made by a dev account (current implementation is for testing)
+
     // Valid key
     console.log('👨🏻‍💻 Modo desarrollador activado.');
     next();

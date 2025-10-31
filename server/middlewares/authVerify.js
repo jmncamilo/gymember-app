@@ -23,6 +23,7 @@ async function authAccessVerify(req, res, next) {
                 access: false
             });
         }
+        req.gym = validPayload;
         next();
         
     } catch (err) {
@@ -37,5 +38,3 @@ async function authAccessVerify(req, res, next) {
 }
 
 module.exports = authAccessVerify;
-
-// TODO: de momento integrar el front para verificar que la autenticación ya está funcionando como funciona en Yaak...

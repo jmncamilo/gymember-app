@@ -12,7 +12,7 @@ class AuthController {
 
     async validateRefreshToken(req, res) {
         const token = req.cookies.refreshToken;
-        if(!token) {
+        if (!token) {
             return res.status(401).json({
                 message: 'El token de refresco no existe...',
                 access: false
@@ -24,14 +24,14 @@ class AuthController {
             console.log('El token de refresco se ha validado correctamente:', validPayload);
 
             // Finding user in the db by id
-            if(!validPayload?.id) {
+            if (!validPayload?.id) {
                 return res.status(403).json({
                     message: 'Token de refresco inválido, el id de usuario no existe...',
                     access: false
                 });
             }
             const result = await AuthModel.getById(validPayload.id); // Executing query
-            if(!result) {
+            if (!result) {
                 return res.status(404).json({
                     message: 'El usuario no ha sido encontrado...',
                     access: false
@@ -60,14 +60,14 @@ class AuthController {
             });
 
         } catch (err) {
-            if(err.name === 'TokenExpiredError') {
+            if (err.name === 'TokenExpiredError') {
                 return res.status(401).json({
                     message: 'El token de refresco ha expirado. Inicia sesión nuevamente...',
                     access: false
                 });
             }
 
-            if(err.name === 'JsonWebTokenError') {
+            if (err.name === 'JsonWebTokenError') {
                 return res.status(401).json({
                     message: 'Token de refresco inválido...',
                     access: false
@@ -106,7 +106,7 @@ class AuthController {
         try {
             // Finding user by NIT and validating the query result
             const result = await AuthModel.getByNit(nitBody);
-            if(!result) {
+            if (!result) {
                 return res.status(404).json({
                     message: 'El NIT ingresado no está registrado...'
                 });
@@ -116,7 +116,7 @@ class AuthController {
 
             // Verifying password
             const isValidPassword = await comparePassword(plain_pass, hash_pass);
-            if(!isValidPassword) {
+            if (!isValidPassword) {
                 return res.status(401).json({
                     message: 'Error de inicio de sesión. Verifica tu contraseña...'
                 });

@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const employeesController = require("../controllers/employeesController.js");
 
+router.post('/verify-code', employeesController.checkAccessCode);
+
+// Endpoints and routes for later if they will be required
 router.get('/', (req, res) => {
     res.json({ msg: 'Consulta para los empleados funcionando...' });
 });
