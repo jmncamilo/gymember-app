@@ -54,7 +54,8 @@ class MasterController {
             });
         }
 
-        // TODO: add validation for granting employee accounts once the dev-admin module is ready...
+        // TODO: add validation for granting employee accounts once the dev-admin module is ready and make sure
+        //  there isn't an identical access code in the same gym
         const { gym_id_fk, nuip, employee_name, role, plain_access_code, email, phone_number } = req.body;
         try {
             // Llamar al modelo

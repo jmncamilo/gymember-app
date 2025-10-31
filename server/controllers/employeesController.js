@@ -1,5 +1,6 @@
 const EmployeesModel = require("../models/employeesModel.js");
 const isEmptyBody = require("../utils/validators/emptyBody.js");
+const { generateToken } = require("../lib/jwt");
 
 
 class EmployeesController {
@@ -30,14 +31,54 @@ class EmployeesController {
         // Start db process
         try {
             // Finding all users from the logged-in gym
-            const allUsersGym = await EmployeesModel.getAllEmployees(validPayload.id);
+            const allEmployeesGym = await EmployeesModel.getAllEmployees(validPayload.id);
 
-            // TODO: empezar a construir la lógica del looping de esos usuarios encontrados, para encontrar (o no) el código de acceso recibido en el body
+            // Check whether any employees were found
+            if (allEmployeesGym.length === 0) {
+                return res.status(404).json({
+                    message: 'No hay ningún empleado registrado en este gimnasio...',
+                    access: false
+                });
+            }
 
-            // Si la respuesta es exitosa
+            // Iterate over the access code search
+            let employeeFounded;
+            for (const employee of allEmployeesGym) {
+                employeeFounded = await EmployeesModel.getByAccessCodeLooping(plain_access_code, employee.hash_access_code, validPayload.id);
+                if (employeeFounded !== null) break;
+            }
+
+            // Check that 'result' is not null, meaning a user was found by the access code
+            if (employeeFounded === null) {
+                return res.status(404).json({
+                    message: 'El código de acceso no pertenece a ningún empleado de la base de datos...',
+                    access: false
+                });
+            }
+
+            // Sign employee token
+            console.log('➡️ Info. del empleado:', employeeFounded);
+            const payload = {
+                id: employeeFounded.id,
+                gym_id_fk: employeeFounded.gym_id_fk,
+                role: employeeFounded.role
+            };
+            const employeeToken = generateToken(payload, { expiresIn: '1d' });
+
+            // Set employee token in a cookie
+            res.cookie('employeeToken', employeeToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                maxAge: 24 * 60 * 60 * 1000
+            });
+
+            // Final response ok
             return res.status(200).json({
                 message: '¡Acceso otorgado al empleado para navegar dentro de la aplicacion!',
-                access: true
+                access: true,
+                employeeToken, // Testing CJ
+                employeeFounded // Testing CJ
             });
 
         } catch (err) {

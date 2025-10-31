@@ -12,7 +12,7 @@ export const verifyAccessToken = async () => {
         }
         return res.ok;
     } catch (err) {
-        console.error('Error ejecutando verifyAccessToken', err); // Testing
+        console.error('Error ejecutando verifyAccessToken', err); // Testing CJ
         return false;
     }
 }
