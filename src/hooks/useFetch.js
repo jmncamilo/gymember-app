@@ -8,7 +8,7 @@ export function useFetch(url, options = {}) {
     const [isLoading, setIsLoading] = useState(autoFetch);
 
     const executeFetch = async (overrideOptions = {}) => {
-        console.log('Requested endpoint:', apiUrl + url) // Testing
+        console.log('Requested endpoint:', apiUrl + url) // Testing CJ
         setError(null);
         setIsLoading(true);
         try {
@@ -31,7 +31,7 @@ export function useFetch(url, options = {}) {
             return data;
 
         } catch (err) {
-            console.error('useFetch executeFetch error:', err);
+            console.log('useFetch executeFetch error:', err);
             setError(err);
             throw err;
         } finally {

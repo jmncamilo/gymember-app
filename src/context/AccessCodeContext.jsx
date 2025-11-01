@@ -3,7 +3,7 @@ import { createContext, useState } from "react";
 const AccessCodeContext = createContext();
 
 export const AccessCodeProvider = ({children}) => {
-    const [isValidCodeAccess, setValidCodeAccess] = useState(true);
+    const [isValidCodeAccess, setValidCodeAccess] = useState(false);
 
     const accessCodeValue = {
         isValidCodeAccess,

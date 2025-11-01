@@ -14,7 +14,7 @@ import AuthContext from "../../context/AuthContext.jsx";
 export function LoginPage() {
     const { form, handlerSetForm } = useForm({ nit: '', plain_pass: '' });
     // Define the custom fetch hook in memory with the authentication wrapper (don't use the wrapper here since this is the login)
-    const { data, error, isLoading, executeFetch } = useFetchWithAuth('/auth', optionsWithBody(form, 'POST'));
+    const { error, isLoading, executeFetch } = useFetchWithAuth('/auth', optionsWithBody(form, 'POST'));
     // Get auth context
     const { setAuth } = useContext(AuthContext);
 
@@ -27,10 +27,17 @@ export function LoginPage() {
             // If there is data to send, we begin the fetching process and consume the corresponding endpoints
             const data = await executeFetch();
             alert(data?.message);
-            // Set the global auth context to grant frontend access
+            // Validate data it was response by status ok (it should contain id)
+            if (!data.data.id) {
+                alert('No se pudieron validar las credenciales, inténtalo de nuevo...');
+                setAuth(false);
+                return;
+            }
+            // If response was ok, then credentials are valid
             setAuth(true);
         } catch (err) {
             alert('Hubo un error, vuelve a intentarlo más tarde...');
+            setAuth(false);
             console.error(err);
         }
     };

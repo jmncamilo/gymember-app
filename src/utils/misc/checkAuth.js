@@ -8,11 +8,11 @@ export const verifyAccessToken = async () => {
             // Fetching to the endpoint that handles refresh token
             const refreshRes = await fetch(`${apiUrl}/auth/token/refresh`, getOptions);
             const data = await refreshRes.json();
-            return data.success === true;
+            return data.access === true;
         }
         return res.ok;
     } catch (err) {
-        console.error('Error ejecutando verifyAccessToken', err); // Testing CJ
+        console.log('Error ejecutando verifyAccessToken', err); // Testing CJ
         return false;
     }
 }
