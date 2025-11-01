@@ -6,6 +6,7 @@ const authRoutes = require("./routes/authRoutes.js");
 const employeesRoutes = require("./routes/employeesRoutes.js");
 const masterRoutes = require("./routes/masterRoutes.js");
 const authVerify = require("./middlewares/authVerify.js");
+const accessCodeVerify = require("./middlewares/accessCodeVerify");
 
 const app = express();
 const PORT = process.env.PORT || 6100; // Port config
@@ -22,11 +23,16 @@ app.use(cors({
 app.use('/auth', authRoutes);
 
 // Section to register private routes as middlewares
-    // Middleware to verify token
+        // Middleware to verify auth tokens
 app.use(authVerify);
-    // Private routes
+    // Private routes that require auth token verification
 app.use('/master', masterRoutes);
 app.use('/employees', employeesRoutes);
+        // Middleware to verify employee token (access code)
+app.use(accessCodeVerify);
+    // Private routes that require auth token and employee token verification
+// TODO: Poner a funcionar algún módulo del home del frontend, es decir la esencia de la app como tal... puede ser registrar un cliente...
+
 
 // Listening the port
 app.listen(PORT, () => {

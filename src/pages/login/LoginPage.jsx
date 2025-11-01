@@ -14,14 +14,14 @@ import AuthContext from "../../context/AuthContext.jsx";
 export function LoginPage() {
     const { form, handlerSetForm } = useForm({ nit: '', plain_pass: '' });
     // Define the custom fetch hook in memory with the authentication wrapper (don't use the wrapper here since this is the login)
-    const { error, isLoading, executeFetch } = useFetchWithAuth('/auth', optionsWithBody(form, 'POST'));
+    const { executeFetch } = useFetchWithAuth('/auth', optionsWithBody(form, 'POST'));
     // Get auth context
     const { setAuth } = useContext(AuthContext);
 
-    // Login handler testing
+    // Login handler
     const handleLogin = async () => {
         try {
-            console.log('Login starting process...'); // Testing
+            console.log('Login starting process...'); // Testing CJ
             // Verify that the data sent to the backend is not empty (as an extra layer of security)
             if(!checkRequestData(form)) return alert('Debes ingresar datos...');
             // If there is data to send, we begin the fetching process and consume the corresponding endpoints

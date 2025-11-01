@@ -11,7 +11,7 @@ import { Loader } from "../../components/loader/Loader.jsx";
 
 export function AccessPage() {
     const { form, handlerSetForm, resetForm } = useForm({ plain_access_code: '' });
-    const { error, isLoading, executeFetchWithAuth } = useFetchWithAuth('/employees/verify-code', optionsWithBody(form, 'POST'));
+    const { isLoading, executeFetchWithAuth } = useFetchWithAuth('/employees/verify-code', optionsWithBody(form, 'POST'));
     // Get access code context
     const { setValidCodeAccess } = useContext(AccessCodeContext);
     // Hook navigate of react-router-dom
@@ -47,7 +47,6 @@ export function AccessPage() {
             resetForm();
             console.error('El error es:', err);
         }
-
     };
 
     return (
