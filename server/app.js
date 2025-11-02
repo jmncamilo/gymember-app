@@ -4,6 +4,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes.js");
 const employeesRoutes = require("./routes/employeesRoutes.js");
+const customersRoutes = require("./routes/customersRoutes.js");
 const masterRoutes = require("./routes/masterRoutes.js");
 const authVerify = require("./middlewares/authVerify.js");
 const accessCodeVerify = require("./middlewares/accessCodeVerify");
@@ -31,8 +32,9 @@ app.use('/employees', employeesRoutes);
         // Middleware to verify employee token (access code)
 app.use(accessCodeVerify);
     // Private routes that require auth token and employee token verification
-// TODO: Poner a funcionar algún módulo del home del frontend, es decir la esencia de la app como tal... puede ser registrar un cliente...
-
+// TODO: Poner a funcionar algún módulo del home del frontend, es decir la esencia de la app como tal...
+//  puede ser registrar un cliente, para empezar a meter usuarios y luego probar el dashboard...
+app.use('/customers', customersRoutes);
 
 // Listening the port
 app.listen(PORT, () => {
