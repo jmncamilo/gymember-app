@@ -1,7 +1,7 @@
 const pool = require("../db/connection.js");
 
 class CustomersModel {
-    // Insert a new customer into the main table
+    // Insert customer data into the main table
     static async insertCustomerMainInfo(connection = null, data) {
         const executor = connection || pool;
         const query = `INSERT INTO Customers
@@ -26,6 +26,41 @@ class CustomersModel {
         ]);
         return result?.affectedRows === 0 ? null : result;
     }
+
+    // Insert data in the customer details table
+    static async insertCustomerDetailsInfo(connection = null, data) {
+        const executor = connection || pool;
+        const query = `INSERT INTO Customers_Details
+                        (customer_id_fk,
+                         gender,
+                         birthdate,
+                         age,
+                         address,
+                         city,
+                         emergency_phone,
+                         additional_info)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        const [result] = await executor.execute(query, [
+            data.customer_id_fk,
+            data.gender,
+            data.birthdate,
+            data.age,
+            data.address,
+            data.city,
+            data.emergency_phone,
+            data.additional_info
+        ]);
+        return result?.affectedRows === 0 ? null : result;
+    }
+
+    // Insert data into the memberships table
+    // static async insertMembership(connection = null, data) {
+    //     const executor = connection || pool;
+    //     const query = ``;
+    //     const [result] = await executor.execute(query, [data.ponerData]);
+    //     return result?.affectedRows === 0 ? null : result;
+    // }
+
 }
 
 module.exports = CustomersModel;
