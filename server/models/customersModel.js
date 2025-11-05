@@ -74,7 +74,6 @@ class CustomersModel {
         ]);
         return result?.affectedRows === 0 ? null : result;
     }
-
 }
 
 module.exports = CustomersModel;
