@@ -36,6 +36,9 @@ class CustomersController {
 
         // TODO: también hay que formatear los campos explícitamente al tipo que la bd requiere, para más robustez...
 
+        // TODO: si todo el format sale bien, al objeto resultante formateado se le agrega la propiedad profile_image_url como null,
+        //  esta nunca debe ser enviada desde el frontend, sera una funcionalidad a agregar en próximas actualizaciones...
+
         // Esta vez no vamos a desestructurar porque no es práctico, vienen muchos datos... solo referenciamos en otra variable
         let enrollData = req.body; // TODO: esto con el formatter desaparece y solo queda enrollData que es donde se almacenarán los datos formateados
         // Traemos la información del empleado que hemos seteado en el objeto req de la petición producto del middleware
