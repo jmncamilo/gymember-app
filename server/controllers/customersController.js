@@ -1,6 +1,7 @@
 const pool = require("../db/connection.js");
 const isEmptyBody = require("../utils/validators/emptyBody.js");
 const { validateBody } = require("../utils/validators/validateField.js");
+const { formatBody } = require("../utils/formatters/formatField.js");
 const {
     insertCustomerDetailsInfo,
     insertCustomerMainInfo,
@@ -24,26 +25,25 @@ class CustomersController {
         }
 
         // Validate body fields
-            // TODO: falta agregar campos al diccionario validador, para verificar el body al 100%. Una vez puestos, descomentar...
-        // const validation = validateBody(req.body);
-        // if (!validation.isSuccess) {
-        //     return res.status(400).json({
-        //         message: '¡Error validando los datos!',
-        //         errors: validation?.errors,
-        //         success: false
-        //     });
-        // }
+        const validation = validateBody(req.body);
+        if (!validation.isSuccess) {
+            return res.status(400).json({
+                message: '¡Error validando los datos!',
+                errors: validation?.errors,
+                success: false
+            });
+        }
 
-        // TODO: también hay que formatear los campos explícitamente al tipo que la bd requiere, para más robustez...
+        // Formatting body fields
+        let enrollData = formatBody(req.body);
 
-        // TODO: si todo el format sale bien, al objeto resultante formateado se le agrega la propiedad profile_image_url como null,
-        //  esta nunca debe ser enviada desde el frontend, sera una funcionalidad a agregar en próximas actualizaciones...
+        // Set profile_image_url to null since profile image functionality will be implemented after Gymember launch
+        enrollData.profile_image_url = null;
 
-        // Esta vez no vamos a desestructurar porque no es práctico, vienen muchos datos... solo referenciamos en otra variable
-        let enrollData = req.body; // TODO: esto con el formatter desaparece y solo queda enrollData que es donde se almacenarán los datos formateados
-        // Traemos la información del empleado que hemos seteado en el objeto req de la petición producto del middleware
+        // Get the employee information stored in the req object of the request by the middleware
         enrollData.enrolling_employee_id_fk = req.employee.id;
-        // Hacemos lo mismo con la info del gym para obtener el ID del gym y que nos sirva de llave foránea al momento de la inserción
+
+        // Get the gym information to retrieve its ID and use it as a foreign key during data insertion
         enrollData.gym_id_fk = req.gym.id;
 
         // Start db process

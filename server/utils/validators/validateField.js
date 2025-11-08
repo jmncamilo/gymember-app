@@ -5,7 +5,9 @@ const {
     validatePhoneNumber,
     validateAge,
     validateBasicString,
-    validateCurrency
+    validateCurrency,
+    validateReasonableNumber,
+    validateDate
 } = require('./validators.js');
 
 // Dictionary mapping field types to its corresponding validators
@@ -18,7 +20,18 @@ const validatorsList = {
     string: validateBasicString,
     amount: validateCurrency,
     hash_pass: validateBasicString,
-    plain_pass: validateBasicString
+    plain_pass: validateBasicString,
+    first_name: validateBasicString,
+    first_last_name: validateBasicString,
+    address: validateBasicString,
+    city: validateBasicString,
+    emergency_phone: validatePhoneNumber,
+    additional_info: validateBasicString,
+    membership_type: validateBasicString,
+    duration_days: validateReasonableNumber,
+    start_date: validateDate,
+    end_date: validateDate,
+    birthdate: validateDate
 };
 
 // Validator function for a single field ('type' is the same thing that key)
@@ -50,5 +63,3 @@ const validateBody = body => {
 };
 
 module.exports = { validateField, validateBody };
-
-// TODO: same thing with formatters...

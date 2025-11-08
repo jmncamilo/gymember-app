@@ -28,6 +28,11 @@ const validateAge = data => {
     return baseValidation(data, 'string', regex);
 };
 
+const validateReasonableNumber = data => {
+    const regex = /^(?:0|[1-9]\d{0,5})$/;
+    return baseValidation(data, 'string', regex);
+};
+
 const validateBasicString = data => {
     if (!data) return false;
     return typeof data === 'string' && data.trim().length >= 2;
@@ -38,6 +43,11 @@ const validateCurrency = data => {
     return baseValidation(data, 'string', regex);
 };
 
+const validateDate = data => {
+    const regex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+    return baseValidation(data, 'string', regex);
+};
+
 module.exports = {
     validateEmail,
     validateNuip,
@@ -45,5 +55,7 @@ module.exports = {
     validatePhoneNumber,
     validateAge,
     validateBasicString,
-    validateCurrency
+    validateCurrency,
+    validateReasonableNumber,
+    validateDate
 };
