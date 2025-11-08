@@ -1,3 +1,4 @@
+const { fieldTranslations } = require("../formatters/fieldTranslations.js");
 const {
     validateEmail,
     validateNuip,
@@ -9,6 +10,7 @@ const {
     validateReasonableNumber,
     validateDate
 } = require('./validators.js');
+
 
 // Dictionary mapping field types to its corresponding validators
 const validatorsList = {
@@ -38,7 +40,7 @@ const validatorsList = {
 const validateField = (value, type = 'string') => {
     const result = validatorsList[type](value);
 
-    if(!result) return { success: false, message: `El campo ${type} no cumple con las condiciones.` };
+    if(!result) return { success: false, message: `El campo ${fieldTranslations[type]} no cumple con las condiciones.` };
 
     return { success: true };
 };

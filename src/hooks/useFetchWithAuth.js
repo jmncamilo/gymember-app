@@ -25,7 +25,7 @@ export function useFetchWithAuth(url, options = {}) {
 
         } catch (err) {
             console.log('Error en executeFetchWithAuth:', err);
-            return { success: false, data: null, error: 'Error inesperado durante la solicitud...' };
+            return { success: false, data: null, error: err?.message || 'Error inesperado durante la solicitud...' };
         } finally {
             setIsLoading(false);
         }

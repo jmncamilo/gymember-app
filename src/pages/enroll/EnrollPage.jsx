@@ -9,26 +9,67 @@ import { useForm } from "../../hooks/useForm.js";
 import { INITIAL_FORM_VALUES } from "./enrollFormInitialValues.js";
 import { calcAge } from "../../utils/calculators/calcAge.js";
 import { calcEndDate } from "../../utils/calculators/calcEndDate.js";
+import { checkRequestData } from "../../utils/misc/miscHelpers.js";
+import { useFetchWithAuth } from "../../hooks/useFetchWithAuth.js";
+import { optionsWithBody } from "../../utils/misc/fetchOptions.js";
+import { Loader } from "../../components/loader/Loader.jsx";
 
 export function EnrollPage() {
-
-    // TODO: Este error es para manejar en el try-catch del botón de Registrar Cliente, dentro del primer filtro.
-    const [error, setError] = useState({
-        status: true,
-        message: '❌ Es necesario diligenciar todos los campos para continuar con el registro...'
-    });
-
     // Destructuring useForm that is my custom hook to handle this page form
     const { form, resetForm, customSetForm, handlerSetForm } = useForm(INITIAL_FORM_VALUES);
 
+    const { executeFetchWithAuth, isLoading } = useFetchWithAuth('/customers/enroll', optionsWithBody(form, 'POST'));
+
+    // Error visualizer
+    const [error, setError] = useState({
+        status: false,
+        message: ''
+    });
+
     // Handling the age field in the form based on the selected birthdate
     const handlerSetFormAge = () => {
-        customSetForm('age', calcAge(form.birthdate));
+        customSetForm('age', calcAge(form.birthdate).toString());
     }
 
     // Setting the end_date field by calculating its value from data in the star_date and duration_days inputs
     const handlerSetFormEndDate = () => {
         customSetForm('end_date', calcEndDate(form.start_date, form.duration_days));
+    };
+
+    // Handling enrollment by submitting
+    const handleEnroll = async () => {
+        // Verify that the data sent to the backend is not empty (as an extra layer of security)
+        try {
+            console.log('Starting enrollment process...'); // Testing CJ
+            console.log(form);
+            if(!checkRequestData(form)) {
+                setError({
+                    status: true,
+                    message: '❌ Es necesario diligenciar todos los campos para continuar con el registro...'
+                });
+                return;
+            }
+
+            // Fetching process
+            const result = await executeFetchWithAuth();
+            if (!result.success) {
+                setError({
+                    status: true,
+                    message: `❌ ${result?.error}..`
+                });
+                return;
+            }
+            setError({
+                status: false,
+                message: ''
+            });
+            alert(`${result.data?.message}`); // This should be in a modal
+            console.log('Enrollment process finished...');
+            resetForm();
+        } catch (err) {
+            console.log(err); // Testing CJ
+            alert('Pasó algo raro...'); // This should be in a modal
+        }
     };
 
     return (
@@ -133,11 +174,14 @@ export function EnrollPage() {
 
                         <div className={styles.boxInput}>
                             <span className={styles.boxButton}>
-                                <DefaultButton onClick={() => {console.log(form)}} text={'Registrar Cliente'}/>
+                                <DefaultButton onClick={handleEnroll} text={'Registrar Cliente'}/>
                             </span>
                         </div>
                     </div>
                 </main>
+
+                {/* Loader making its job */}
+                {isLoading && <Loader/>}
 
             </div>
         </div>

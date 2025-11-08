@@ -28,7 +28,7 @@ class CustomersController {
         const validation = validateBody(req.body);
         if (!validation.isSuccess) {
             return res.status(400).json({
-                message: '¡Error validando los datos!',
+                message: `¡Error validando los datos! ${Object.values(validation?.errors)[0] || ''}`,
                 errors: validation?.errors,
                 success: false
             });
@@ -67,10 +67,10 @@ class CustomersController {
             // Send response ok
             return res.status(200).json({
                 message: '¡Cliente registrado correctamente!',
-                bodyData: enrollData,
-                customerMainInfo: resultMain,
-                customerDetailInfo: resultDetails,
-                membershipInfo: resultMembership,
+                bodyData: enrollData, // Testing
+                customerMainInfo: resultMain, // Testing
+                customerDetailInfo: resultDetails, // Testing
+                membershipInfo: resultMembership, // Testing
                 success: true
             });
         } catch (err) {
@@ -83,7 +83,6 @@ class CustomersController {
         } finally {
             connection.release(); // Release db connection
         }
-
     }
 }
 

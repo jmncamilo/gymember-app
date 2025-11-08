@@ -23,8 +23,17 @@ export function useFetch(url, options = {}) {
                 }
             });
 
+            // This handles only error status 400 which is the validation error in the backend architecture
+            if (res.status === 400) {
+                const data = await res.json();
+                throw new Error(`${data.message}`);
+            }
+
             // This throws an error if the response is negative when attempting to verify the tokens
-            if (!res.ok) throw new Error(`¡Hay un error HTTP! status: ${res.status}`);
+            if (!res.ok) {
+                console.log(`¡Error HTTP detectado! Status: ${res.status}`);
+                throw new Error('Ocurrió un error al procesar la solicitud. Vuelve a intentarlo.');
+            }
 
             const data = await res.json();
             setData(data);
