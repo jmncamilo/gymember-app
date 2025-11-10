@@ -14,11 +14,11 @@ export function HomePage() {
 
     /* Simulating API */
     const data = {
-        first_name: 'Samara',
-        first_last_name: 'Morgan',
-        gymName: 'Body People Gym',
+        first_name: 'Bruno',
+        first_last_name: 'Jiménez',
+        gym_name: 'Biuro Performance Gym',
         todayIncome: '99.000.000',
-        logo_url: 'https://entertainment.time.com/wp-content/uploads/sites/3/2012/05/new-line.jpg?w=600',
+        logo_url: 'https://www.shutterstock.com/image-vector/angry-dog-head-gym-barbell-600nw-2256877429.jpg',
         membershipCount: 15,
         totalActiveUsers: 250,
         todayExpiringMemberships: 8,
@@ -43,7 +43,7 @@ export function HomePage() {
                     <div className={styles.profileContainer}>
                         <div className={styles.textProfile}>
                             <h3 className={styles.textProfileName}>{`${data.first_name} ${data.first_last_name}`}</h3>
-                            <h3 className={styles.textProfileGym}>{data.gymName}</h3>
+                            <h3 className={styles.textProfileGym}>{data.gym_name}</h3>
                         </div>
                         <img className={styles.profilePic} src={data.logo_url ? data.logo_url : profilePicIcon} alt="profile-pic"/>
                     </div>

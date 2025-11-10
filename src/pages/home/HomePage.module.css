@@ -1,7 +1,7 @@
 .generalContainer {
     color: #f0f0f0;
-    background-color: #692222; /* To testing proposes to see the better the bg of the module in construction */
-    /*background-color: transparent;*/
+    /*background-color: #692222; !* To testing proposes to see the better the bg of the module in construction *!*/
+    background-color: transparent;
     display: flex;
     flex-direction: column;
     /*width: 100vw;*/
@@ -14,7 +14,7 @@
 
 /* --- Name and date container --- */
 .titleContainer {
-    background-color: #ff1a64;
+    /*background-color: #ff1a64;*/
     width: 94%;
     min-width: 1049px;
     overflow: hidden;
@@ -31,7 +31,7 @@
     width: 30%;
     min-width: 300px;
     height: 100%;
-    background-color: yellow;
+    /*background-color: yellow;*/
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -40,7 +40,7 @@
 }
 
 .titleHeading {
-    background-color: #0e0c0f;
+    /*background-color: #0e0c0f;*/
     font-style: italic;
     font-weight: bold;
     font-size: 1.4rem;
@@ -48,7 +48,7 @@
 }
 
 .dateHeading {
-    background-color: #0a480a;
+    /*background-color: #0a480a;*/
     font-weight: bolder;
     font-style: normal;
     font-size: 0.8rem;
@@ -60,17 +60,18 @@
     width: 45%;
     min-width: 500px;
     height: 100%;
-    background-color: blue;
+    /*background-color: blue;*/
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
+    gap: 0.35rem;
 }
 
 .textProfile {
     width: 82%;
     height: 100%;
-    background-color: red;
+    /*background-color: red;*/
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -79,7 +80,7 @@
 }
 
 .textProfileName {
-    background-color: green;
+    /*background-color: green;*/
     padding-right: 2px;
     font-style: normal;
     font-size: 0.9rem;
@@ -89,7 +90,7 @@
 }
 
 .textProfileGym {
-    background-color: purple;
+    /*background-color: purple;*/
     padding-right: 2px;
     font-style: italic;
     font-size: 0.716rem;
@@ -100,7 +101,7 @@
 .profilePic {
     width: 3.65rem;
     aspect-ratio: 1/1;
-    background-color: gray;
+    /*background-color: gray;*/
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -117,7 +118,7 @@
     /*height: 26px;*/
     height: 4vh;
     min-height: 30px;
-    background-color: slateblue;
+    /*background-color: slateblue;*/
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -137,8 +138,7 @@
     /*height: 100%;*/
     min-height: 474px;
     height: 75vh;
-    background-color: #0e0c0e;
-    /*background-color: transparent;*/
+    /*background-color: #0e0c0e;*/
     display: grid;
     grid-gap: 13px;
     grid-template-rows: repeat(3, 1fr) 2fr;
@@ -154,7 +154,9 @@
     background-color: rgba(var(--colorBg));
     /*border-radius: 14px;*/
     border-radius: 1rem;
-    outline: 2px solid rgba(255, 255, 255, 0.09);
+    /*outline: 2px solid rgba(255, 255, 255, 0.08);*/
+    border: 2px solid rgba(109, 86, 145, 0.33);
+    box-sizing: border-box;
     position: relative;
     overflow: hidden;
     transition: outline 0.15s ease-in-out;
@@ -270,7 +272,8 @@
 }
 
 .gridCards:hover {
-    outline-color: rgba(255, 52, 144, 0.30);
+    /*outline-color: none;*/
+    box-shadow: 0 3px 18px rgba(154, 67, 245, 0.23);
 }
 
 /* --- First card styles --- */
@@ -371,7 +374,7 @@
 .secondCardContent {
     width: 90%;
     height: calc(100% - var(--titleHeight));
-    background-color: #0a480a;
+    /*background-color: #0a480a;*/
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -389,7 +392,7 @@
 }
 
 .secondCardContentContainer {
-    background-color: gray;
+    /*background-color: rgba(0, 0, 0, 0.3);*/
     width: 100%;
     height: 32%;
     display: flex;
@@ -400,7 +403,7 @@
 .secondCardContentIcon {
     width: 10%;
     height: 100%;
-    background-color: #692222;
+    /*background-color: #692222;*/
     display: flex;
     justify-content: center;
     align-items: center;
@@ -409,7 +412,7 @@
 .secondCardContentText {
     width: 65%;
     height: 100%;
-    background-color: black;
+    /*background-color: black;*/
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -423,7 +426,7 @@
 .secondCardContentValue {
     width: 25%;
     height: 100%;
-    background-color: blue;
+    /*background-color: blue;*/
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -462,7 +465,7 @@
 .thirdCardContent {
     width: 90%;
     height: calc(100% - var(--titleHeight));
-    background-color: #1b7a2b;
+    /*background-color: #1b7a2b;*/
     display: flex;
     justify-content: center;
     align-items: center;
@@ -473,7 +476,7 @@
 .thirdCardBoxInfo {
     width: 100%;
     height: 35%;
-    background-color: #e04141;
+    /*background-color: #e04141;*/
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -483,14 +486,14 @@
 .boxTextThirdCard {
     width: 100%;
     height: 29%;
-    background-color: #692222;
+    /*background-color: #692222;*/
     text-align: left;
     font-weight: 500;
     font-size: 1.1rem;
 }
 
 .boxContainerThirdCard {
-    background-color: #353a4a;
+    background-color: rgba(5, 6, 9, 0.9);
     /*height: 63%;*/
     height: 61%;
     width: 100%;
@@ -506,7 +509,7 @@
 .boxInsideTextThirdCard {
     width: 60%;
     height: 100%;
-    background-color: darkblue;
+    /*background-color: darkblue;*/
     /*font-size: 0.80rem;*/
     font-size: 0.88rem;
     color: #b8b9be;
@@ -516,7 +519,9 @@
 .boxInsideValueThirdCard {
     width: 40%;
     height: 100%;
-    background-color: #312f14;
+    background-color: rgba(43, 40, 56, 0.60);
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
     font-size: 1.8rem;
     color: #f0f0f0;
     font-weight: 600;
@@ -561,7 +566,7 @@
 .fourthCardTitle {
     width: 96%;
     height: 20%;
-    background-color: navy;
+    /*background-color: navy;*/
     font-weight: 800;
     font-size: 1.3rem;
 }
@@ -573,7 +578,7 @@
 .fourthCardContent {
     width: 96%;
     height: 80%;
-    background-color: #601b1b;
+    /*background-color: #601b1b;*/
     display: flex;
     justify-content: center;
     align-items: center;
