@@ -74,6 +74,20 @@ class CustomersModel {
         ]);
         return result?.affectedRows === 0 ? null : result;
     }
+
+    // Get remaining membership days and status for a customer by nuip in specific gym (fk)
+    static async getCustomerByNuip(nuip, gym_id_fk) {
+        const query = `SELECT
+                           c.id AS id_customer,
+                           DATEDIFF(cm.end_date, CURDATE()) AS days_remaining,
+                           cm.status AS membership_status
+                       FROM Customers c
+                       INNER JOIN Customers_Memberships cm
+                           ON c.id = cm.customer_id_fk
+                       WHERE nuip = ? AND gym_id_fk = ?`;
+        const [result] = await pool.execute(query, [nuip, gym_id_fk]);
+        return result.length === 0 ? null : result[0];
+    }
 }
 
 module.exports = CustomersModel;
