@@ -7,6 +7,7 @@ const {
     insertCustomerMainInfo,
     insertCustomerMembership
 } = require("../models/customersModel.js");
+const { insertCustomerTransaction } = require('../models/transactionModel.js');
 
 
 class CustomersController {
@@ -83,6 +84,10 @@ class CustomersController {
         } finally {
             connection.release(); // Release db connection
         }
+    }
+
+    async customerTransaction(req, res) {
+        console.log('Lógica aquí...', req, res);
     }
 }
 
