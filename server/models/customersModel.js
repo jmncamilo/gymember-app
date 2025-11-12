@@ -88,6 +88,16 @@ class CustomersModel {
         const [result] = await pool.execute(query, [nuip, gym_id_fk]);
         return result.length === 0 ? null : result[0];
     }
+
+    // Updating membership status to active
+    static async membershipStatusToActive(connection = null, data) {
+        const executor = connection || pool;
+        const query = `UPDATE Customers_Memberships
+                        SET status = 'active'
+                        WHERE customer_id_fk = ?`;
+        const [result] = await executor.execute(query, [data.customer_id_fk]);
+        return result?.affectedRows === 0 ? null : result;
+    }
 }
 
 module.exports = CustomersModel;

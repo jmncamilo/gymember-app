@@ -50,7 +50,8 @@ export function PaymentsPage() {
     // Handling API for days remaining and membership status when hook does fetching through the nuip input
     const data = {
         days_remaining: 5,
-        membership_status: 'pending'
+        membership_status: 'pending',
+        customer_id_fk: 10
     };
 
     return (

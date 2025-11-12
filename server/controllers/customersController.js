@@ -88,6 +88,7 @@ class CustomersController {
 
     async customerTransaction(req, res) {
         console.log('Lógica aquí...', req, res);
+        // TODO: Empezar a construir esta mondiu
     }
 }
 
