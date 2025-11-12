@@ -12,6 +12,7 @@ const formattersList = {
     role: toLowerCaseText,
     enrolling_employee_id_fk: intParser,
     customer_id_fk: intParser,
+    employee_id_fk: intParser,
     gender: toLowerCaseText,
     duration_days: intParser,
     amount: floatCurrencyParser,

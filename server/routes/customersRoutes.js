@@ -3,7 +3,7 @@ const router = express.Router();
 const customersController = require("../controllers/customersController.js");
 
 router.post('/enroll', customersController.atomicEnrollCustomer);
-router.post('/transaction', customersController.customerTransaction);
+router.post('/transaction', customersController.atomicTransactionCustomer);
 
 // GET initial example and test
 router.get('/', (req, res) => {

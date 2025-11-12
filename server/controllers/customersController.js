@@ -5,7 +5,8 @@ const { formatBody } = require("../utils/formatters/formatField.js");
 const {
     insertCustomerDetailsInfo,
     insertCustomerMainInfo,
-    insertCustomerMembership
+    insertCustomerMembership,
+    membershipStatusToActive
 } = require("../models/customersModel.js");
 const { insertCustomerTransaction } = require('../models/transactionModel.js');
 
@@ -68,10 +69,10 @@ class CustomersController {
             // Send response ok
             return res.status(200).json({
                 message: '¡Cliente registrado correctamente!',
-                bodyData: enrollData, // Testing
-                customerMainInfo: resultMain, // Testing
-                customerDetailInfo: resultDetails, // Testing
-                membershipInfo: resultMembership, // Testing
+                bodyData: enrollData, // Testing CJ
+                customerMainInfo: resultMain, // Testing CJ
+                customerDetailInfo: resultDetails, // Testing CJ
+                membershipInfo: resultMembership, // Testing CJ
                 success: true
             });
         } catch (err) {
@@ -86,10 +87,70 @@ class CustomersController {
         }
     }
 
-    async customerTransaction(req, res) {
-        console.log('Lógica aquí...', req, res);
-        // TODO: Empezar a construir esta mondiu
+    async atomicTransactionCustomer(req, res) {
+        // This method is used to register a new payment
+
+        // Validate that body is not empty
+        if (isEmptyBody(req.body)) {
+            return res.status(400).json({
+                message: 'El cuerpo de la solicitud no debe estar vacío...',
+                success: false
+            });
+        }
+
+        // Validate body fields
+        const validation = validateBody(req.body);
+        if (!validation.isSuccess) {
+            return res.status(400).json({
+                message: `¡Error validando los datos! ${Object.values(validation?.errors)[0] || ''}`,
+                errors: validation?.errors,
+                success: false
+            });
+        }
+
+        // Formatting body fields
+        let transactionData = formatBody(req.body);
+
+        // Get the employee information (id) stored in the req object of the request by the middleware
+        transactionData.employee_id_fk = req.employee.id;
+
+        // Start db process
+        const connection = await pool.getConnection();
+        try {
+            await connection.beginTransaction(); // Begin transaction process
+
+            // Insert data in transactions table
+            const resultTransaction = await insertCustomerTransaction(connection, transactionData);
+
+            // Update status of the membership to active in Customers_Memberships table
+            const resultStatusChange = await membershipStatusToActive(connection, transactionData);
+
+            // Commit changes
+            await connection.commit();
+
+            // Send response ok
+            return res.status(200).json({
+                message: 'Pago registrado correctamente. ¡Cliente activo!',
+                bodyData: transactionData, // Testing CJ
+                transactionInfo: resultTransaction, // Testing CJ
+                statusChangeInfo: resultStatusChange, // Testing CJ
+                success: true
+            });
+
+        } catch (err) {
+            await connection.rollback();
+            return res.status(500).json({
+                message: 'Error en el servidor. Vuelve a intentarlo en unos minutos...',
+                error: err?.message || err,
+                success: false
+            });
+        } finally {
+            connection.release(); // Release db connection
+        }
     }
+
+    // TODO: create handler to get client by nuip
+    // TODO: create handler to to renew a user
 }
 
 module.exports = new CustomersController();

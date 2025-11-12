@@ -33,7 +33,11 @@ const validatorsList = {
     duration_days: validateReasonableNumber,
     start_date: validateDate,
     end_date: validateDate,
-    birthdate: validateDate
+    birthdate: validateDate,
+    status: validateBasicString,
+    transaction_category: validateBasicString,
+    transaction_type: validateBasicString,
+    payment_method: validateBasicString
 };
 
 // Validator function for a single field ('type' is the same thing that key)
