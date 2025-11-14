@@ -6,7 +6,8 @@ const {
     insertCustomerDetailsInfo,
     insertCustomerMainInfo,
     insertCustomerMembership,
-    membershipStatusToActive
+    membershipStatusToActive,
+    getCustomerByNuip
 } = require("../models/customersModel.js");
 const { insertCustomerTransaction } = require('../models/transactionModel.js');
 
@@ -149,8 +150,8 @@ class CustomersController {
         }
     }
 
-    // TODO: create handler to get client by nuip
-    // TODO: create handler to to renew a user
+    // TODO: create handler to get client by nuip and its corresponding endpoint
+    // TODO: create handler to to renew a user and its corresponding endpoint
 }
 
 module.exports = new CustomersController();

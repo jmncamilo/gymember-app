@@ -4,6 +4,7 @@ const customersController = require("../controllers/customersController.js");
 
 router.post('/enroll', customersController.atomicEnrollCustomer);
 router.post('/transaction', customersController.atomicTransactionCustomer);
+// TODO: agregar endpoint para renovar (/renew tipo post) y para consultar por nuip (/find/:nuip tipo get)
 
 // GET initial example and test
 router.get('/', (req, res) => {

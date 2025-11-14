@@ -75,13 +75,32 @@ class CustomersModel {
         return result?.affectedRows === 0 ? null : result;
     }
 
-    // Get remaining membership days and status for a customer by nuip in specific gym (fk)
+    // Get all customer data including remaining membership days by nuip in specific gym (fk)
     static async getCustomerByNuip(nuip, gym_id_fk) {
         const query = `SELECT
                            c.id AS id_customer,
-                           DATEDIFF(cm.end_date, CURDATE()) AS days_remaining,
-                           cm.status AS membership_status
+                           c.nuip AS nuip,
+                           c.first_name AS first_name,
+                           c.first_last_name AS first_last_name,
+                           c.email AS email,
+                           c.phone_number AS phone_number,
+                           c.profile_image_url AS profile_image_url,
+                           cd.gender AS gender,
+                           cd.birthdate AS birthdate,
+                           cd.age AS age,
+                           cd.address AS address,
+                           cd.city AS city,
+                           cd.emergency_phone AS emergency_phone,
+                           cd.additional_info AS additional_info,
+                           cm.membership_type AS membership_type,
+                           cm.status AS status,
+                           cm.duration_days AS duration_days,
+                           cm.start_date AS start_date,
+                           cm.end_date AS end_date,
+                           DATEDIFF(cm.end_date, CURDATE()) AS days_remaining
                        FROM Customers c
+                       INNER JOIN Customers_Details cd
+                           ON c.id = cd.customer_id_fk
                        INNER JOIN Customers_Memberships cm
                            ON c.id = cm.customer_id_fk
                        WHERE nuip = ? AND gym_id_fk = ?`;
