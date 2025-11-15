@@ -7,7 +7,8 @@ const {
     insertCustomerMainInfo,
     insertCustomerMembership,
     membershipStatusToActive,
-    getCustomerByNuip
+    getCustomerByNuip,
+    updateCustomerMembership
 } = require("../models/customersModel.js");
 const { insertCustomerTransaction } = require('../models/transactionModel.js');
 
@@ -168,6 +169,77 @@ class CustomersController {
 
     async atomicRenewTransactionCustomer(req, res) {
         // This method is used to register a renewal transaction for a customer's membership
+
+        // Validate that body is not empty
+        if (isEmptyBody(req.body)) {
+            return res.status(400).json({
+                message: 'El cuerpo de la solicitud está vacío...',
+                success: false
+            });
+        }
+
+        // Validate body fields
+        const validation = validateBody(req.body);
+        if (!validation.isSuccess) {
+            return res.status(400).json({
+                message: `¡Error validando los datos! ${Object.values(validation?.errors)[0] || ''}`,
+                errors: validation?.errors,
+                success: false
+            });
+        }
+
+        // Formatting body fields
+        let transactionData = formatBody(req.body);
+
+        // Get the employee information (id) stored in the req object of the request by the middleware
+        transactionData.employee_id_fk = req.employee.id;
+
+        // Start db process
+        const connection = await pool.getConnection();
+        try {
+            await connection.beginTransaction(); // Begin transaction process
+
+            // Update data in customers memberships table
+            const resultUpdateMembership = await updateCustomerMembership(connection, transactionData);
+            if (!resultUpdateMembership) {
+                throw new Error('Error al actualizar la membresía del cliente...');
+            }
+
+            // Insert data in transactions table
+            const resultTransaction = await insertCustomerTransaction(connection, transactionData);
+            if (!resultTransaction) {
+                throw new Error('Error al registrar el pago del cliente...');
+            }
+
+            // Update status of the membership to active in customers memberships table
+            const resultStatusChange = await membershipStatusToActive(connection, transactionData);
+            if (!resultStatusChange) {
+                throw new Error('Error al cambiar el estado de la membresía del cliente...');
+            }
+
+            // Commit changes
+            await connection.commit();
+
+            // Send response ok
+            return res.status(200).json({
+                message: 'Pago registrado correctamente. ¡El cliente ha sido renovado!',
+                bodyData: transactionData, // Testing CJ
+                updateMembershipInfo: resultUpdateMembership, // Testing CJ
+                transactionInfo: resultTransaction, // Testing CJ
+                statusChangeInfo: resultStatusChange, // Testing CJ
+                success: true
+            });
+
+        } catch (err) {
+            await connection.rollback();
+            return res.status(500).json({
+                message: 'Error en el servidor. Vuelve a intentarlo en unos minutos...',
+                error: err?.message || err,
+                success: false
+            });
+        } finally {
+            connection.release(); // Release db connection
+        }
     }
 
     async getByNuip(req, res) {
