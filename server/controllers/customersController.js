@@ -166,6 +166,10 @@ class CustomersController {
         }
     }
 
+    async atomicRenewTransactionCustomer(req, res) {
+        // This method is used to register a renewal transaction for a customer's membership
+    }
+
     async getByNuip(req, res) {
         // This method is used to get a customer by nuip
         const { nuip } = req.params;
@@ -214,8 +218,6 @@ class CustomersController {
             });
         }
     }
-
-    // TODO: create handler to to renew a user and its corresponding endpoint
 }
 
 module.exports = new CustomersController();

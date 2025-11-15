@@ -75,6 +75,24 @@ class CustomersModel {
         return result?.affectedRows === 0 ? null : result;
     }
 
+    static async updateCustomerMembership(connection = null, data) {
+        const executor = connection || pool;
+        const query = `UPDATE Customers_Memberships
+                        SET membership_type = ?,
+                            duration_days = ?,
+                            start_date = ?,
+                            end_date = ?
+                       WHERE customer_id_fk = ?`;
+        const [result] = await executor.execute(query, [
+            data.membership_type,
+            data.duration_days,
+            data.start_date,
+            data.end_date,
+            data.customer_id_fk
+        ]);
+        return result?.affectedRows === 0 ? null : result;
+    }
+
     // Get all customer data including remaining membership days by nuip in specific gym (fk)
     static async getCustomerByNuip(nuip, gym_id_fk) {
         const query = `SELECT
