@@ -275,6 +275,11 @@ class CustomersController {
                 });
             }
 
+            // Set days remaining to 0 if the value is negative
+            if (parseInt(data.days_remaining) < 0) {
+                data.days_remaining = '0';
+            }
+
             // Send response ok
             return res.status(200).json({
                 message: '¡Cliente encontrado! Consulta de datos exitosa...',

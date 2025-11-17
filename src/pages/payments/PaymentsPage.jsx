@@ -49,10 +49,19 @@ export function PaymentsPage() {
 
     // Handling API for days remaining and membership status when hook does fetching through the nuip input
     const data = {
-        days_remaining: 5, // Esto no se envía en el fetching
-        membership_status: 'pending', // Esto tampoco se envía en el fetching
-        customer_id_fk: 10 // Esto sí se envía fetching
+        days_remaining: 5, // Esto no se envía en el fetching, es para automatizar el cálculo desde el front
+        membership_status: 'pending', // Esto tampoco se envía en el fetching, es para saber el estado del cliente consultado
+        id_customer: 10 // Esto SÍ se envía en el fetching, pero como customer_id_fk
     };
+
+    // TODO: ajustar el endpoint de la consulta del cliente por nuip, seteando cualquier valor negativo de days_remaining a cero (string) al momento de enviar la data
+
+    // TODO: empezar consumiendo el endpoint de consultar un cliente por nuip
+
+    // TODO: calcular automáticamente la fecha de terminación y los días de duración, teniendo en cuenta los days_remaining que trae la
+    //  api. Se podría modificar la lógica dentro del method handlerEndDateBlur para que primero se sobrescriban los días de duración, sumándole
+    //  el valor de los days_remaining y luego ya el cálculo del end_date se realiza con la función que ya hemos creado calcEndDate. De esta
+    //  manera se setean correctamente tanto los campos fecha de terminación y los días de duración de la membresía.
 
     return (
         <>
