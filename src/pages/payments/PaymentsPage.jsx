@@ -6,14 +6,21 @@ import { StatusBadge } from "../../components/badges/StatusBadge.jsx";
 import { DefaultButton } from "../../components/buttons/default/DefaultButton.jsx";
 import { useState } from "react";
 import { useForm } from "../../hooks/useForm.js";
-import { INITIAL_FORM_VALUES } from "./paymentsFormInitialValues.js";
+import { INITIAL_FORM_VALUES, INITIAL_CUSTOMER_STATUS_VALUES } from "./paymentsFormInitialValues.js";
 import { calcEndDate } from "../../utils/calculators/calcEndDate.js";
 import { formatCurrency, removeCurrencyFormat } from "../../utils/formatters/amountFormatters.js";
+import { useFetchWithAuth } from "../../hooks/useFetchWithAuth.js";
+import { getOptions } from "../../utils/misc/fetchOptions.js";
 
 export function PaymentsPage() {
-
     // Destructuring useForm custom hook to handle this page form
     const { form, resetForm, handlerSetForm, customSetForm } = useForm(INITIAL_FORM_VALUES);
+
+    // Calling custom hook to fetching validating auth
+    const { isLoading, executeFetchWithAuth } = useFetchWithAuth(`/customers/find/${form.nuip}`, getOptions);
+
+    // Handling customer data to show remaining days and membership status
+    const [customerStatusInfo, setCustomerStatusInfo] = useState(INITIAL_CUSTOMER_STATUS_VALUES);
 
     // Handling dynamic options if customer is new user or not
     const [isFirstPayment, setIsFirstPayment] = useState('1');
@@ -27,8 +34,8 @@ export function PaymentsPage() {
 
     // Handling dynamic error. SetError is already unused 'cause there is no function calling it
     const [error, setError] = useState({
-        status: true,
-        message: '❌ Error de validación. Por favor, completa todos los campos...'
+        status: false,
+        message: ''
     });
 
     // Handler to calc end_date through duration_days
@@ -47,16 +54,61 @@ export function PaymentsPage() {
         }, 0);
     };
 
-    // Handling API for days remaining and membership status when hook does fetching through the nuip input
-    const data = {
-        days_remaining: 5, // Esto no se envía en el fetching, es para automatizar el cálculo desde el front
-        membership_status: 'pending', // Esto tampoco se envía en el fetching, es para saber el estado del cliente consultado
-        id_customer: 10 // Esto SÍ se envía en el fetching, pero como customer_id_fk
+    // Handler to find a customer by nuip (endpoint) and get days remaining, status membership and id
+    const handlerFindByNuip = async () => {
+        if (!form.nuip) {
+            setError({
+                status: true,
+                message: '❌ Es necesario ingresar un número de documento...'
+            });
+            // Get back initial values if response was not ok
+            setCustomerStatusInfo(INITIAL_CUSTOMER_STATUS_VALUES);
+            customSetForm('customer_id_fk', '');
+            return;
+        }
+
+        try {
+            // Fetching process
+            const result = await executeFetchWithAuth();
+            if (!result.success) {
+                // Handling custom error
+                setError(
+                    result?.error === 'Ocurrió un error al procesar la solicitud. Vuelve a intentarlo.'
+                        ? {
+                            status: true,
+                            message: `❌ No existe ningún usuario registrado con el documento de identidad ingresado...`
+                        }
+                        : {
+                            status: true,
+                            message: `❌ ${result?.error}..`
+                        }
+                );
+                // Get back initial values if response was not ok
+                setCustomerStatusInfo(INITIAL_CUSTOMER_STATUS_VALUES);
+                customSetForm('customer_id_fk', '');
+                return;
+            }
+            // Clear any previous error if one was displayed
+            setError({
+                status: false,
+                message: ''
+            });
+            // Set customer membership info
+            setCustomerStatusInfo({
+                days_remaining: result?.data?.data?.days_remaining || '0',
+                status: result?.data?.data?.status || 'pending',
+                id_customer: result?.data?.data?.id_customer || null
+            });
+            // Set customer id fk in the main form
+            customSetForm('customer_id_fk', result?.data?.data?.id_customer || '');
+
+        } catch (err) {
+            console.log(err); // Testing CJ
+            setCustomerStatusInfo(INITIAL_CUSTOMER_STATUS_VALUES);
+            resetForm();
+            alert('Pasó algo raro...'); // This should be in a modal
+        }
     };
-
-    // TODO: ajustar el endpoint de la consulta del cliente por nuip, seteando cualquier valor negativo de days_remaining a cero (string) al momento de enviar la data
-
-    // TODO: empezar consumiendo el endpoint de consultar un cliente por nuip
 
     // TODO: calcular automáticamente la fecha de terminación y los días de duración, teniendo en cuenta los days_remaining que trae la
     //  api. Se podría modificar la lógica dentro del method handlerEndDateBlur para que primero se sobrescriban los días de duración, sumándole
@@ -75,15 +127,15 @@ export function PaymentsPage() {
                     <main>
                         <div className={styles.firstMainBox}>
                             <div className={styles.inputBox}>
-                                <DefaultInput name={'nuip'} value={form.nuip} onChange={handlerSetForm} text={'Número de documento:'} type={'number'} htmlFor={'nuip'}/>
+                                <DefaultInput name={'nuip'} value={form.nuip} onChange={handlerSetForm} onBlur={handlerFindByNuip} text={'Número de documento:'} type={'number'} htmlFor={'nuip'}/>
                             </div>
                             <div className={styles.inputBox}>
-                                <DefaultInput name={'days_remaining'} value={data.days_remaining} text={'Días restantes:'} type={'number'} htmlFor={'days-remaining'}
+                                <DefaultInput name={'days_remaining'} value={customerStatusInfo.days_remaining} text={'Días restantes:'} type={'number'} htmlFor={'days-remaining'}
                                               readOnly={true}/>
                             </div>
                             <div className={`${styles.inputBox} ${styles.badgeBox}`}>
                                 <p>Estado de la membresía:</p>
-                                <StatusBadge status={data.membership_status} type={data.membership_status}/>
+                                <StatusBadge status={customerStatusInfo.status} type={customerStatusInfo.status}/>
                             </div>
                             <div className={styles.inputBox}>
                                 <DefaultSelect text={'¿Es inscripción inicial?'} htmlFor={'enrolling'} value={isFirstPayment} onChange={(e) => setIsFirstPayment(e.target.value)}>

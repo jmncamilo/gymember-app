@@ -8,5 +8,12 @@ export const INITIAL_FORM_VALUES = {
     transaction_type: '',
     amount: '',
     payment_method: '',
-    description: ''
+    description: '',
+    customer_id_fk: ''
+};
+
+export const INITIAL_CUSTOMER_STATUS_VALUES = {
+    days_remaining: '0',
+    status: 'pending',
+    id_customer: null
 };
