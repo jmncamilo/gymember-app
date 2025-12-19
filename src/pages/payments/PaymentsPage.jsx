@@ -38,9 +38,16 @@ export function PaymentsPage() {
         message: ''
     });
 
-    // Handler to calc end_date through duration_days
+    // Handler to calc end_date through duration_days and days remaining
     const handlerEndDateBlur = () => {
-        customSetForm('end_date', calcEndDate(form.start_date, form.duration_days))
+        // Obtiene los days restantes y se computa con el valor de los days que se van a otorgar
+        const grantedDays = Number(form.duration_days) || 0;
+        const remainingDays = Number(customerStatusInfo.days_remaining) || 0;
+        const totalRemainingDays = String(grantedDays + remainingDays);
+        // Setea los valores finales en los campos correspondientes
+        customSetForm('duration_days', totalRemainingDays);
+        customSetForm('end_date', calcEndDate(form.start_date, totalRemainingDays));
+        // customSetForm('end_date', calcEndDate(form.start_date, form.duration_days)); // anterior
     };
 
     // Handler to delete the amount currency format and get a raw value to API
@@ -113,7 +120,11 @@ export function PaymentsPage() {
     // TODO: calcular automáticamente la fecha de terminación y los días de duración, teniendo en cuenta los days_remaining que trae la
     //  api. Se podría modificar la lógica dentro del method handlerEndDateBlur para que primero se sobrescriban los días de duración, sumándole
     //  el valor de los days_remaining y luego ya el cálculo del end_date se realiza con la función que ya hemos creado calcEndDate. De esta
-    //  manera se setean correctamente tanto los campos fecha de terminación y los días de duración de la membresía.
+    //  manera se setean correctamente tanto los campos fecha de terminación y los días de duración de la membresía. Hay que tener en cuenta
+    //  que, pueden crear residuos cuando cambiemos de es primer pago a no es primer pago, asi que debería evaluarse este escenario,
+    //  aunque creo que como habrá dos handlers diferentes dependiendo de si es renovación o no, entonces allí se manejaría,
+    //  porque los días restantes solo se manejan en el escenario de renovación, cuando es primer pago simplemente al backend no
+    //  se le envía esta información, sino directamente la información de la transacción.
 
     return (
         <>

@@ -100,7 +100,7 @@ class CustomersController {
     }
 
     async atomicTransactionCustomer(req, res) {
-        // This method is used to register a new payment
+        // This method is used to register a customer membership payment that is first payment or initial enroll
 
         // Validate that body is not empty
         if (isEmptyBody(req.body)) {
@@ -168,7 +168,7 @@ class CustomersController {
     }
 
     async atomicRenewTransactionCustomer(req, res) {
-        // This method is used to register a renewal transaction for a customer's membership
+        // This method is used to register a renewal payment for a customer membership
 
         // Validate that body is not empty
         if (isEmptyBody(req.body)) {
