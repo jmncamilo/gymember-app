@@ -11,6 +11,7 @@ import { calcEndDate } from "../../utils/calculators/calcEndDate.js";
 import { formatCurrency, removeCurrencyFormat } from "../../utils/formatters/amountFormatters.js";
 import { useFetchWithAuth } from "../../hooks/useFetchWithAuth.js";
 import { getOptions } from "../../utils/misc/fetchOptions.js";
+import { validateGrantedDays } from "../../utils/validators/numberValidators.js";
 
 export function PaymentsPage() {
     // Destructuring useForm custom hook to handle this page form
@@ -46,7 +47,7 @@ export function PaymentsPage() {
     // Handler to calc end_date through duration_days, days remaining and start date
     const handlerDurationDaysBlur = () => {
         // Get the remaining days and adds them to the granted days value
-        const grantedDays = Number(form.duration_days) || 0;
+        const grantedDays = validateGrantedDays(Number(form.duration_days) || 0);
         const remainingDays = Number(customerStatusInfo.days_remaining) || 0;
         const totalRemainingDays = String(grantedDays + remainingDays);
         // Set the final values in the corresponding fields
