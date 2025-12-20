@@ -38,16 +38,20 @@ export function PaymentsPage() {
         message: ''
     });
 
-    // Handler to calc end_date through duration_days and days remaining
-    const handlerEndDateBlur = () => {
-        // Obtiene los days restantes y se computa con el valor de los days que se van a otorgar
+    // Handler to calc end_date through start date
+    const handlerStartDateBlur = () => {
+        customSetForm('end_date', calcEndDate(form.start_date, form.duration_days));
+    };
+
+    // Handler to calc end_date through duration_days, days remaining and start date
+    const handlerDurationDaysBlur = () => {
+        // Get the remaining days and adds them to the granted days value
         const grantedDays = Number(form.duration_days) || 0;
         const remainingDays = Number(customerStatusInfo.days_remaining) || 0;
         const totalRemainingDays = String(grantedDays + remainingDays);
-        // Setea los valores finales en los campos correspondientes
+        // Set the final values in the corresponding fields
         customSetForm('duration_days', totalRemainingDays);
         customSetForm('end_date', calcEndDate(form.start_date, totalRemainingDays));
-        // customSetForm('end_date', calcEndDate(form.start_date, form.duration_days)); // anterior
     };
 
     // Handler to delete the amount currency format and get a raw value to API
@@ -117,14 +121,7 @@ export function PaymentsPage() {
         }
     };
 
-    // TODO: calcular automáticamente la fecha de terminación y los días de duración, teniendo en cuenta los days_remaining que trae la
-    //  api. Se podría modificar la lógica dentro del method handlerEndDateBlur para que primero se sobrescriban los días de duración, sumándole
-    //  el valor de los days_remaining y luego ya el cálculo del end_date se realiza con la función que ya hemos creado calcEndDate. De esta
-    //  manera se setean correctamente tanto los campos fecha de terminación y los días de duración de la membresía. Hay que tener en cuenta
-    //  que, pueden crear residuos cuando cambiemos de es primer pago a no es primer pago, asi que debería evaluarse este escenario,
-    //  aunque creo que como habrá dos handlers diferentes dependiendo de si es renovación o no, entonces allí se manejaría,
-    //  porque los días restantes solo se manejan en el escenario de renovación, cuando es primer pago simplemente al backend no
-    //  se le envía esta información, sino directamente la información de la transacción.
+    // TODO: - NOTA - habrá dos handlers para manejar la lógica del envío del pago, un handler para renovación y otro para inscripción inicial!
 
     return (
         <>
@@ -171,10 +168,10 @@ export function PaymentsPage() {
                                         </DefaultSelect>
                                     </div>
                                     <div className={styles.inputBox}>
-                                        <DefaultInput name={'start_date'} value={form.start_date} onChange={handlerSetForm} onBlur={handlerEndDateBlur} text={'Fecha de inicio:'} type={'date'} htmlFor={'start-date'}/>
+                                        <DefaultInput name={'start_date'} value={form.start_date} onChange={handlerSetForm} onBlur={handlerStartDateBlur} text={'Fecha de inicio:'} type={'date'} htmlFor={'start-date'}/>
                                     </div>
                                     <div className={styles.inputBox}>
-                                        <DefaultInput name={'duration_days'} value={form.duration_days} onChange={handlerSetForm} onBlur={handlerEndDateBlur} text={'Vigencia (en días):'} type={'number'} htmlFor={'days-membership'}/>
+                                        <DefaultInput name={'duration_days'} value={form.duration_days} onChange={handlerSetForm} onBlur={handlerDurationDaysBlur} text={'Vigencia (en días):'} type={'number'} htmlFor={'days-membership'}/>
                                     </div>
                                     <div className={styles.inputBox}>
                                         <DefaultInput name={'end_date'} value={form.end_date} onChange={handlerSetForm} text={'Fecha de vencimiento:'} type={'date'} htmlFor={'end-date'}
