@@ -44,8 +44,12 @@ export function PaymentsPage() {
         customSetForm('end_date', calcEndDate(form.start_date, form.duration_days));
     };
 
+    // Implement state to store the last duration_days value and optimize end_date calculation
+    const [lastDurationDays, setLastDurationDays] = useState(null);
+
     // Handler to calc end_date through duration_days, days remaining and start date
     const handlerDurationDaysBlur = () => {
+        if (lastDurationDays === form.duration_days) return;
         // Get the remaining days and adds them to the granted days value
         const grantedDays = validateGrantedDays(Number(form.duration_days) || 0);
         const remainingDays = Number(customerStatusInfo.days_remaining) || 0;
@@ -53,6 +57,7 @@ export function PaymentsPage() {
         // Set the final values in the corresponding fields
         customSetForm('duration_days', totalRemainingDays);
         customSetForm('end_date', calcEndDate(form.start_date, totalRemainingDays));
+        setLastDurationDays(totalRemainingDays);
     };
 
     // Handler to delete the amount currency format and get a raw value to API
@@ -123,6 +128,12 @@ export function PaymentsPage() {
     };
 
     // TODO: - NOTA - habrá dos handlers para manejar la lógica del envío del pago, un handler para renovación y otro para inscripción inicial!
+    // Handler to process payment transactions. Handles two scenarios: membership renewals for existing customers and initial enrollment payments for new customers
+    const handlerPayment = () => {
+        alert(JSON.stringify(form)); // TESTING CJ
+    };
+
+    // TODO: verificar que otros campos se deberían validar, aunque creo que ninguno, ya que no los demás inputs ya están formateados o son de tipo select... entonces empezar a construir la lógica de envío del formulario al backend para registrar el pago de un cliente y por ende activar la membresía. Revisar en Yaak que es lo que necesita el backend y en que formato, pero creo que todo debe ser enviado como string, hasta las llaves foráneas, toca comprobar esto...
 
     return (
         <>
@@ -218,7 +229,7 @@ export function PaymentsPage() {
                                                   htmlFor={'description'}/>
                                 </div>
                                 <div className={`${styles.inputBox} ${styles.buttonBox}`}>
-                                    <DefaultButton text={'Procesar Pago'} onClick={() => {console.log(form)}}/>
+                                    <DefaultButton text={'Procesar Pago'} onClick={handlerPayment}/>
                                 </div>
                             </div>
                             {error.status && <h5>{error.message}</h5>}
