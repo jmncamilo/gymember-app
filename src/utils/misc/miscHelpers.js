@@ -6,7 +6,7 @@ export const checkRequestData = obj => {
 };
 
 // Validates that specified keys in an object contain non-empty string values
-export const isValidRequest = (obj = {}, keysToValidate = []) => {
+export const validateRequiredFields = (obj = {}, keysToValidate = []) => {
     if (
         !obj ||
         typeof obj !== 'object' ||
@@ -17,4 +17,28 @@ export const isValidRequest = (obj = {}, keysToValidate = []) => {
     // Iterate through the required keys to check for empty values
     const hasEmptyValues = keysToValidate.some(key => !obj?.[key]?.trim());
     return !hasEmptyValues;
+};
+
+// Normalizes selected object fields by converting their values to strings
+export const normalizeObjectFields = (obj = {}, keysToNormalize = []) => {
+    if (
+        !obj ||
+        typeof obj !== 'object' ||
+        !Array.isArray(keysToNormalize) ||
+        keysToNormalize.length === 0
+    ) {
+        return false;
+    }
+
+    // Build a map of normalized fields converted to strings
+    const normalizedFields = keysToNormalize.reduce((acc, key) => {
+        acc[key] = String(obj?.[key]);
+        return acc;
+    }, {});
+
+    // Merge normalized fields back into the original object
+    return {
+        ...obj,
+        ...normalizedFields
+    };
 };

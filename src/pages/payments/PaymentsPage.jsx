@@ -12,6 +12,7 @@ import { formatCurrency, removeCurrencyFormat } from "../../utils/formatters/amo
 import { useFetchWithAuth } from "../../hooks/useFetchWithAuth.js";
 import { getOptions } from "../../utils/misc/fetchOptions.js";
 import { validateGrantedDays } from "../../utils/validators/numberValidators.js";
+import { normalizeObjectFields, validateRequiredFields } from "../../utils/misc/miscHelpers.js";
 
 export function PaymentsPage() {
     // Destructuring useForm custom hook to handle this page form
@@ -130,8 +131,25 @@ export function PaymentsPage() {
     // TODO: - NOTA - habrá dos handlers para manejar la lógica del envío del pago, un handler para renovación y otro para inscripción inicial!
     // Handler to process payment transactions. Handles two scenarios: membership renewals for existing customers and initial enrollment payments for new customers
     const handlerPayment = () => {
-        // Verifica que los campos que necesita el servidor realmente se envíen diligenciados (no vacíos)
-        alert(JSON.stringify(form)); // TESTING CJ
+        // TODO: ver como construir los dos escenarios planteados arriba, dependiendo de si el cliente es nuevo o está renovando, el código tomará un camino u otro. Quizá integrar los das funciones creadas para normalizar y validar los campos requeridos, donde la función integradora reciba el objeto, unas claves a filtrar, claves a normalizar y claves a validar, de esta manera la lógica queda unificada y se limpia el código
+        // Sanitizes specific object keys before sending to the backend to ensure secure validation
+        const objRequest = normalizeObjectFields(form, ['customer_id_fk']);
+        // Validates that all server-required fields are properly filled before submission
+        const requiredFields = [
+            'nuip',
+            'membership_type',
+            'start_date',
+            'duration_days',
+            'end_date',
+            'transaction_category',
+            'transaction_type',
+            'amount',
+            'payment_method',
+            'customer_id_fk'
+        ]; // TODO: poner esto en otro archivo que se encargue de precisamente de almacenar los campos requeridos por cada vista
+        console.log(objRequest);
+        const isValidRequest = validateRequiredFields(objRequest, requiredFields);
+        alert(isValidRequest ? 'Listo pa envíar...' : 'Falla el envío...'); // TESTING CJ
     };
 
     // TODO: verificar que otros campos se deberían validar, aunque creo que ninguno, ya que no los demás inputs ya están formateados o son de tipo select... entonces empezar a construir la lógica de envío del formulario al backend para registrar el pago de un cliente y por ende activar la membresía. Revisar en Yaak que es lo que necesita el backend y en que formato, pero creo que todo debe ser enviado como string, hasta las llaves foráneas, toca comprobar esto...
