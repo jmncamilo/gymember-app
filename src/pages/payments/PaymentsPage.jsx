@@ -130,6 +130,7 @@ export function PaymentsPage() {
     // TODO: - NOTA - habrá dos handlers para manejar la lógica del envío del pago, un handler para renovación y otro para inscripción inicial!
     // Handler to process payment transactions. Handles two scenarios: membership renewals for existing customers and initial enrollment payments for new customers
     const handlerPayment = () => {
+        // Verifica que los campos que necesita el servidor realmente se envíen diligenciados (no vacíos)
         alert(JSON.stringify(form)); // TESTING CJ
     };
 
