@@ -152,7 +152,7 @@ export function PaymentsPage() {
         alert(isValidRequest ? 'Listo pa envíar...' : 'Falla el envío...'); // TESTING CJ
     };
 
-    // TODO: verificar que otros campos se deberían validar, aunque creo que ninguno, ya que no los demás inputs ya están formateados o son de tipo select... entonces empezar a construir la lógica de envío del formulario al backend para registrar el pago de un cliente y por ende activar la membresía. Revisar en Yaak que es lo que necesita el backend y en que formato, pero creo que todo debe ser enviado como string, hasta las llaves foráneas, toca comprobar esto...
+    // TODO: Revisar en Yaak que es lo que necesita el backend y en que formato, pero creo que todo debe ser enviado como string, hasta las llaves foráneas, toca comprobar esto...
 
     return (
         <>

@@ -42,3 +42,19 @@ export const normalizeObjectFields = (obj = {}, keysToNormalize = []) => {
         ...normalizedFields
     };
 };
+
+// Creates a new object containing only the specified keys from the source object
+export const filterObjectByKeys = (source = {}, keys = []) => {
+    if (
+        !(source && Object.keys(source).length) ||
+        !(Array.isArray(keys) && keys.length)
+    ) return null;
+
+
+    return keys.reduce((result, key) => {
+        if (key in source) {
+            result[key] = source[key];
+        }
+        return result;
+    }, {});
+};
