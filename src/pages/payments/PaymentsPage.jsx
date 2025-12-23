@@ -12,7 +12,12 @@ import { formatCurrency, removeCurrencyFormat } from "../../utils/formatters/amo
 import { useFetchWithAuth } from "../../hooks/useFetchWithAuth.js";
 import { getOptions } from "../../utils/misc/fetchOptions.js";
 import { validateGrantedDays } from "../../utils/validators/numberValidators.js";
-import { normalizeObjectFields, validateRequiredFields, filterObjectByKeys } from "../../utils/misc/miscHelpers.js";
+import {
+    normalizeObjectFields,
+    validateRequiredFields,
+    filterObjectByKeys,
+    removeValuesFromArray
+} from "../../utils/misc/miscHelpers.js";
 import { API_FIELDS } from "../../utils/constants/apiFields.js";
 
 export function PaymentsPage() {
@@ -129,44 +134,21 @@ export function PaymentsPage() {
         }
     };
 
-    // TODO: - NOTA - habrá dos handlers para manejar la lógica del envío del pago, un handler para renovación y otro para inscripción inicial!
-    // Handler to process payment transactions. Handles two scenarios: membership renewals for existing customers and initial enrollment payments for new customers
-    const handlerPayment = () => {
-        // TODO: ver como construir los dos escenarios planteados arriba, dependiendo de si el cliente es nuevo o está renovando, el código tomará un camino u otro. Quizá integrar los das funciones creadas para normalizar y validar los campos requeridos, donde la función integradora reciba el objeto, unas claves a filtrar, claves a normalizar y claves a validar, de esta manera la lógica queda unificada y se limpia el código
-        // Sanitizes specific object keys before sending to the backend to ensure secure validation
-        const objRequest = normalizeObjectFields(form, ['customer_id_fk']);
-        // Validates that all server-required fields are properly filled before submission
-        const requiredFields = [
-            'nuip',
-            'membership_type',
-            'start_date',
-            'duration_days',
-            'end_date',
-            'transaction_category',
-            'transaction_type',
-            'amount',
-            'payment_method',
-            'customer_id_fk'
-        ]; // TODO: poner esto en otro archivo que se encargue de precisamente de almacenar los campos requeridos por cada vista
-        console.log(objRequest);
-        const isValidRequest = validateRequiredFields(objRequest, requiredFields);
-        alert(isValidRequest ? 'Listo pa envíar...' : 'Falla el envío...'); // TESTING CJ
-    };
-
     // Handler to process payment transaction for a membership that is a first payment
     const handlerFirstPayment = () => {
         // Filter the form object to include only the fields required for first-time payment processing
         const filterFormObj = filterObjectByKeys(form, API_FIELDS.FIRST_TRANSACTION);
         // Sanitizes specific object keys before sending to the backend to ensure secure validation
-        const normalizeFormObj = normalizeObjectFields(filterFormObj, ['customer_id_fk']);
+        const requestPayload = normalizeObjectFields(filterFormObj, ['customer_id_fk']);
         // Final validation of the object before sending it to the API
-            // TODO: crear un extractor de valor dentro array api fields para verificar únicamente los campos que deben ser string con valores truthy
-        const requestObj = validateRequiredFields(normalizeFormObj, API_FIELDS.FIRST_TRANSACTION);
+        const isValidRequest = validateRequiredFields(requestPayload, removeValuesFromArray(API_FIELDS.FIRST_TRANSACTION, ['description']));
+        if (!isValidRequest) return alert('No está listo el objeto para enviar la solicitud al backend...');
+        console.log(requestPayload);
     };
 
     // Handler to process payment transaction for a membership that is a renewal
     const handlerRenewalPayment = () => {
-
+        alert('Este es el handler para la renovación del cliente...');
     };
 
 
@@ -264,7 +246,10 @@ export function PaymentsPage() {
                                                   htmlFor={'description'}/>
                                 </div>
                                 <div className={`${styles.inputBox} ${styles.buttonBox}`}>
-                                    <DefaultButton text={'Procesar Pago'} onClick={handlerPayment}/>
+                                    <DefaultButton
+                                        text={'Procesar Pago'}
+                                        onClick={() => (isFirstPayment === '1' ? handlerFirstPayment() : handlerRenewalPayment())}
+                                    />
                                 </div>
                             </div>
                             {error.status && <h5>{error.message}</h5>}
