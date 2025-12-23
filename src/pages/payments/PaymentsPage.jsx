@@ -12,7 +12,8 @@ import { formatCurrency, removeCurrencyFormat } from "../../utils/formatters/amo
 import { useFetchWithAuth } from "../../hooks/useFetchWithAuth.js";
 import { getOptions } from "../../utils/misc/fetchOptions.js";
 import { validateGrantedDays } from "../../utils/validators/numberValidators.js";
-import { normalizeObjectFields, validateRequiredFields } from "../../utils/misc/miscHelpers.js";
+import { normalizeObjectFields, validateRequiredFields, filterObjectByKeys } from "../../utils/misc/miscHelpers.js";
+import { API_FIELDS } from "../../utils/constants/apiFields.js";
 
 export function PaymentsPage() {
     // Destructuring useForm custom hook to handle this page form
@@ -152,7 +153,22 @@ export function PaymentsPage() {
         alert(isValidRequest ? 'Listo pa envíar...' : 'Falla el envío...'); // TESTING CJ
     };
 
-    // TODO: Revisar en Yaak que es lo que necesita el backend y en que formato, pero creo que todo debe ser enviado como string, hasta las llaves foráneas, toca comprobar esto...
+    // Handler to process payment transaction for a membership that is a first payment
+    const handlerFirstPayment = () => {
+        // Filter the form object to include only the fields required for first-time payment processing
+        const filterFormObj = filterObjectByKeys(form, API_FIELDS.FIRST_TRANSACTION);
+        // Sanitizes specific object keys before sending to the backend to ensure secure validation
+        const normalizeFormObj = normalizeObjectFields(filterFormObj, ['customer_id_fk']);
+        // Final validation of the object before sending it to the API
+            // TODO: crear un extractor de valor dentro array api fields para verificar únicamente los campos que deben ser string con valores truthy
+        const requestObj = validateRequiredFields(normalizeFormObj, API_FIELDS.FIRST_TRANSACTION);
+    };
+
+    // Handler to process payment transaction for a membership that is a renewal
+    const handlerRenewalPayment = () => {
+
+    };
+
 
     return (
         <>

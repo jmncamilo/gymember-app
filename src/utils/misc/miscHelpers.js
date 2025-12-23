@@ -27,7 +27,7 @@ export const normalizeObjectFields = (obj = {}, keysToNormalize = []) => {
         !Array.isArray(keysToNormalize) ||
         keysToNormalize.length === 0
     ) {
-        return false;
+        return null;
     }
 
     // Build a map of normalized fields converted to strings
@@ -57,4 +57,11 @@ export const filterObjectByKeys = (source = {}, keys = []) => {
         }
         return result;
     }, {});
+};
+
+// Returns a new array excluding all values present in the removal list
+export const removeValuesFromArray = (source, valuesToRemove) => {
+    if (!Array.isArray(source) || !Array.isArray(valuesToRemove)) return null;
+
+    return source.filter(item => !valuesToRemove.includes(item));
 };
