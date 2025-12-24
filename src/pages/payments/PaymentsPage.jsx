@@ -10,7 +10,7 @@ import { INITIAL_FORM_VALUES, INITIAL_CUSTOMER_STATUS_VALUES } from "./paymentsF
 import { calcEndDate } from "../../utils/calculators/calcEndDate.js";
 import { formatCurrency, removeCurrencyFormat } from "../../utils/formatters/amountFormatters.js";
 import { useFetchWithAuth } from "../../hooks/useFetchWithAuth.js";
-import { getOptions } from "../../utils/misc/fetchOptions.js";
+import { getOptions, optionsWithBody } from "../../utils/misc/fetchOptions.js";
 import { validateGrantedDays } from "../../utils/validators/numberValidators.js";
 import {
     normalizeObjectFields,
@@ -24,8 +24,20 @@ export function PaymentsPage() {
     // Destructuring useForm custom hook to handle this page form
     const { form, resetForm, handlerSetForm, customSetForm } = useForm(INITIAL_FORM_VALUES);
 
-    // Calling custom hook to fetching validating auth
-    const { isLoading, executeFetchWithAuth } = useFetchWithAuth(`/customers/find/${form.nuip}`, getOptions);
+    // Using custom hook to fetching validating nuip
+    const { isLoading: isLoadingFindByNuip, executeFetchWithAuth } = useFetchWithAuth(`/customers/find/${form.nuip}`, getOptions);
+
+    // Using custom hook to fetch customer renewal payment
+    const {
+        isLoading: isLoadingRenewalPayment,
+        executeFetchWithAuth: executeRenewalPaymentFetchWithAuth
+    } = useFetchWithAuth(`/customers/renew/transaction`, optionsWithBody({}, 'POST'));
+
+    // Using custom hook to fetch customer first payment
+    const {
+        isLoading: isLoadingFirstPayment,
+        executeFetch: executeFirstPaymentFetchWithAuth
+    } = useFetchWithAuth(`/customers/transaction`, optionsWithBody({}, 'POST'));
 
     // Handling customer data to show remaining days and membership status
     const [customerStatusInfo, setCustomerStatusInfo] = useState(INITIAL_CUSTOMER_STATUS_VALUES);
@@ -135,7 +147,13 @@ export function PaymentsPage() {
     };
 
     // Handler to process payment transaction for a membership that is a first payment
-    const handlerFirstPayment = () => {
+    const handlerFirstPayment = async () => {
+        // Clear any previous error messages before processing the first payment
+        setError({
+            status: false,
+            message: ''
+        });
+
         try {
             // Filter the form object to include only the fields required for first-time payment processing
             const filterFormObj = filterObjectByKeys(form, API_FIELDS.FIRST_TRANSACTION);
@@ -145,14 +163,25 @@ export function PaymentsPage() {
             const isValidRequest = validateRequiredFields(requestPayload, removeValuesFromArray(API_FIELDS.FIRST_TRANSACTION, ['description']));
             if (!isValidRequest) return alert('No está listo el objeto para enviar la solicitud de primer pago...');
             console.log('Primer pago' ,requestPayload);
+
+            // Fetching process
+            const result = await executeFirstPaymentFetchWithAuth(optionsWithBody(requestPayload, 'POST'));
+            // If the request is successful this happens. If not, the flow is redirected to the catch block due to the executeFetch design.
+            alert(`${result?.message}`); // This should be in a modal
+            console.log('First payment process finished...');
+            resetForm();
+
         } catch (err) {
             console.log(err);
-            alert('Ocurrió un error durante el proceso de primer pago...');
+            setError({
+                status: true,
+                message: '❌ ¡Oops, algo salió mal! Intenta de nuevo...'
+            });
         }
     };
 
     // Handler to process payment transaction for a membership that is a renewal
-    const handlerRenewalPayment = () => {
+    const handlerRenewalPayment = async () => {
         try {
             // Filter the form object to include only the fields required for first-time payment processing
             const filterFormObj = filterObjectByKeys(form, API_FIELDS.RENEW_TRANSACTION);
