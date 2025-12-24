@@ -136,19 +136,36 @@ export function PaymentsPage() {
 
     // Handler to process payment transaction for a membership that is a first payment
     const handlerFirstPayment = () => {
-        // Filter the form object to include only the fields required for first-time payment processing
-        const filterFormObj = filterObjectByKeys(form, API_FIELDS.FIRST_TRANSACTION);
-        // Sanitizes specific object keys before sending to the backend to ensure secure validation
-        const requestPayload = normalizeObjectFields(filterFormObj, ['customer_id_fk']);
-        // Final validation of the object before sending it to the API
-        const isValidRequest = validateRequiredFields(requestPayload, removeValuesFromArray(API_FIELDS.FIRST_TRANSACTION, ['description']));
-        if (!isValidRequest) return alert('No está listo el objeto para enviar la solicitud al backend...');
-        console.log(requestPayload);
+        try {
+            // Filter the form object to include only the fields required for first-time payment processing
+            const filterFormObj = filterObjectByKeys(form, API_FIELDS.FIRST_TRANSACTION);
+            // Sanitizes specific object keys before sending to the backend to ensure secure validation
+            const requestPayload = normalizeObjectFields(filterFormObj, ['customer_id_fk']);
+            // Final validation of the object before sending it to the API
+            const isValidRequest = validateRequiredFields(requestPayload, removeValuesFromArray(API_FIELDS.FIRST_TRANSACTION, ['description']));
+            if (!isValidRequest) return alert('No está listo el objeto para enviar la solicitud de primer pago...');
+            console.log('Primer pago' ,requestPayload);
+        } catch (err) {
+            console.log(err);
+            alert('Ocurrió un error durante el proceso de primer pago...');
+        }
     };
 
     // Handler to process payment transaction for a membership that is a renewal
     const handlerRenewalPayment = () => {
-        alert('Este es el handler para la renovación del cliente...');
+        try {
+            // Filter the form object to include only the fields required for first-time payment processing
+            const filterFormObj = filterObjectByKeys(form, API_FIELDS.RENEW_TRANSACTION);
+            // Sanitizes specific object keys before sending to the backend to ensure secure validation
+            const requestPayload = normalizeObjectFields(filterFormObj, ['customer_id_fk']);
+            // Final validation of the object before sending it to the API
+            const isValidRequest = validateRequiredFields(requestPayload, removeValuesFromArray(API_FIELDS.RENEW_TRANSACTION, ['description']));
+            if (!isValidRequest) return alert('No está listo el objeto para enviar la solicitud de pago por renovación...');
+            console.log('Renovación', requestPayload);
+        } catch (err) {
+            console.log(err);
+            alert('Ocurrió un error durante el proceso de pago por renovación...');
+        }
     };
 
 
