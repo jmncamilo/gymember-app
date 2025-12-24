@@ -25,12 +25,15 @@ export function PaymentsPage() {
     const { form, resetForm, handlerSetForm, customSetForm } = useForm(INITIAL_FORM_VALUES);
 
     // Using custom hook to fetching validating nuip
-    const { isLoading: isLoadingFindByNuip, executeFetchWithAuth } = useFetchWithAuth(`/customers/find/${form.nuip}`, getOptions);
+    const {
+        isLoading: isLoadingFindByNuip,
+        executeFetchWithAuth
+    } = useFetchWithAuth(`/customers/find/${form.nuip}`, getOptions);
 
     // Using custom hook to fetch customer renewal payment
     const {
         isLoading: isLoadingRenewalPayment,
-        executeFetchWithAuth: executeRenewalPaymentFetchWithAuth
+        executeFetch: executeRenewalPaymentFetchWithAuth
     } = useFetchWithAuth(`/customers/renew/transaction`, optionsWithBody({}, 'POST'));
 
     // Using custom hook to fetch customer first payment
@@ -166,9 +169,9 @@ export function PaymentsPage() {
 
             // Fetching process
             const result = await executeFirstPaymentFetchWithAuth(optionsWithBody(requestPayload, 'POST'));
-            // If the request is successful this happens. If not, the flow is redirected to the catch block due to the executeFetch design.
+                // If the request is successful this happens. If not, the flow is redirected to the catch block due to the executeFetch design.
             alert(`${result?.message}`); // This should be in a modal
-            console.log('First payment process finished...');
+            console.log('Proceso de primer pago finalizado...');
             resetForm();
 
         } catch (err) {
@@ -182,6 +185,12 @@ export function PaymentsPage() {
 
     // Handler to process payment transaction for a membership that is a renewal
     const handlerRenewalPayment = async () => {
+        // Clear any previous error messages before processing the first payment
+        setError({
+            status: false,
+            message: ''
+        });
+
         try {
             // Filter the form object to include only the fields required for first-time payment processing
             const filterFormObj = filterObjectByKeys(form, API_FIELDS.RENEW_TRANSACTION);
@@ -191,9 +200,19 @@ export function PaymentsPage() {
             const isValidRequest = validateRequiredFields(requestPayload, removeValuesFromArray(API_FIELDS.RENEW_TRANSACTION, ['description']));
             if (!isValidRequest) return alert('No está listo el objeto para enviar la solicitud de pago por renovación...');
             console.log('Renovación', requestPayload);
+
+            // Fetching process
+            const result = await executeRenewalPaymentFetchWithAuth(optionsWithBody(requestPayload, 'POST'));
+            alert(`${result?.message}`); // This should be in a modal
+            console.log('Proceso de pago por renovación finalizado...');
+            resetForm();
+
         } catch (err) {
             console.log(err);
-            alert('Ocurrió un error durante el proceso de pago por renovación...');
+            setError({
+                status: true,
+                message: '❌ ¡Oops, algo salió mal! Intenta de nuevo la renovación...'
+            });
         }
     };
 
