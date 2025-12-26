@@ -15,7 +15,7 @@ import phoneIcon from "../../assets/icons/table-phone.svg";
 /** @type {string} */
 import profilePicIcon from "../../assets/icons/user-nopic.png";
 import { StatusBadge } from "../../components/badges/StatusBadge.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DefaultInput } from "../../components/inputs/default/DefaultInput.jsx";
 import { DefaultButton } from "../../components/buttons/default/DefaultButton.jsx";
 import { DefaultSelect } from "../../components/inputs/select/DefaultSelect.jsx";
@@ -23,8 +23,20 @@ import { UsersRowTable } from "./UsersRowTable.jsx";
 import { useForm } from "../../hooks/useForm.js";
 import { INITIAL_FORM_VALUES } from "./usersFormInitialValues.js";
 import { membershipTypeFormatter } from "../../utils/formatters/membershipTypeFormatter.js";
+import { useFetchWithAuth } from "../../hooks/useFetchWithAuth.js";
+import { getOptions } from "../../utils/misc/fetchOptions.js";
+import { useNavigate } from "react-router-dom";
+import { Loader } from "../../components/loader/Loader.jsx";
 
 export function UsersPage() {
+    // Hook for programmatic route navigation
+    const navigate = useNavigate();
+
+    // State to control the loader during the initial data load
+    const [loadingState, setLoadingState] = useState({
+        firstLoading: true,
+        generalLoading: false
+    });
 
     // Simulating API
     const data = {
@@ -55,6 +67,36 @@ export function UsersPage() {
     // Custom hook to controlling form
     const { form, handlerSetForm, customSetForm, resetForm } = useForm(INITIAL_FORM_VALUES);
 
+    // Custom hook to fetch customers data
+    const {data: customersData, executeFetchWithAuth: executeCustomersFetchWithAuth} = useFetchWithAuth('/customers', getOptions);
+
+    // Effect to load all customers data by executing the custom fetch hook below
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await executeCustomersFetchWithAuth();
+                if (!result.success) {
+                    alert('No se pudo cargar la información de los clientes...');
+                    navigate("/acceso", { replace: true });
+                }
+                // TESTING CJ
+                alert(result?.data.message ?? '¡Clientes encontrados!');
+                console.log(result?.data?.data ?? 'Error imprimiendo la data de los clientes...');
+            } catch (err) {
+                console.error(err);
+                navigate("/acceso", { replace: true });
+            } finally {
+                setLoadingState(prev => ({
+                    ...prev,
+                    firstLoading: false
+                }));
+            }
+        };
+
+        fetchData().catch(() => {});
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // TODO: continuar con el renderizado de las filas de la tabla. Falta aún setear la data que se obtiene en el useEffect de arriba.
     // TODO: cuando se empiece a hacer el consumo de la api, el input para buscar cc se debe manejar, de momento no se ha hecho nada.
 
     return (
@@ -251,6 +293,9 @@ export function UsersPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Loader displayed */}
+            { (loadingState.firstLoading || loadingState.generalLoading) && <Loader /> }
         </>
     );
 }
