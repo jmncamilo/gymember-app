@@ -17,6 +17,11 @@ class CustomersController {
     constructor() {
     }
 
+    async getAllCustomers(req, res) {
+        // This method retrieves all information about customers registered
+
+    }
+
     async atomicEnrollCustomer(req, res) {
         // This method is used to enroll a new customer and assign an initial membership type
 

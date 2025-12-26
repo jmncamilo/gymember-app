@@ -75,6 +75,7 @@ class CustomersModel {
         return result?.affectedRows === 0 ? null : result;
     }
 
+    // Update information about the customer membership
     static async updateCustomerMembership(connection = null, data) {
         const executor = connection || pool;
         const query = `UPDATE Customers_Memberships
@@ -93,7 +94,46 @@ class CustomersModel {
         return result?.affectedRows === 0 ? null : result;
     }
 
-    // Get all customer data including remaining membership days by nuip in specific gym (fk)
+    // Get all customers data for a specific gym (fk)
+    static async getAllCustomersData(gym_id_fk) {
+        const query = `SELECT
+                           g.gym_name,
+                           c.nuip AS nuip,
+                           c.first_name AS first_name,
+                           c.first_last_name AS first_last_name,
+                           c.email AS email,
+                           c.phone_number AS phone_number,
+                           c.profile_image_url AS profile_image_url,
+                           cd.gender AS gender,
+                           cd.birthdate AS birthdate,
+                           cd.age AS age,
+                           cd.address AS address,
+                           cd.city AS city,
+                           cd.emergency_phone AS emergency_phone,
+                           cd.additional_info AS additional_info,
+                           cm.membership_type AS membership_type,
+                           cm.status AS status,
+                           cm.duration_days AS duration_days,
+                           cm.start_date AS start_date,
+                           cm.end_date AS end_date,
+                           c.created_at AS registered_at,
+                           e.employee_name AS registered_by,
+                           e.role AS employee_role
+                       FROM Customers c
+                           INNER JOIN Gym_Dev_Accounts g
+                               ON c.gym_id_fk = g.id
+                           INNER JOIN Employees e
+                               ON c.enrolling_employee_id_fk = e.id
+                           INNER JOIN Customers_Details cd
+                               ON c.id = cd.customer_id_fk
+                           INNER JOIN Customers_Memberships cm
+                               ON c.id = cm.customer_id_fk
+                       WHERE c.gym_id_fk = ?`;
+        const [result] = await pool.execute(query, [gym_id_fk]);
+        return result.length === 0 ? null : result;
+    }
+
+    // Get customer data by nuip including remaining membership days for a specific gym (fk)
     static async getCustomerByNuip(nuip, gym_id_fk) {
         const query = `SELECT
                            c.id AS id_customer,
