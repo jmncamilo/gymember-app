@@ -58,7 +58,7 @@ class MasterController {
         //  there isn't an identical access code in the same gym
         const { gym_id_fk, nuip, employee_name, role, plain_access_code, email, phone_number } = req.body;
         try {
-            // Llamar al modelo
+            // Calling the model
             const result = await EmployeesModel.createNewEmployee(gym_id_fk, nuip, employee_name, role, plain_access_code, email, phone_number);
             if(result === null) {
                 return res.status(500).json({

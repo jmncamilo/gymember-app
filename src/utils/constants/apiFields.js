@@ -1,3 +1,4 @@
+// This file contains arrays with the required column names for API endpoints
 export const API_FIELDS = {
     // POST /customers/renew/transaction
     RENEW_TRANSACTION: [

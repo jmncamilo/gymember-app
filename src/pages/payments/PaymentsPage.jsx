@@ -216,6 +216,8 @@ export function PaymentsPage() {
         }
     };
 
+    // TODO: Crear el modal reutilizable para cuando se ejecuten procesos correctamente...
+
 
     return (
         <>
