@@ -97,7 +97,7 @@ class CustomersModel {
     // Get all customers data for a specific gym (fk)
     static async getAllCustomersData(gym_id_fk) {
         const query = `SELECT
-                           g.gym_name,
+                           g.gym_name AS gym_name,
                            c.nuip AS nuip,
                            c.first_name AS first_name,
                            c.first_last_name AS first_last_name,

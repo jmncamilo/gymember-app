@@ -8,7 +8,8 @@ const {
     insertCustomerMembership,
     membershipStatusToActive,
     getCustomerByNuip,
-    updateCustomerMembership
+    updateCustomerMembership,
+    getAllCustomersData
 } = require("../models/customersModel.js");
 const { insertCustomerTransaction } = require('../models/transactionModel.js');
 
@@ -19,7 +20,33 @@ class CustomersController {
 
     async getAllCustomers(req, res) {
         // This method retrieves all information about customers registered
+        try {
+            // Get gym id
+            const gym_id_fk = req.gym.id;
 
+            // Execute query and validate data
+            const data = await getAllCustomersData(gym_id_fk);
+            if (!data) {
+                return res.status(404).json({
+                    message: 'No se han encontrado clientes...',
+                    success: false
+                });
+            }
+
+            // Send response ok
+            return res.status(200).json({
+                message: '¡Clientes encontrados! Consulta de datos exitosa...',
+                success: true,
+                data
+            });
+
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error en el servidor. Vuelve a intentarlo en unos minutos...',
+                error: err?.message || err,
+                success: false
+            });
+        }
     }
 
     async atomicEnrollCustomer(req, res) {
