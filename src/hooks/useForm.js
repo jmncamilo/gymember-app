@@ -20,13 +20,17 @@ export function useForm(initialValues) {
         }));
     };
 
+    const setFormAll = (newObj) => {
+        setForm({ ...newObj });
+    };
+
     const resetForm = () => setForm(initialValues);
 
     return {
         form,
         handlerSetForm,
         resetForm,
-        customSetForm
+        customSetForm,
+        setFormAll
     }
-
 }
