@@ -14,7 +14,6 @@ import membershipIcon from "../../assets/icons/table-membership.svg";
 import phoneIcon from "../../assets/icons/table-phone.svg";
 /** @type {string} */
 import profilePicIcon from "../../assets/icons/user-nopic.png";
-import { StatusBadge } from "../../components/badges/StatusBadge.jsx";
 import { useEffect, useState } from "react";
 import { DefaultInput } from "../../components/inputs/default/DefaultInput.jsx";
 import { DefaultButton } from "../../components/buttons/default/DefaultButton.jsx";
@@ -22,11 +21,11 @@ import { DefaultSelect } from "../../components/inputs/select/DefaultSelect.jsx"
 import { UsersRowTable } from "./UsersRowTable.jsx";
 import { useForm } from "../../hooks/useForm.js";
 import { INITIAL_FORM_VALUES } from "./usersFormInitialValues.js";
-import { membershipTypeFormatter } from "../../utils/formatters/membershipTypeFormatter.js";
 import { useFetchWithAuth } from "../../hooks/useFetchWithAuth.js";
 import { getOptions } from "../../utils/misc/fetchOptions.js";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../../components/loader/Loader.jsx";
+import { formatDateForDateInput } from "../../utils/formatters/formatDateForDateInput.js";
 
 export function UsersPage() {
     // Hook for programmatic route navigation
@@ -38,27 +37,28 @@ export function UsersPage() {
         generalLoading: false
     });
 
-    // Simulating API
+    // TODO: renombrar esto y modificar el nombre donde es llamado en este archivo...
+    // Fallback data
     const data = {
-        total_customers: 299,
-        nuip: '40441835',
-        first_name: 'Néstor',
-        first_last_name: 'Jiménez',
-        email: 'nealji86@hotmail.com',
-        phone_number: '3132097726',
+        total_customers: 0,
+        nuip: '99999999',
+        first_name: 'Unnamed',
+        first_last_name: 'Unnamed',
+        email: 'unnamed@gymember.co',
+        phone_number: '9999999999',
         profile_image_url: null,
-        birthdate: '1977-03-03',
-        age: '50',
-        address: 'Cra 9A #5B-04 Mi Llanura',
-        city: 'Villavicencio',
-        emergency_phone: '3125853937',
-        additional_info: 'Quiere perder peso.',
-        membership_type: 'Mensual',
-        status: 'active',
+        birthdate: '2000-01-01',
+        age: '99',
+        address: 'Unnamed',
+        city: 'Unnamed',
+        emergency_phone: '9999999999',
+        additional_info: 'Unnamed',
+        membership_type: 'Otro',
+        status: 'cancelled',
         gender: 'm',
-        duration_days: '30',
-        start_date: '2025-04-23',
-        end_date: '2025-05-22'
+        duration_days: '0',
+        start_date: '2000-01-01',
+        end_date: '2000-01-01'
     };
 
     // Custom hook to controlling modal form
@@ -107,13 +107,12 @@ export function UsersPage() {
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     // TODO: cuando se empiece a hacer el consumo de la api, el input para buscar cc se debe manejar, de momento no se ha hecho nada.
-    // TODO: testear que si se esté editando la información del cliente en el modal form correctamente
 
     return (
         <>
             <div className={`defaultContainer ${styles.generalWrapper}`}>
                 <header>
-                    <h1 className={styles.titleStyles}>Lista de Clientes ({data.total_customers})</h1>
+                    <h1 className={styles.titleStyles}>Lista de Clientes ({customersData?.data?.length ?? data.total_customers})</h1>
                     <div className={styles.searchContainer}>
                         <input type="text" name="search_nuip" className={styles.searchInput}
                                placeholder="Buscar cliente por número de documento..."/>
@@ -198,46 +197,46 @@ export function UsersPage() {
                     <div className={styles.titleWrapper}>
                         <h3 className={styles.titleForm}>Editar Datos del Cliente</h3>
                         <div className={styles.profilePicUpload}>
-                            <img src={!data.profile_image_url ? profilePicIcon : data.profile_image_url} alt="Foto de perfil" className={styles.profilePicCircle}/>
+                            <img src={form?.profile_image_url || profilePicIcon} alt="Foto de perfil" className={styles.profilePicCircle}/>
                             <input name={'profile_pic'} type="file" accept="image/*" className={styles.inputFile} title="Subir foto"/>
                         </div>
                     </div>
 
                     <span className={styles.inputWrapper}>
-                        <DefaultInput name={'nuip'} value={form.nuip || data.nuip} onChange={handlerSetForm} text={'Documento de identidad:'} htmlFor={'nuip'} type={'number'}/>
+                        <DefaultInput name={'nuip'} value={form.nuip ?? data.nuip} onChange={handlerSetForm} text={'Documento de identidad:'} htmlFor={'nuip'} type={'number'}/>
                     </span>
                     <span className={styles.inputWrapper}>
-                        <DefaultInput name={'first_name'} value={form.first_name || data.first_name} onChange={handlerSetForm} text={'Nombre(s) del cliente:'} htmlFor={'name'} type={'text'}/>
+                        <DefaultInput name={'first_name'} value={form.first_name ?? data.first_name} onChange={handlerSetForm} text={'Nombre(s) del cliente:'} htmlFor={'name'} type={'text'}/>
                     </span>
                     <span className={styles.inputWrapper}>
-                        <DefaultInput name={'first_last_name'} value={form.first_last_name || data.first_last_name} onChange={handlerSetForm} text={'Apellido(s) del cliente:'} htmlFor={'lastname'} type={'text'}/>
+                        <DefaultInput name={'first_last_name'} value={form.first_last_name ?? data.first_last_name} onChange={handlerSetForm} text={'Apellido(s) del cliente:'} htmlFor={'lastname'} type={'text'}/>
                     </span>
                     <span className={styles.inputWrapper}>
-                        <DefaultInput name={'email'} value={form.email || data.email} onChange={handlerSetForm} text={'Correo electrónico:'} htmlFor={'email'} type={'email'}/>
+                        <DefaultInput name={'email'} value={form.email ?? data.email} onChange={handlerSetForm} text={'Correo electrónico:'} htmlFor={'email'} type={'email'}/>
                     </span>
                     <span className={styles.inputWrapper}>
-                        <DefaultInput name={'phone_number'} value={form.phone_number || data.phone_number} onChange={handlerSetForm} text={'Número de teléfono:'} htmlFor={'phone'} type={'number'}/>
+                        <DefaultInput name={'phone_number'} value={form.phone_number ?? data.phone_number} onChange={handlerSetForm} text={'Número de teléfono:'} htmlFor={'phone'} type={'number'}/>
                     </span>
                     <span className={styles.inputWrapper}>
-                        <DefaultInput name={'birthdate'} value={form.birthdate || data.birthdate} onChange={handlerSetForm} text={'Fecha de nacimiento:'} htmlFor={'birthdate'} type={'date'}/>
+                        <DefaultInput name={'birthdate'} value={formatDateForDateInput(form.birthdate ?? data.birthdate)} onChange={handlerSetForm} text={'Fecha de nacimiento:'} htmlFor={'birthdate'} type={'date'}/>
                     </span>
                     <span className={styles.inputWrapper}>
-                        <DefaultInput name={'age'} value={form.age || data.age} onChange={handlerSetForm} text={'Edad del cliente:'} htmlFor={'age'} type={'number'}/>
+                        <DefaultInput name={'age'} value={form.age ?? data.age} onChange={handlerSetForm} text={'Edad del cliente:'} htmlFor={'age'} type={'number'}/>
                     </span>
                     <span className={styles.inputWrapper}>
-                        <DefaultInput name={'address'} value={form.address || data.address} onChange={handlerSetForm} text={'Dirección domiciliaria:'} htmlFor={'address'} type={'text'}/>
+                        <DefaultInput name={'address'} value={form.address ?? data.address} onChange={handlerSetForm} text={'Dirección domiciliaria:'} htmlFor={'address'} type={'text'}/>
                     </span>
                     <span className={styles.inputWrapper}>
-                        <DefaultInput name={'city'} value={form.city || data.city} onChange={handlerSetForm} text={'Ciudad de nacimiento:'} htmlFor={'city'} type={'text'}/>
+                        <DefaultInput name={'city'} value={form.city ?? data.city} onChange={handlerSetForm} text={'Ciudad de nacimiento:'} htmlFor={'city'} type={'text'}/>
                     </span>
                     <span className={styles.inputWrapper}>
-                        <DefaultInput name={'emergency_phone'} value={form.emergency_phone || data.emergency_phone} onChange={handlerSetForm} text={'Contacto de emergencia:'} htmlFor={'attendant'} type={'number'}/>
+                        <DefaultInput name={'emergency_phone'} value={form.emergency_phone ?? data.emergency_phone} onChange={handlerSetForm} text={'Contacto de emergencia:'} htmlFor={'attendant'} type={'number'}/>
                     </span>
                     <span className={styles.inputWrapper}>
-                        <DefaultInput name={'additional_info'} value={form.additional_info || data.additional_info} onChange={handlerSetForm} text={'Información adicional:'} htmlFor={'comments'} type={'text'}/>
+                        <DefaultInput name={'additional_info'} value={form.additional_info ?? data.additional_info} onChange={handlerSetForm} text={'Información adicional:'} htmlFor={'comments'} type={'text'}/>
                     </span>
                     <span className={styles.inputWrapper}>
-                        <DefaultSelect name={'membership_type'} value={form.membership_type || data.membership_type} onChange={handlerSetForm} text={'Tipo de membresía:'} htmlFor={'type-membership'}>
+                        <DefaultSelect name={'membership_type'} value={form.membership_type ?? data.membership_type} onChange={handlerSetForm} text={'Tipo de membresía:'} htmlFor={'type-membership'}>
                             <option value="" disabled hidden>...</option>
                             <option value="Diario">Pase diario</option>
                             <option value="Semanal">Pase semanal</option>
@@ -251,7 +250,7 @@ export function UsersPage() {
                         </DefaultSelect>
                     </span>
                     <span className={styles.inputWrapper}>
-                        <DefaultSelect name={'status'} value={form.status || data.status} onChange={handlerSetForm} text={'Estado de la membresía:'} htmlFor={'membership-status'}>
+                        <DefaultSelect name={'status'} value={form.status ?? data.status} onChange={handlerSetForm} text={'Estado de la membresía:'} htmlFor={'membership-status'}>
                             <option value="" disabled hidden>...</option>
                             <option value="active" disabled hidden>Activo</option>
                             <option value="trial" disabled hidden>Cortesía</option>
@@ -262,13 +261,13 @@ export function UsersPage() {
                         </DefaultSelect>
                     </span>
                     <span className={styles.inputWrapper}>
-                        <DefaultInput name={'duration_days'} value={data.duration_days} text={'Vigencia de la membresía:'} htmlFor={'days'} type={'number'} readOnly={true}/>
+                        <DefaultInput name={'duration_days'} value={form.duration_days ?? data.duration_days} text={'Vigencia de la membresía:'} htmlFor={'days'} type={'number'} readOnly={true}/>
                     </span>
                     <span className={styles.inputWrapper}>
-                        <DefaultInput name={'start_date'} value={data.start_date} text={'Fecha de inscripción:'} htmlFor={'start'} type={'date'} readOnly={true}/>
+                        <DefaultInput name={'start_date'} value={formatDateForDateInput(form.start_date ?? data.start_date)} text={'Fecha de inscripción:'} htmlFor={'start'} type={'date'} readOnly={true}/>
                     </span>
                     <span className={styles.inputWrapper}>
-                        <DefaultInput name={'end_date'} value={data.end_date} text={'Fecha de expiración:'} htmlFor={'end'} type={'date'} readOnly={true}/>
+                        <DefaultInput name={'end_date'} value={formatDateForDateInput(form.end_date ?? data.end_date)} text={'Fecha de expiración:'} htmlFor={'end'} type={'date'} readOnly={true}/>
                     </span>
                     <div className={styles.buttonsWrapper}>
                         <DefaultButton onClick={() => setModalFormStatus(false)} text={'Cancelar'}/>
