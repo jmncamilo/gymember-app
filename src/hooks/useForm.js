@@ -20,7 +20,7 @@ export function useForm(initialValues) {
         }));
     };
 
-    const setFormAll = (newObj) => {
+    const setFormWithObject = (newObj) => {
         setForm({ ...newObj });
     };
 
@@ -31,6 +31,6 @@ export function useForm(initialValues) {
         handlerSetForm,
         resetForm,
         customSetForm,
-        setFormAll
+        setFormWithObject
     }
 }

@@ -5,11 +5,11 @@ import profilePicIcon from "../../assets/icons/user-nopic.png";
 import { StatusBadge } from "../../components/badges/StatusBadge.jsx";
 import { membershipTypeFormatter } from "../../utils/formatters/membershipTypeFormatter.js";
 
-export function UsersRowTable({ data, setModalFormStatus }) {
+export function UsersRowTable({ data, onEditCustomer }) {
     return (
         <tr>
             <td className={styles.tdTable}>
-                <button onClick={() => setModalFormStatus(true)} className={styles.btnEdit}>
+                <button onClick={onEditCustomer} className={styles.btnEdit}>
                     <img src={editIcon} alt="Editar usuario"/>
                 </button>
             </td>

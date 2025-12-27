@@ -61,11 +61,21 @@ export function UsersPage() {
         end_date: '2025-05-22'
     };
 
+    // Custom hook to controlling modal form
+    const { form, handlerSetForm, setFormWithObject } = useForm(INITIAL_FORM_VALUES);
+
+    // State to track the currently selected customer for editing and to compare modified fields
+    const [selectedCustomer, setSelectedCustomer] = useState(null);
+
     // Controlling modal form
     const [modalFormStatus, setModalFormStatus] = useState(false);
-
-    // Custom hook to controlling form
-    const { form, handlerSetForm, customSetForm, resetForm } = useForm(INITIAL_FORM_VALUES);
+        // Handler to open the modal and set the selected customer data
+    const setModalStatusAndData = (data) => {
+        setModalFormStatus(true); // Open modal
+        setFormWithObject(data); // Load customer data into form
+        setSelectedCustomer(data); // Set current customer
+        console.log('Seteando la data del cliente al abrir el modal', data);
+    };
 
     // Custom hook to fetch customers data
     const {data: customersData, executeFetchWithAuth: executeCustomersFetchWithAuth} = useFetchWithAuth('/customers', getOptions);
@@ -96,7 +106,6 @@ export function UsersPage() {
         fetchData().catch(() => {});
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // TODO: continuar con el renderizado de las filas de la tabla. Falta aún setear la data que se obtiene en el useEffect de arriba.
     // TODO: cuando se empiece a hacer el consumo de la api, el input para buscar cc se debe manejar, de momento no se ha hecho nada.
 
     return (
@@ -160,50 +169,23 @@ export function UsersPage() {
                             </thead>
 
                             <tbody>
-                            <tr>
-                                <td className={styles.tdTable}>
-                                    <button onClick={()=> setModalFormStatus(true)} className={styles.btnEdit}>
-                                        <img src={editIcon} alt="Editar usuario"/>
-                                    </button>
-                                </td>
-                                <td className={styles.tdTable}>
-                                    {data.nuip}
-                                </td>
-                                <td className={styles.tdTable}>
-                                    <div className={styles.tdWrapperNamePic}>
-                                        <img src={!data.profile_image_url ? profilePicIcon : data.profile_image_url}
-                                             alt="Foto de perfil"/>
-                                        {data.first_name + ' ' + data.first_last_name}
-                                    </div>
-                                </td>
-                                <td className={styles.tdTable}>
-                                    <div className={styles.badgeContainer}>
-                                        <StatusBadge status={data.status} type={data.status}/>
-                                    </div>
-                                </td>
-                                <td className={styles.tdTable}>
-                                    {membershipTypeFormatter(data.membership_type)}
-                                </td>
-                                <td className={styles.tdTable}>
-                                    {data.phone_number}
-                                </td>
-                            </tr>
-                            <UsersRowTable data={data} setModalFormStatus={setModalFormStatus}/>
-                            <UsersRowTable data={data} setModalFormStatus={setModalFormStatus}/>
-                            <UsersRowTable data={data} setModalFormStatus={setModalFormStatus}/>
-                            <UsersRowTable data={data} setModalFormStatus={setModalFormStatus}/>
-                            <UsersRowTable data={data} setModalFormStatus={setModalFormStatus}/>
-                            <UsersRowTable data={data} setModalFormStatus={setModalFormStatus}/>
-                            <UsersRowTable data={data} setModalFormStatus={setModalFormStatus}/>
-                            <UsersRowTable data={data} setModalFormStatus={setModalFormStatus}/>
-                            <UsersRowTable data={data} setModalFormStatus={setModalFormStatus}/>
-                            <UsersRowTable data={data} setModalFormStatus={setModalFormStatus}/>
-                            <UsersRowTable data={data} setModalFormStatus={setModalFormStatus}/>
-                            <UsersRowTable data={data} setModalFormStatus={setModalFormStatus}/>
-                            <UsersRowTable data={data} setModalFormStatus={setModalFormStatus}/>
-                            <UsersRowTable data={data} setModalFormStatus={setModalFormStatus}/>
-                            <UsersRowTable data={data} setModalFormStatus={setModalFormStatus}/>
-                            <UsersRowTable data={data} setModalFormStatus={setModalFormStatus}/>
+                            {
+                                customersData?.data?.length
+                                    ? customersData?.data?.map((data, idx) => (
+                                        <UsersRowTable
+                                            key={data.id || idx}
+                                            data={data}
+                                            onEditCustomer={() => setModalStatusAndData(data)}
+                                        />
+                                    ))
+                                    : (
+                                        <tr>
+                                            <td colSpan={7} style={{ textAlign: "center", padding: "2rem" }}>
+                                                No hay usuarios registrados.
+                                            </td>
+                                        </tr>
+                                    )
+                            }
                             </tbody>
                         </table>
                     </div>
