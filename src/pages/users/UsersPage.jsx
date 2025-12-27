@@ -107,6 +107,7 @@ export function UsersPage() {
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     // TODO: cuando se empiece a hacer el consumo de la api, el input para buscar cc se debe manejar, de momento no se ha hecho nada.
+    // TODO: testear que si se esté editando la información del cliente en el modal form correctamente
 
     return (
         <>
