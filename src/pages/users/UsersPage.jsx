@@ -199,7 +199,7 @@ export function UsersPage() {
                                         return appliedNuipFilter ? (
                                             <tr>
                                                 <td colSpan={7} style={{ textAlign: "center", padding: "2rem" }}>
-                                                    No se encontró un usuario registrado con el número de documento ingresado.
+                                                    {`No se encontró ningún usuario registrado con el número de documento ingresado: ${appliedNuipFilter}.`}
                                                 </td>
                                             </tr>
                                         ) : (
