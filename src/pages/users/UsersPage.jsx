@@ -27,6 +27,7 @@ import { useNavigate } from "react-router-dom";
 import { Loader } from "../../components/loader/Loader.jsx";
 import { formatDateForDateInput } from "../../utils/formatters/formatDateForDateInput.js";
 
+
 export function UsersPage() {
     // Hook for programmatic route navigation
     const navigate = useNavigate();
@@ -60,6 +61,10 @@ export function UsersPage() {
         start_date: '2000-01-01',
         end_date: '2000-01-01'
     };
+
+    // States to store the value entered in search input for nuip
+    const [appliedNuipFilter, setAppliedNuipFilter] = useState('');
+    const [nuipSearchInput, setNuipSearchInput] = useState('');
 
     // Custom hook to controlling modal form
     const { form, handlerSetForm, setFormWithObject } = useForm(INITIAL_FORM_VALUES);
@@ -106,7 +111,9 @@ export function UsersPage() {
         fetchData().catch(() => {});
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // TODO: cuando se empiece a hacer el consumo de la api, el input para buscar cc se debe manejar, de momento no se ha hecho nada.
+    // TODO: el valor del cumpleaños debe recalcularse al cambiar la fecha de nacimiento en el cliente seleccionado para editar su información...
+    // TODO: empezar a construir el backend para generar la actualización de información de un cliente de acuerdo a los campos que realmente han sido editados
+    // TODO: crear el handler y consumir la api desde el front para editar al información de un cliente
 
     return (
         <>
@@ -114,13 +121,20 @@ export function UsersPage() {
                 <header>
                     <h1 className={styles.titleStyles}>Lista de Clientes ({customersData?.data?.length ?? data.total_customers})</h1>
                     <div className={styles.searchContainer}>
-                        <input type="text" name="search_nuip" className={styles.searchInput}
-                               placeholder="Buscar cliente por número de documento..."/>
-                        <button className={styles.btnSearch}>
+                        <input
+                            type="number"
+                            name="search_nuip"
+                            value={nuipSearchInput}
+                            onChange={(e) => setNuipSearchInput(e.target.value)}
+                            className={styles.searchInput}
+                            placeholder="Buscar cliente por número de documento..."
+                        />
+                        <button className={styles.btnSearch} onClick={() => setAppliedNuipFilter(nuipSearchInput)}>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30">
                                 <path
                                     d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"
-                                    fill="#efeff1"></path>
+                                    fill="#efeff1">
+                                </path>
                             </svg>
                         </button>
                     </div>
@@ -170,21 +184,40 @@ export function UsersPage() {
 
                             <tbody>
                             {
-                                customersData?.data?.length
-                                    ? customersData?.data?.map((data, idx) => (
+                                (() => {
+                                    if (!customersData?.data?.length) {
+                                        return (
+                                            <tr>
+                                                <td colSpan={7} style={{ textAlign: "center", padding: "2rem" }}>
+                                                    No hay usuarios registrados.
+                                                </td>
+                                            </tr>
+                                        );
+                                    }
+                                    const filtered = customersData?.data?.filter(data => data?.nuip?.includes(appliedNuipFilter));
+                                    if (!filtered?.length) {
+                                        return appliedNuipFilter ? (
+                                            <tr>
+                                                <td colSpan={7} style={{ textAlign: "center", padding: "2rem" }}>
+                                                    No se encontró un usuario registrado con el número de documento ingresado.
+                                                </td>
+                                            </tr>
+                                        ) : (
+                                            <tr>
+                                                <td colSpan={7} style={{ textAlign: "center", padding: "2rem" }}>
+                                                    No hay usuarios registrados.
+                                                </td>
+                                            </tr>
+                                        );
+                                    }
+                                    return filtered.map((data, idx) => (
                                         <UsersRowTable
                                             key={data.id || idx}
                                             data={data}
                                             onEditCustomer={() => setModalStatusAndData(data)}
                                         />
-                                    ))
-                                    : (
-                                        <tr>
-                                            <td colSpan={7} style={{ textAlign: "center", padding: "2rem" }}>
-                                                No hay usuarios registrados.
-                                            </td>
-                                        </tr>
-                                    )
+                                    ));
+                                })()
                             }
                             </tbody>
                         </table>
