@@ -49,6 +49,11 @@ class CustomersController {
         }
     }
 
+    async updateCustomerInfo(req, res) {
+        console.log(req);
+        // TODO: continuar construyendo el algoritmo para la actualización del recurso de un cliente
+    }
+
     async atomicEnrollCustomer(req, res) {
         // This method is used to enroll a new customer and assign an initial membership type
 

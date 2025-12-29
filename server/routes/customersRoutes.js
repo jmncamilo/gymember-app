@@ -7,6 +7,6 @@ router.get('/find/:nuip', customersController.getByNuip);
 router.post('/enroll', customersController.atomicEnrollCustomer);
 router.post('/transaction', customersController.atomicTransactionCustomer);
 router.post('/renew/transaction', customersController.atomicRenewTransactionCustomer);
-
+router.patch('/:id', customersController.updateCustomerInfo);
 
 module.exports = router;
