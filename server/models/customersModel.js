@@ -86,7 +86,7 @@ class CustomersModel {
         return result?.affectedRows === 0 ? null : result;
     }
 
-    // Update information about the customer membership
+    // Update customer membership information (except the status)
     static async updateCustomerMembership(connection = null, data) {
         const executor = connection || pool;
         const query = `UPDATE Customers_Memberships
@@ -103,6 +103,11 @@ class CustomersModel {
             data.customer_id_fk
         ]);
         return result?.affectedRows === 0 ? null : result;
+    }
+
+    // Update partial resource in the customer membership table
+    static async updateCustomerMembershipInfoPartial(updateData, conditionValue, connection = null) {
+        return updateByCondition(updateData, conditionValue, 'Customers_Memberships', 'customer_id_fk', connection);
     }
 
     // Get all customers data for a specific gym (fk)
