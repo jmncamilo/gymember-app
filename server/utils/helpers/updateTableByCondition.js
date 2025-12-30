@@ -54,4 +54,4 @@ async function updateByCondition(
     return result?.affectedRows === 0 ? null : result;
 }
 
-module.exports = updateByCondition;
+module.exports = { updateByCondition };

@@ -1,4 +1,5 @@
 const pool = require("../db/connection.js");
+const { updateByCondition } = require("../utils/helpers/updateTableByCondition.js");
 
 class CustomersModel {
     // Insert customer data into the main table
@@ -25,6 +26,11 @@ class CustomersModel {
             data.profile_image_url
         ]);
         return result?.affectedRows === 0 ? null : result;
+    }
+
+    // Update partial resource in the customer main table
+    static async updateCustomerMainInfoPartial(updateData, conditionValue, connection = null) {
+        return updateByCondition(updateData, conditionValue, 'Customers', 'id', connection);
     }
 
     // Insert data in the customer details table
