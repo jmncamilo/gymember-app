@@ -59,6 +59,11 @@ class CustomersModel {
         return result?.affectedRows === 0 ? null : result;
     }
 
+    // Update partial resource in the customer details table
+    static async updateCustomerDetailsInfoPartial(updateData, conditionValue, connection = null) {
+        return updateByCondition(updateData, conditionValue, 'Customers_Details', 'customer_id_fk', connection);
+    }
+
     // Insert data into the customer membership table
     static async insertCustomerMembership(connection = null, data) {
         const executor = connection || pool;
