@@ -12,6 +12,9 @@ const {
     getAllCustomersData
 } = require("../models/customersModel.js");
 const { insertCustomerTransaction } = require('../models/transactionModel.js');
+const { groupByEntity } = require("../utils/helpers/groupByEntity.js");
+const { FIELD_ENTITY_MAP } = require("../utils/mappings/fieldEntityMap.js");
+const { customersMethods } = require("../utils/mappings/customerMethodDictionary.js");
 
 
 class CustomersController {
@@ -49,9 +52,88 @@ class CustomersController {
         }
     }
 
-    async updateCustomerInfo(req, res) {
-        console.log(req);
-        // TODO: continuar construyendo el algoritmo para la actualización del recurso de un cliente
+    async atomicUpdateCustomerInfo(req, res) {
+        // This method is used to partial update customer info in all tables related to customer information
+
+        // Validate 'id' parameter exists and is not empty or falsy in the request
+        const id = Number(req.params.id);
+        if (!Number.isInteger(id)) {
+            return res.status(400).json({
+                message: 'El id de usuario debe ser un número entero...',
+                success: false
+            });
+        }
+
+        // Validate that body is not empty
+        if (isEmptyBody(req.body)) {
+            return res.status(400).json({
+                message: 'El cuerpo de la solicitud no debe estar vacío. Intenta de nuevo...',
+                success: false
+            });
+        }
+
+        // Validate body fields
+        const validation = validateBody(req.body);
+        if (!validation.isSuccess) {
+            return res.status(400).json({
+                message: `¡Error validando los datos! ${Object.values(validation?.errors)[0] || ''}`,
+                errors: validation?.errors,
+                success: false
+            });
+        }
+
+        // Format body fields
+        let customerUpdateData = formatBody(req.body);
+
+        // Start db process
+        const connection = await pool.getConnection();
+        try {
+            await connection.beginTransaction(); // Begin transaction process
+
+            // Groups column-value pairs by table to facilitate dynamic updates
+            const customerDataByEntity = groupByEntity(customerUpdateData, FIELD_ENTITY_MAP);
+            if (!customerDataByEntity) {
+                throw new Error('Error al momento de agrupar la información a actualizar...');
+            }
+
+            // Executes model updates per table and tracks which entities were actually updated
+            const updateSummary = {};
+            for (const entityName of Object.keys(customerDataByEntity)) {
+                // Validate that
+                if (!customersMethods[entityName]) {
+                    throw new Error(`No se encontró la entidad ${entityName} o es inválida...`);
+                }
+                const methodToExecute = customersMethods[entityName];
+                const queryResult = await methodToExecute(customerDataByEntity[entityName], id, connection);
+                updateSummary[entityName] = !!queryResult;
+            }
+
+            // Validate all entities were updated successfully
+            const updateWasSuccessful = Object.values(updateSummary).every(value => value === true);
+            if (!updateWasSuccessful) {
+                throw new Error('No se actualizaron correctamente todas las tablas, la operación ha fallado...');
+            }
+
+            // Commit changes
+            await connection.commit();
+
+            // Send response ok
+            return res.status(200).json({
+                message: '¡Información del cliente actualizada correctamente!',
+                customerInfoUpdated: customerDataByEntity,
+                success: true
+            });
+
+        } catch (err) {
+            await connection.rollback();
+            return res.status(500).json({
+                message: 'Error en el servidor. Vuelve a intentarlo en unos minutos...',
+                error: err?.message || err,
+                success: false
+            });
+        } finally {
+            connection.release(); // Release db connection
+        }
     }
 
     async atomicEnrollCustomer(req, res) {

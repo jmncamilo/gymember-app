@@ -25,4 +25,4 @@ function groupByEntity(source, entityMap) {
     return Object.keys(grouped).length > 0 ? grouped : null;
 }
 
-module.exports = groupByEntity;
+module.exports = { groupByEntity };
