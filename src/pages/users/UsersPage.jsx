@@ -26,6 +26,7 @@ import { getOptions } from "../../utils/misc/fetchOptions.js";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../../components/loader/Loader.jsx";
 import { formatDateForDateInput } from "../../utils/formatters/formatDateForDateInput.js";
+import { calcAge } from "../../utils/calculators/calcAge.js";
 
 
 export function UsersPage() {
@@ -67,7 +68,7 @@ export function UsersPage() {
     const [nuipSearchInput, setNuipSearchInput] = useState('');
 
     // Custom hook to controlling modal form
-    const { form, handlerSetForm, setFormWithObject } = useForm(INITIAL_FORM_VALUES);
+    const { form, handlerSetForm, setFormWithObject, customSetForm } = useForm(INITIAL_FORM_VALUES);
 
     // State to track the currently selected customer for editing and to compare modified fields
     const [selectedCustomer, setSelectedCustomer] = useState(null);
@@ -111,8 +112,11 @@ export function UsersPage() {
         fetchData().catch(() => {});
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // TODO: el valor del cumpleaños debe recalcularse al cambiar la fecha de nacimiento en el cliente seleccionado para editar su información...
-    // TODO: empezar a construir el backend para generar la actualización de información de un cliente de acuerdo a los campos que realmente han sido editados
+    // Handler to update the age field based on the selected birthdate when the input loses focus
+    const handlerSetFormAge = () => {
+        customSetForm('age', calcAge(form.birthdate).toString());
+    };
+
     // TODO: crear el handler y consumir la api desde el front para editar al información de un cliente
 
     return (
@@ -251,7 +255,7 @@ export function UsersPage() {
                         <DefaultInput name={'phone_number'} value={form.phone_number ?? data.phone_number} onChange={handlerSetForm} text={'Número de teléfono:'} htmlFor={'phone'} type={'number'}/>
                     </span>
                     <span className={styles.inputWrapper}>
-                        <DefaultInput name={'birthdate'} value={formatDateForDateInput(form.birthdate ?? data.birthdate)} onChange={handlerSetForm} text={'Fecha de nacimiento:'} htmlFor={'birthdate'} type={'date'}/>
+                        <DefaultInput name={'birthdate'} value={formatDateForDateInput(form.birthdate ?? data.birthdate)} onChange={handlerSetForm} onBlur={handlerSetFormAge} text={'Fecha de nacimiento:'} htmlFor={'birthdate'} type={'date'}/>
                     </span>
                     <span className={styles.inputWrapper}>
                         <DefaultInput name={'age'} value={form.age ?? data.age} onChange={handlerSetForm} text={'Edad del cliente:'} htmlFor={'age'} type={'number'}/>

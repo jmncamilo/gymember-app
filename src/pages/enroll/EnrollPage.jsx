@@ -29,7 +29,7 @@ export function EnrollPage() {
     // Handling the age field in the form based on the selected birthdate
     const handlerSetFormAge = () => {
         customSetForm('age', calcAge(form.birthdate).toString());
-    }
+    };
 
     // Setting the end_date field by calculating its value from data in the star_date and duration_days inputs
     const handlerSetFormEndDate = () => {
