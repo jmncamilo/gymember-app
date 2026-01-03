@@ -77,9 +77,9 @@ export function UsersPage() {
     const [modalFormStatus, setModalFormStatus] = useState(false);
         // Handler to open the modal and set the selected customer data
     const setModalStatusAndData = (data) => {
-        setModalFormStatus(true); // Open modal
         setFormWithObject(data); // Load customer data into form
         setSelectedCustomer(data); // Set current customer
+        setModalFormStatus(true); // Open modal
         console.log('Seteando la data del cliente al abrir el modal', data);
     };
 
@@ -117,7 +117,10 @@ export function UsersPage() {
         customSetForm('age', calcAge(form.birthdate).toString());
     };
 
-    // TODO: crear el handler y consumir la api desde el front para editar al información de un cliente
+    // TODO: crear el handler y consumir la api desde el front para editar la información de un cliente
+    const submitCustomerUpdate = () => {
+        console.log('Aquí empieza la lógica para enviar el formulario con la información del cliente a actualizar...');
+    };
 
     return (
         <>
