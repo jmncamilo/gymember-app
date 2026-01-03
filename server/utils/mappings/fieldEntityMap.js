@@ -1,6 +1,7 @@
 // This file maps database column names to their corresponding table names
 const FIELD_ENTITY_MAP = {
     /* Customers */
+    nuip: 'Customers',
     first_name: 'Customers',
     first_last_name: 'Customers',
     email: 'Customers',
