@@ -27,7 +27,12 @@ import { useNavigate } from "react-router-dom";
 import { Loader } from "../../components/loader/Loader.jsx";
 import { formatDateForDateInput } from "../../utils/formatters/formatDateForDateInput.js";
 import { calcAge } from "../../utils/calculators/calcAge.js";
-import { filterObjectByKeys } from "../../utils/misc/miscHelpers.js";
+import {
+    filterObjectByKeys,
+    getDiffObject,
+    normalizeObjectFields,
+    validateRequiredFields
+} from "../../utils/misc/miscHelpers.js";
 import { API_FIELDS } from "../../utils/constants/apiFields.js";
 
 
@@ -119,22 +124,30 @@ export function UsersPage() {
         customSetForm('age', calcAge(form.birthdate).toString());
     };
 
-    // TODO: crear el handler y consumir la api desde el front para editar la información de un cliente
     const submitCustomerUpdate = async () => {
-        console.log('Aquí empieza la lógica para enviar el formulario con la información del cliente a actualizar...');
         try {
             // Filter the form object to include only the fields required for update customer information
             const filterFormObj = filterObjectByKeys(form, API_FIELDS.UPDATE_CUSTOMER_INFORMATION);
             // Compare which keys have actually changed compared to the existing customer data and create a new object
+            const diffObj = getDiffObject(selectedCustomer, filterFormObj);
+            if (!diffObj || !Object?.keys(diffObj)?.length) {
+                alert('No hay información del cliente para actualizar');
+                setModalFormStatus(false);
+                return;
+            }
+            // Normalize to string
+            const requestPayload = normalizeObjectFields(diffObj, Object.keys(diffObj));
+            // Final payload validation before sending to the backend
+            const isValidRequest = validateRequiredFields(requestPayload, Object.keys(requestPayload));
+            if (!isValidRequest) return alert('No está listo el objeto para actualizar la información del cliente...');
 
+            console.log('Customer update info:', requestPayload);
+
+            // Aquí empieza el consumo del endpoint
         } catch (err) {
             console.log(err);
             alert('Error actualizando información del cliente'); // Make this modal
         }
-        // Filtrar un objeto con las keys permitidas para actualizar DONE
-        // Comparar que keys realmente han cambiado respecto a la data del cliente que ya existe y crear un nuevo objeto
-        // Normalizar a string lo que debe ser obligatorio (si aplica)
-        // Validar que ningún valor sea string vacío en el objeto final
     };
 
     return (
@@ -326,7 +339,7 @@ export function UsersPage() {
                     </span>
                     <div className={styles.buttonsWrapper}>
                         <DefaultButton onClick={() => setModalFormStatus(false)} text={'Cancelar'}/>
-                        <DefaultButton text={'Guardar'} onClick={() => {console.log(form)}}/>
+                        <DefaultButton text={'Guardar'} onClick={submitCustomerUpdate}/>
                     </div>
                 </div>
             </div>
