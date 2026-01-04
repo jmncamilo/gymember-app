@@ -120,6 +120,10 @@ export function UsersPage() {
     // TODO: crear el handler y consumir la api desde el front para editar la información de un cliente
     const submitCustomerUpdate = () => {
         console.log('Aquí empieza la lógica para enviar el formulario con la información del cliente a actualizar...');
+        // Filtrar un objeto con las keys permitidas para actualizar
+        // Comparar que keys realmente han cambiado respecto a la data del cliente que ya existe y crear un nuevo objeto
+        // Normalizar a string lo que debe ser obligatorio (si aplica)
+        // Validar que ningún valor sea string vacío en el objeto final
     };
 
     return (

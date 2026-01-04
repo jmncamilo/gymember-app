@@ -21,5 +21,26 @@ export const API_FIELDS = {
         'amount',
         'payment_method',
         'description'
+    ],
+    // PATCH /customers/:id
+    UPDATE_CUSTOMER_INFORMATION: [
+        'nuip',
+        'first_name',
+        'first_last_name',
+        'email',
+        'phone_number',
+        'profile_image_url',
+        'gender',
+        'birthdate',
+        'age',
+        'address',
+        'city',
+        'emergency_phone',
+        'additional_info',
+        'membership_type',
+        'status',
+        'duration_days',
+        'start_date',
+        'end_date'
     ]
 };
