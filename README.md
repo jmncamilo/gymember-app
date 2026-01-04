@@ -29,4 +29,4 @@ Gymember busca fortalecer a los pequeños y medianos gimnasios del país, foment
 
 ---
 
-🔜 _**La primera versión está por llegar...**_  
+🔜 _**La primera versión está por llegar...**_
