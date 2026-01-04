@@ -22,7 +22,7 @@ import { UsersRowTable } from "./UsersRowTable.jsx";
 import { useForm } from "../../hooks/useForm.js";
 import { INITIAL_FORM_VALUES } from "./usersFormInitialValues.js";
 import { useFetchWithAuth } from "../../hooks/useFetchWithAuth.js";
-import { getOptions } from "../../utils/misc/fetchOptions.js";
+import { getOptions, optionsWithBody } from "../../utils/misc/fetchOptions.js";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../../components/loader/Loader.jsx";
 import { formatDateForDateInput } from "../../utils/formatters/formatDateForDateInput.js";
@@ -92,6 +92,8 @@ export function UsersPage() {
 
     // Custom hook to fetch customers data
     const {data: customersData, executeFetchWithAuth: executeCustomersFetchWithAuth} = useFetchWithAuth('/customers', getOptions);
+        // Counter to trigger customer data reload after a successful update
+    const [reloadCustomers, setReloadCustomers] = useState(0);
 
     // Effect to load all customers data by executing the custom fetch hook below
     useEffect(() => {
@@ -117,7 +119,7 @@ export function UsersPage() {
         };
 
         fetchData().catch(() => {});
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [reloadCustomers]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Handler to update the age field based on the selected birthdate when the input loses focus
     const handlerSetFormAge = () => {
@@ -126,6 +128,12 @@ export function UsersPage() {
 
     const submitCustomerUpdate = async () => {
         try {
+            // Activate loader
+            setLoadingState(prev => ({
+                ...prev,
+                generalLoading: true
+            }));
+
             // Filter the form object to include only the fields required for update customer information
             const filterFormObj = filterObjectByKeys(form, API_FIELDS.UPDATE_CUSTOMER_INFORMATION);
             // Compare which keys have actually changed compared to the existing customer data and create a new object
@@ -143,10 +151,33 @@ export function UsersPage() {
 
             console.log('Customer update info:', requestPayload);
 
-            // Aquí empieza el consumo del endpoint
+            // Fetching process
+            const apiUrl = import.meta.env.VITE_API_URL; // Backend url
+            const endpoint = `/customers/${selectedCustomer.id}`;
+            const res = await fetch(
+                apiUrl + endpoint,
+                {credentials: 'include', ...optionsWithBody(requestPayload, 'PATCH', {'Content-Type': 'application/json'})}
+            );
+            const dataFetch = await res.json();
+            if (!res.ok) {
+                alert(`${dataFetch?.message}`);
+                throw new Error(`Ocurrió un error al procesar la solicitud. ${data?.message}.`);
+            }
+            alert(`${dataFetch?.message}`); // This should be in a modal
+            console.log('Actualización de información de cliente completada con éxito...');
+            setModalFormStatus(false);
+
+            // Load again customers info
+            setReloadCustomers(prev => prev + 1);
+
         } catch (err) {
             console.log(err);
             alert('Error actualizando información del cliente'); // Make this modal
+        } finally {
+            setLoadingState(prev => ({
+                ...prev,
+                generalLoading: false
+            }));
         }
     };
 
