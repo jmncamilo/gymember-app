@@ -65,3 +65,32 @@ export const removeValuesFromArray = (source, valuesToRemove) => {
 
     return source.filter(item => !valuesToRemove.includes(item));
 };
+
+// Returns an object with properties that differ between two objects
+export function getDiffObject(baseObj, updatedObj) {
+    // Basic validation
+    if (
+        typeof baseObj !== 'object' ||
+        typeof updatedObj !== 'object' ||
+        baseObj === null ||
+        updatedObj === null ||
+        Array.isArray(baseObj) ||
+        Array.isArray(updatedObj)
+    ) {
+        return null;
+    }
+
+    const diff = {};
+
+    Object.keys(baseObj).forEach((key) => {
+        // Skip if key does not exist in updated object
+        if (!Object.hasOwn(updatedObj, key)) return;
+
+        // Skip if values are strictly equal
+        if (baseObj[key] === updatedObj[key]) return;
+
+        diff[key] = updatedObj[key];
+    });
+
+    return diff;
+}

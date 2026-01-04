@@ -27,6 +27,8 @@ import { useNavigate } from "react-router-dom";
 import { Loader } from "../../components/loader/Loader.jsx";
 import { formatDateForDateInput } from "../../utils/formatters/formatDateForDateInput.js";
 import { calcAge } from "../../utils/calculators/calcAge.js";
+import { filterObjectByKeys } from "../../utils/misc/miscHelpers.js";
+import { API_FIELDS } from "../../utils/constants/apiFields.js";
 
 
 export function UsersPage() {
@@ -118,9 +120,18 @@ export function UsersPage() {
     };
 
     // TODO: crear el handler y consumir la api desde el front para editar la información de un cliente
-    const submitCustomerUpdate = () => {
+    const submitCustomerUpdate = async () => {
         console.log('Aquí empieza la lógica para enviar el formulario con la información del cliente a actualizar...');
-        // Filtrar un objeto con las keys permitidas para actualizar
+        try {
+            // Filter the form object to include only the fields required for update customer information
+            const filterFormObj = filterObjectByKeys(form, API_FIELDS.UPDATE_CUSTOMER_INFORMATION);
+            // Compare which keys have actually changed compared to the existing customer data and create a new object
+
+        } catch (err) {
+            console.log(err);
+            alert('Error actualizando información del cliente'); // Make this modal
+        }
+        // Filtrar un objeto con las keys permitidas para actualizar DONE
         // Comparar que keys realmente han cambiado respecto a la data del cliente que ya existe y crear un nuevo objeto
         // Normalizar a string lo que debe ser obligatorio (si aplica)
         // Validar que ningún valor sea string vacío en el objeto final
