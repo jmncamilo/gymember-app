@@ -151,9 +151,9 @@ export function UsersPage() {
 
             console.log('Customer update info:', requestPayload);
 
-            // Fetching process
+            // Start fetching... manual fetch here because the custom hook does not support dynamic URLs for this operation
             const apiUrl = import.meta.env.VITE_API_URL; // Backend url
-            const endpoint = `/customers/${selectedCustomer.id}`;
+            const endpoint = `/customers/${selectedCustomer.id}`; // endpoint url
             const res = await fetch(
                 apiUrl + endpoint,
                 {credentials: 'include', ...optionsWithBody(requestPayload, 'PATCH', {'Content-Type': 'application/json'})}
