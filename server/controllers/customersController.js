@@ -9,7 +9,8 @@ const {
     membershipStatusToActive,
     getCustomerByNuip,
     updateCustomerMembership,
-    getAllCustomersData
+    getAllCustomersData,
+    getCustomersDataByMembershipStatus
 } = require("../models/customersModel.js");
 const { insertCustomerTransaction } = require('../models/transactionModel.js');
 const { groupByEntity } = require("../utils/helpers/groupByEntity.js");
@@ -52,8 +53,42 @@ class CustomersController {
         }
     }
 
-    async getAllCustomersExpired(req, res) {
-        console.log(req);
+    async getCustomersExpired(req, res) {
+        // This method retrieves all information about expired customers
+        try {
+            // Get gym id
+            const gym_id_fk = req.gym.id;
+
+            // Execute query and validate data
+            const data = await getCustomersDataByMembershipStatus(gym_id_fk, 'expired');
+            if (!data) {
+                return res.status(404).json({
+                    message: 'No se encontraron clientes vencidos...',
+                    success: false
+                });
+            }
+
+            // Send response ok
+                // Crear objeto con data adicional de métricas
+            const expiredCustomersMetrics = {};
+                // Calcular el total de vencidos
+            expiredCustomersMetrics['total_expired_customers'] = data?.length || 0;
+                // Calcular el total de vencidos de la última semana
+
+
+            return res.status(200).json({
+                message: '¡Se encontraron clientes con membresía vencida! Consulta realizada con éxito.',
+                success: true,
+                data
+            });
+            
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error en el servidor. Vuelve a intentarlo en unos minutos...',
+                error: err?.message || err,
+                success: false
+            });
+        }
     }
 
     async atomicUpdateCustomerInfo(req, res) {
