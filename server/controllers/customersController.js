@@ -1,5 +1,6 @@
 const pool = require("../db/connection.js");
 const isEmptyBody = require("../utils/validators/emptyBody.js");
+const isDateWithinLastDays = require("../utils/validators/dateRange.js");
 const { validateBody, validateField } = require("../utils/validators/validateField.js");
 const { formatBody } = require("../utils/formatters/formatField.js");
 const {
@@ -69,17 +70,21 @@ class CustomersController {
             }
 
             // Send response ok
-                // Crear objeto con data adicional de métricas
+                // Create object with additional metrics data
             const expiredCustomersMetrics = {};
-                // Calcular el total de vencidos
+                    // Calculate the total number of expired customers
             expiredCustomersMetrics['total_expired_customers'] = data?.length || 0;
-                // Calcular el total de vencidos de la última semana
-
+                    // Calculate the total number of expired customers in N days
+            const days = 7;
+            expiredCustomersMetrics['recently_expired_customers'] = data
+                .filter(customer => isDateWithinLastDays(customer.end_date, days))
+                .length;
 
             return res.status(200).json({
                 message: '¡Se encontraron clientes con membresía vencida! Consulta realizada con éxito.',
                 success: true,
-                data
+                data,
+                expiredCustomersMetrics
             });
             
         } catch (err) {
