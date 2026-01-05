@@ -76,14 +76,14 @@ class CustomersController {
             expiredCustomersMetrics['total_expired_customers'] = data?.length || 0;
                     // Calculate the total number of expired customers in N days
             const days = 7;
-            expiredCustomersMetrics['recently_expired_customers'] = data
-                .filter(customer => isDateWithinLastDays(customer.end_date, days))
-                .length;
+            const recentlyExpiredCustomers = data.filter(customer => isDateWithinLastDays(customer.end_date, days));
+            expiredCustomersMetrics['recently_expired_customers'] = recentlyExpiredCustomers.length;
 
             return res.status(200).json({
                 message: '¡Se encontraron clientes con membresía vencida! Consulta realizada con éxito.',
                 success: true,
-                data,
+                allExpiredCostumers: data,
+                recentlyExpiredCustomers,
                 expiredCustomersMetrics
             });
             
