@@ -28,9 +28,9 @@ export function ExpirationsPage() {
         navigate("/pagos");
     }
 
-    // TODO: crear endpoint para traer los usuarios con membresías vencidas y datos del total de vencimientos y los recientes (1 semana)
-    // TODO: consumir ese endpoint para la carga inicial de datos
-    // TODO: agregar filtros de encontrar usuario por nuip
+    // TODO: consumir endpoint para la carga inicial de datos de clientes vencidos GET -> /customers/expired
+    // TODO: también agregar mensaje en cado de que no se renderice ninguna card porque no se hayan encontrado clientes vencidos
+    // TODO: agregar filtros de encontrar usuario por nuip y no se encuentra ningún usuario mostrar mensaje
 
     return (
         <>
