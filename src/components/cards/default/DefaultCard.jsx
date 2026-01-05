@@ -9,12 +9,12 @@ export function DefaultCard({data, onClick = () => {}}) {
         // Customer info data
         nuip: '0000000000',
         first_name: 'Unnamed',
-        first_last_name: 'Default',
+        first_last_name: 'Unnamed',
         profile_image_url: 'https://pbs.twimg.com/media/F3hZ5izWEAAC2zt.jpg',
         // Membership info data
         membership_type: 'Mensualidad',
         start_date: '01/01/1996',
-        end_date: '31/12/1996'
+        end_date: '01/02/1996'
     };
 
     let customerData = data || defaultData;

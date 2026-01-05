@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 export function ExpirationsPage() {
 
     // Simulating API
-    const data = {
+    const fallbackData = {
         // Queries data -> membership_type = expired
             // Cambiar los nombres de estas propiedades cuando haya conexión real a la API...
         clientes_vencidos_total: 250,
@@ -35,13 +35,13 @@ export function ExpirationsPage() {
                 <div className={styles.contentAreaWrapper}>
 
                     <header>
-                        <h1>Clientes Vencidos ({data.clientes_vencidos_total})</h1>
+                        <h1>Clientes Vencidos ({fallbackData.clientes_vencidos_total})</h1>
                     </header>
 
                     <main>
                         <div className={styles.mainSectionWrapper}>
                             <div className={styles.mainSubtitle}>
-                                <h3>Clientes Vencidos Recientemente ({data.clientes_vencidos_recientemente})</h3>
+                                <h3>Clientes Vencidos Recientemente ({fallbackData.clientes_vencidos_recientemente})</h3>
                                 <div className={styles.containerInput}>
                                     <input title={'Buscar cliente'} type="text" name="nuip" className={styles.inputStyle} placeholder="Documento de identidad..." required/>
                                     <div className={styles.iconSearch}>
@@ -56,8 +56,8 @@ export function ExpirationsPage() {
                                 </div>
                             </div>
                             <div className={styles.mainSectionContent}>
-                                <DefaultCard data={data} onClick={handleRedirection}/>
-                                <DefaultCard onClick={handleRedirection}/>
+                                <DefaultCard data={fallbackData} onClick={handleRedirection}/>
+                                <DefaultCard data={fallbackData} onClick={handleRedirection}/>
                                 <DefaultCard onClick={handleRedirection}/>
                                 <DefaultCard onClick={handleRedirection}/>
                                 <DefaultCard onClick={handleRedirection}/>
@@ -68,7 +68,7 @@ export function ExpirationsPage() {
 
                         <div className={styles.mainSectionWrapper}>
                             <div className={styles.mainSubtitle}>
-                                <h3>Historial de Vencimientos ({data.clientes_vencidos_historial})</h3>
+                                <h3>Historial de Vencimientos ({fallbackData.clientes_vencidos_historial})</h3>
                                 <div className={styles.containerInput}>
                                     <input title={'Buscar cliente'} type="text" name="nuip" className={styles.inputStyle}
                                            placeholder="Documento de identidad..." required/>
@@ -85,8 +85,8 @@ export function ExpirationsPage() {
                                 </div>
                             </div>
                             <div className={styles.mainSectionContent}>
-                                <DefaultCard data={data} onClick={handleRedirection}/>
-                                <DefaultCard data={data}/>
+                                <DefaultCard data={fallbackData} onClick={handleRedirection} />
+                                <DefaultCard data={fallbackData} onClick={handleRedirection} />
                                 <DefaultCard/>
                                 <DefaultCard/>
                                 <DefaultCard/>

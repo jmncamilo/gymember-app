@@ -46,7 +46,7 @@ export function UsersPage() {
         generalLoading: false
     });
 
-    // TODO: renombrar esto y modificar el nombre donde es llamado en este archivo...
+    // TODO: renombrar esto a fallbackData y modificar el nombre donde es llamado en este archivo...
     // Fallback data
     const data = {
         total_customers: 0,
