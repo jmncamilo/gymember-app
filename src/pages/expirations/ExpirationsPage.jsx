@@ -5,18 +5,17 @@ import { useNavigate } from "react-router-dom";
 
 export function ExpirationsPage() {
 
-    // Simulating API
+    // Fallback API data
     const fallbackData = {
         // Queries data -> membership_type = expired
             // Cambiar los nombres de estas propiedades cuando haya conexión real a la API...
         clientes_vencidos_total: 250,
         clientes_vencidos_recientemente: 23,
-        clientes_vencidos_historial: 227,
         // Customer info data
-        nuip: 1122652725,
+        nuip: '1122334567',
         first_name: 'Bruno',
         first_last_name: 'Jiménez',
-        profile_image_url: false,
+        profile_image_url: null,
         // Membership info data
         membership_type: 'Plan promocional',
         start_date: '19/03/2025',
@@ -28,6 +27,10 @@ export function ExpirationsPage() {
     const handleRedirection = () => {
         navigate("/pagos");
     }
+
+    // TODO: crear endpoint para traer los usuarios con membresías vencidas y datos del total de vencimientos y los recientes (1 semana)
+    // TODO: consumir ese endpoint para la carga inicial de datos
+    // TODO: agregar filtros de encontrar usuario por nuip
 
     return (
         <>
@@ -68,7 +71,7 @@ export function ExpirationsPage() {
 
                         <div className={styles.mainSectionWrapper}>
                             <div className={styles.mainSubtitle}>
-                                <h3>Historial de Vencimientos ({fallbackData.clientes_vencidos_historial})</h3>
+                                <h3>Historial de Vencimientos ({fallbackData.clientes_vencidos_total})</h3>
                                 <div className={styles.containerInput}>
                                     <input title={'Buscar cliente'} type="text" name="nuip" className={styles.inputStyle}
                                            placeholder="Documento de identidad..." required/>

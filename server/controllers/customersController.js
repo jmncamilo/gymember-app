@@ -52,6 +52,10 @@ class CustomersController {
         }
     }
 
+    async getAllCustomersExpired(req, res) {
+        console.log(req);
+    }
+
     async atomicUpdateCustomerInfo(req, res) {
         // This method is used to partial update customer info in all tables related to customer information
 

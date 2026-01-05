@@ -47,7 +47,7 @@ export function UsersPage() {
     });
 
     // TODO: renombrar esto a fallbackData y modificar el nombre donde es llamado en este archivo...
-    // Fallback data
+    // Fallback API data
     const data = {
         total_customers: 0,
         nuip: '99999999',
