@@ -1,6 +1,8 @@
 import styles from "./DefaultCard.module.css";
 /** @type {string} */
 import userNoPic from "../../../assets/icons/user-nopic.png";
+import { formatDateToDayFirst } from "../../../utils/formatters/formatDateToDayFirst.js";
+import { formatDateForDateInput } from "../../../utils/formatters/formatDateForDateInput.js";
 
 export function DefaultCard({data, onClick = () => {}}) {
 
@@ -13,8 +15,8 @@ export function DefaultCard({data, onClick = () => {}}) {
         profile_image_url: 'https://pbs.twimg.com/media/F3hZ5izWEAAC2zt.jpg',
         // Membership info data
         membership_type: 'Mensualidad',
-        start_date: '01/01/1996',
-        end_date: '01/02/1996'
+        start_date: '1996-01-01',
+        end_date: '1996-01-02'
     };
 
     let customerData = data || defaultData;
@@ -31,8 +33,8 @@ export function DefaultCard({data, onClick = () => {}}) {
                 <p>📜{customerData.nuip}</p>
             </div>
             <div className={`${styles.cardBody} ${styles.cardFooter}`}>
-                <h5>🗓️ Inscripción → {customerData.start_date}</h5>
-                <h5>📅 Expiración → {customerData.end_date}</h5>
+                <h5>🗓️ Inscripción → {formatDateToDayFirst(formatDateForDateInput(customerData.start_date))}</h5>
+                <h5>📅 Expiración → {formatDateToDayFirst(formatDateForDateInput(customerData.end_date))}</h5>
                 <h5>🥇 Membresía → {customerData.membership_type}</h5>
                 <button className={styles.buttonRenew} onClick={onClick}>Renovar Cliente</button>
             </div>

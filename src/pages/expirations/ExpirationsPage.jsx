@@ -18,8 +18,8 @@ export function ExpirationsPage() {
         profile_image_url: null,
         // Membership info data
         membership_type: 'Plan promocional',
-        start_date: '19/03/2025',
-        end_date: '19/04/2025'
+        start_date: '2025-03-19',
+        end_date: '2025-04-19'
     };
 
     // Function that handles redirection to the payments module
