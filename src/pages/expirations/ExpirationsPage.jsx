@@ -28,9 +28,9 @@ export function ExpirationsPage() {
         navigate("/pagos");
     }
 
-    // TODO: consumir endpoint para la carga inicial de datos de clientes vencidos GET -> /customers/expired
+    // TODO: consumir endpoint para la carga inicial de datos de clientes vencidos GET -> /customers/expired y renderizar las cards
     // TODO: también agregar mensaje en cado de que no se renderice ninguna card porque no se hayan encontrado clientes vencidos
-    // TODO: agregar filtros de encontrar usuario por nuip y no se encuentra ningún usuario mostrar mensaje
+    // TODO: agregar filtros de encontrar usuario por nuip y no se encuentra ningún usuario mostrar mensaje (reciclar lógica del módulo de usuarios/clientes)
 
     return (
         <>
