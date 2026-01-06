@@ -2,8 +2,18 @@ import styles from "./ExpirationsPage.module.css";
 import "../defaultStyles.css";
 import { DefaultCard } from "../../components/cards/default/DefaultCard.jsx";
 import { useNavigate } from "react-router-dom";
+import { useFetchWithAuth } from "../../hooks/useFetchWithAuth.js";
+import { getOptions } from "../../utils/misc/fetchOptions.js";
+import { useEffect, useState } from "react";
+import { Loader } from "../../components/loader/Loader.jsx";
+
 
 export function ExpirationsPage() {
+    // State to control the loading indicator during both initial load and general operations
+    const [loadingState, setLoadingState] = useState({
+        firstLoading: true,
+        generalLoading: false
+    });
 
     // Fallback API data
     const fallbackData = {
@@ -28,7 +38,40 @@ export function ExpirationsPage() {
         navigate("/pagos");
     }
 
-    // TODO: consumir endpoint para la carga inicial de datos de clientes vencidos GET -> /customers/expired y renderizar las cards
+    // TODO: Falta usar la data cargada para renderizar las cards
+    // Custom hook to fetch customers expired data
+    const {
+        data: customersExpiredData,
+        executeFetchWithAuth: executeCustomersExpiredFetchWithAuth
+    } = useFetchWithAuth('/customers/expired', getOptions);
+
+    // Effect to load all expired customers by executing the custom fetch hook
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await executeCustomersExpiredFetchWithAuth();
+                if (!result.success) {
+                    alert('No se pudo cargar la información de los clientes vencidos...');
+                    navigate("/acceso", { replace: true });
+                }
+                // TESTING CJ
+                alert(result?.data.message ?? '¡Clientes vencidos encontrados!');
+                console.log(result?.data ?? 'Error imprimiendo los datos de los clientes vencidos...');
+            } catch (err) {
+                console.error(err);
+                navigate("/acceso", { replace: true });
+            } finally {
+                setLoadingState(prev => ({
+                    ...prev,
+                    firstLoading: false
+                }));
+            }
+        };
+
+        fetchData().catch(() => {});
+    }, []);// eslint-disable-line react-hooks/exhaustive-deps
+
+
     // TODO: también agregar mensaje en cado de que no se renderice ninguna card porque no se hayan encontrado clientes vencidos
     // TODO: agregar filtros de encontrar usuario por nuip y no se encuentra ningún usuario mostrar mensaje (reciclar lógica del módulo de usuarios/clientes)
 
@@ -101,6 +144,9 @@ export function ExpirationsPage() {
 
                 </div>
             </div>
+
+            {/* Loader visibility */}
+            {(loadingState.firstLoading || loadingState.generalLoading) && <Loader/>}
         </>
     );
 }

@@ -95,7 +95,7 @@ export function UsersPage() {
         // Counter to trigger customer data reload after a successful update
     const [reloadCustomers, setReloadCustomers] = useState(0);
 
-    // Effect to load all customers data by executing the custom fetch hook below
+    // Effect to load all customers data by executing the custom fetch hook
     useEffect(() => {
         const fetchData = async () => {
             try {
