@@ -15,19 +15,23 @@ export function ExpirationsPage() {
         generalLoading: false
     });
 
+    // State to control filtering customers by nuip (recent and historical expired customers)
+    const [filterByNuipRecentExpiredCustomers, setFilterByNuipRecentExpiredCustomers] = useState('');
+    const [filterByNuipHistoricExpiredCustomers, setFilterByNuipHistoricExpiredCustomers] = useState('');
+
     // Fallback API data
     const fallbackData = {
         // Queries data -> membership_type = expired
             // Cambiar los nombres de estas propiedades cuando haya conexión real a la API...
-        clientes_vencidos_total: 250,
-        clientes_vencidos_recientemente: 23,
+        clientes_vencidos_total: 99,
+        clientes_vencidos_recientemente: 99,
         // Customer info data
-        nuip: '1122334567',
-        first_name: 'Bruno',
-        first_last_name: 'Jiménez',
+        nuip: '0000000000',
+        first_name: 'Unnamed',
+        first_last_name: 'Unnamed',
         profile_image_url: null,
         // Membership info data
-        membership_type: 'Plan promocional',
+        membership_type: 'Mensual',
         start_date: '2025-03-19',
         end_date: '2025-04-19'
     };
@@ -38,7 +42,6 @@ export function ExpirationsPage() {
         navigate("/pagos");
     }
 
-    // TODO: Falta usar la data cargada para renderizar las cards
     // Custom hook to fetch customers expired data
     const {
         data: customersExpiredData,
@@ -71,9 +74,7 @@ export function ExpirationsPage() {
         fetchData().catch(() => {});
     }, []);// eslint-disable-line react-hooks/exhaustive-deps
 
-
-    // TODO: también agregar mensaje en cado de que no se renderice ninguna card porque no se hayan encontrado clientes vencidos
-    // TODO: agregar filtros de encontrar usuario por nuip y no se encuentra ningún usuario mostrar mensaje (reciclar lógica del módulo de usuarios/clientes)
+    // TODO: testear un poco más... intentar romperlo!!
 
     return (
         <>
@@ -81,15 +82,24 @@ export function ExpirationsPage() {
                 <div className={styles.contentAreaWrapper}>
 
                     <header>
-                        <h1>Clientes Vencidos ({fallbackData.clientes_vencidos_total})</h1>
+                        <h1>Clientes Vencidos ({customersExpiredData?.expiredCustomersMetrics?.total_expired_customers ?? fallbackData.clientes_vencidos_total})</h1>
                     </header>
 
                     <main>
                         <div className={styles.mainSectionWrapper}>
                             <div className={styles.mainSubtitle}>
-                                <h3>Clientes Vencidos Recientemente ({fallbackData.clientes_vencidos_recientemente})</h3>
+                                <h3>Clientes Vencidos Recientemente ({customersExpiredData?.expiredCustomersMetrics?.recently_expired_customers ?? fallbackData.clientes_vencidos_recientemente})</h3>
                                 <div className={styles.containerInput}>
-                                    <input title={'Buscar cliente'} type="text" name="nuip" className={styles.inputStyle} placeholder="Documento de identidad..." required/>
+                                    <input
+                                        title={'Buscar cliente'}
+                                        type="text"
+                                        value={filterByNuipRecentExpiredCustomers}
+                                        onChange={(e) => setFilterByNuipRecentExpiredCustomers(e.target.value)}
+                                        name="nuip-recently"
+                                        className={styles.inputStyle}
+                                        placeholder="Documento de identidad..."
+                                        required
+                                    />
                                     <div className={styles.iconSearch}>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                             <path
@@ -102,22 +112,47 @@ export function ExpirationsPage() {
                                 </div>
                             </div>
                             <div className={styles.mainSectionContent}>
-                                <DefaultCard data={fallbackData} onClick={handleRedirection}/>
-                                <DefaultCard data={fallbackData} onClick={handleRedirection}/>
-                                <DefaultCard onClick={handleRedirection}/>
-                                <DefaultCard onClick={handleRedirection}/>
-                                <DefaultCard onClick={handleRedirection}/>
-                                <DefaultCard onClick={handleRedirection}/>
-                                <DefaultCard onClick={handleRedirection}/>
+                                {
+                                    (() => {
+                                        if (!customersExpiredData?.recentlyExpiredCustomers?.length) {
+                                            return (
+                                                <h3>📄 No hay clientes vencidos recientemente.</h3>
+                                            );
+                                        }
+                                        const filtered = customersExpiredData?.recentlyExpiredCustomers?.filter(data => data?.nuip?.includes(filterByNuipRecentExpiredCustomers));
+                                        if (!filtered?.length) {
+                                            return filterByNuipRecentExpiredCustomers ? (
+                                               <h3>{`🚨 No se encontró ningún cliente registrado con el número de documento ingresado: ${filterByNuipRecentExpiredCustomers}.`}</h3>
+                                            ) : (
+                                                <h3>📄 No hay clientes vencidos recientemente.</h3>
+                                            );
+                                        }
+                                        return filtered.map((data, idx) => (
+                                            <DefaultCard
+                                                key={data?.id || idx}
+                                                data={data}
+                                                onClick={handleRedirection}
+                                            />
+                                        ));
+                                    })()
+                                }
                             </div>
                         </div>
 
                         <div className={styles.mainSectionWrapper}>
                             <div className={styles.mainSubtitle}>
-                                <h3>Historial de Vencimientos ({fallbackData.clientes_vencidos_total})</h3>
+                                <h3>Historial de Vencimientos ({customersExpiredData?.expiredCustomersMetrics?.total_expired_customers ?? fallbackData.clientes_vencidos_total})</h3>
                                 <div className={styles.containerInput}>
-                                    <input title={'Buscar cliente'} type="text" name="nuip" className={styles.inputStyle}
-                                           placeholder="Documento de identidad..." required/>
+                                    <input
+                                        title={'Buscar cliente'}
+                                        type="text"
+                                        value={filterByNuipHistoricExpiredCustomers}
+                                        onChange={(e) => setFilterByNuipHistoricExpiredCustomers(e.target.value)}
+                                        name="nuip-historic"
+                                        className={styles.inputStyle}
+                                        placeholder="Documento de identidad..."
+                                        required
+                                    />
                                     <div className={styles.iconSearch}>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                             <path
@@ -131,13 +166,30 @@ export function ExpirationsPage() {
                                 </div>
                             </div>
                             <div className={styles.mainSectionContent}>
-                                <DefaultCard data={fallbackData} onClick={handleRedirection} />
-                                <DefaultCard data={fallbackData} onClick={handleRedirection} />
-                                <DefaultCard/>
-                                <DefaultCard/>
-                                <DefaultCard/>
-                                <DefaultCard/>
-                                <DefaultCard/>
+                                {
+                                    (() => {
+                                        if (!customersExpiredData?.allExpiredCostumers?.length) {
+                                            return (
+                                                <h3>📄 No hay clientes con membresías vencidas.</h3>
+                                            );
+                                        }
+                                        const filtered = customersExpiredData?.allExpiredCostumers?.filter(data => data?.nuip?.includes(filterByNuipHistoricExpiredCustomers));
+                                        if (!filtered?.length) {
+                                            return filterByNuipHistoricExpiredCustomers ? (
+                                                <h3>{`🚨 No se encontró ningún cliente registrado con el número de documento ingresado: ${filterByNuipHistoricExpiredCustomers}.`}</h3>
+                                            ) : (
+                                                <h3>📄 No hay clientes con membresías vencidas.</h3>
+                                            );
+                                        }
+                                        return filtered.map((data, idx) => (
+                                            <DefaultCard
+                                                key={data?.id || idx}
+                                                data={data}
+                                                onClick={handleRedirection}
+                                            />
+                                        ));
+                                    })()
+                                }
                             </div>
                         </div>
                     </main>

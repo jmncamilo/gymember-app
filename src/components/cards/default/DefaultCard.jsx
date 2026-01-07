@@ -3,6 +3,7 @@ import styles from "./DefaultCard.module.css";
 import userNoPic from "../../../assets/icons/user-nopic.png";
 import { formatDateToDayFirst } from "../../../utils/formatters/formatDateToDayFirst.js";
 import { formatDateForDateInput } from "../../../utils/formatters/formatDateForDateInput.js";
+import { membershipTypeFormatter } from "../../../utils/formatters/membershipTypeFormatter.js";
 
 export function DefaultCard({data, onClick = () => {}}) {
 
@@ -14,7 +15,7 @@ export function DefaultCard({data, onClick = () => {}}) {
         first_last_name: 'Unnamed',
         profile_image_url: 'https://pbs.twimg.com/media/F3hZ5izWEAAC2zt.jpg',
         // Membership info data
-        membership_type: 'Mensualidad',
+        membership_type: 'Mensual',
         start_date: '1996-01-01',
         end_date: '1996-01-02'
     };
@@ -35,7 +36,7 @@ export function DefaultCard({data, onClick = () => {}}) {
             <div className={`${styles.cardBody} ${styles.cardFooter}`}>
                 <h5>🗓️ Inscripción → {formatDateToDayFirst(formatDateForDateInput(customerData.start_date))}</h5>
                 <h5>📅 Expiración → {formatDateToDayFirst(formatDateForDateInput(customerData.end_date))}</h5>
-                <h5>🥇 Membresía → {customerData.membership_type}</h5>
+                <h5>🥇 Membresía → {membershipTypeFormatter(customerData.membership_type)}</h5>
                 <button className={styles.buttonRenew} onClick={onClick}>Renovar Cliente</button>
             </div>
         </div>
