@@ -74,7 +74,7 @@ export function ExpirationsPage() {
         fetchData().catch(() => {});
     }, []);// eslint-disable-line react-hooks/exhaustive-deps
 
-    // TODO: testear un poco más... intentar romperlo!!
+    // TODO: testear un poco más... simular el uso, registrar nuevos usuarios y establecerlos como vencidos e ir viendo si se comporta correctamente este módulo...
 
     return (
         <>
