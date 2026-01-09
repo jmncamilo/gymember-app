@@ -274,7 +274,7 @@ class CustomersModel {
         return result.length === 0 ? null : result[0];
     }
 
-    // Get the count of the memberships that are expiring in the next 7 days for a specific gym (id)
+    // Get the count of the memberships that are expiring soon in the next 7 days for a specific gym (id)
     static async getExpiringMembershipsSoonByGymId(id) {
         const query = `SELECT
                            g.gym_name,
@@ -287,6 +287,21 @@ class CustomersModel {
                        WHERE g.id = ?
                        AND cm.end_date BETWEEN DATE(CONVERT_TZ(NOW(), 'UTC', 'America/Bogota'))
                        AND DATE_ADD(DATE(CONVERT_TZ(NOW(), 'UTC', 'America/Bogota')), INTERVAL 7 DAY)
+                       GROUP BY g.gym_name`;
+        const [result] = await pool.execute(query, [id]);
+        return result.length === 0 ? null : result[0];
+    }
+
+    // Get total count of new customers created in the last 30 days for a specific gym (id)
+    static async getLastMonthCustomersByGymId(id) {
+        const query = `SELECT
+                           g.gym_name,
+                           COUNT(*) AS new_customers_last_month
+                       FROM Customers c
+                       INNER JOIN Gym_Dev_Accounts g
+                           ON c.gym_id_fk = g.id
+                       WHERE g.id = ?
+                       AND (c.created_at BETWEEN DATE_SUB(NOW(), INTERVAL 1 MONTH) AND NOW())
                        GROUP BY g.gym_name`;
         const [result] = await pool.execute(query, [id]);
         return result.length === 0 ? null : result[0];
