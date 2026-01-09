@@ -38,7 +38,8 @@ class TransactionModel {
                                ON t.customer_id_fk = c.id
                        WHERE g.id = ?
                        AND (t.transaction_date >= CURDATE()
-                       AND t.transaction_date < DATE_ADD(CURDATE(), INTERVAL 1 DAY))`;
+                       AND t.transaction_date < DATE_ADD(CURDATE(), INTERVAL 1 DAY))
+                       GROUP BY g.gym_name`;
         const [result] = await pool.execute(query, [id]);
         return result.length === 0 ? null : result[0];
     }

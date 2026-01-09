@@ -224,17 +224,35 @@ class CustomersModel {
     }
 
     // Get the count of memberships granted today for a specific gym (id)
-    static async getCountMembershipsGrantedToday(id) {
+    static async getCountMembershipsGrantedTodayByGymId(id) {
         const query = `SELECT
-                          g.gym_name,
-                          COUNT(*) AS today_total_memberships
-                      FROM Customers c
-                      INNER JOIN Customers_Memberships cm
-                          ON c.id = cm.customer_id_fk
-                      INNER JOIN Gym_Dev_Accounts g
-                          ON c.gym_id_fk = g.id
-                      WHERE g.id = ?
-                      AND cm.start_date = DATE(CONVERT_TZ(NOW(), 'UTC', 'America/Bogota'))`;
+                           g.gym_name,
+                           COUNT(*) AS today_total_memberships
+                       FROM Customers c
+                       INNER JOIN Customers_Memberships cm
+                           ON c.id = cm.customer_id_fk
+                       INNER JOIN Gym_Dev_Accounts g
+                           ON c.gym_id_fk = g.id
+                       WHERE g.id = ?
+                       AND cm.start_date = DATE(CONVERT_TZ(NOW(), 'UTC', 'America/Bogota'))
+                       GROUP BY g.gym_name`;
+        const [result] = await pool.execute(query, [id]);
+        return result.length === 0 ? null : result[0];
+    }
+
+    // Get the count of the total active customers for a specific gym (id)
+    static async getActiveCustomersCountByGymId(id) {
+        const query = `SELECT
+                           g.gym_name,
+                           COUNT(*) AS total_active_customers
+                       FROM Customers c
+                       INNER JOIN Customers_Memberships cm
+                           ON c.id = cm.customer_id_fk
+                       INNER JOIN Gym_Dev_Accounts g
+                           ON c.gym_id_fk = g.id
+                       WHERE g.id = ?
+                       AND cm.status IN ('active', 'trial')
+                       GROUP BY g.gym_name`;
         const [result] = await pool.execute(query, [id]);
         return result.length === 0 ? null : result[0];
     }
