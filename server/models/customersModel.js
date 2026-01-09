@@ -257,6 +257,23 @@ class CustomersModel {
         return result.length === 0 ? null : result[0];
     }
 
+    // Get the count of the memberships that are expiring today for a specific gym (id)
+    static async getExpiringMembershipsTodayByGymId(id) {
+        const query = `SELECT
+                           g.gym_name,
+                           COUNT(*) AS today_expiring_memberships
+                       FROM Customers c
+                       INNER JOIN Customers_Memberships cm
+                           ON c.id = cm.customer_id_fk
+                       INNER JOIN Gym_Dev_Accounts g
+                           ON c.gym_id_fk = g.id
+                       WHERE g.id = ?
+                       AND cm.end_date = DATE(CONVERT_TZ(NOW(), 'UTC', 'America/Bogota'))
+                       GROUP BY g.gym_name`;
+        const [result] = await pool.execute(query, [id]);
+        return result.length === 0 ? null : result[0];
+    }
+
     // Updating membership status to active
     static async membershipStatusToActive(connection = null, data) {
         const executor = connection || pool;
