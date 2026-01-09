@@ -28,7 +28,7 @@ class TransactionModel {
     // Get today's total revenue for a specific gym by id
     static async getTodayTotalRevenueByGymId(id) {
         const query = `SELECT g.gym_name,
-                           SUM(t.amount) AS today_revenue
+                            COALESCE(SUM(t.amount), 0) AS today_revenue
                        FROM Transactions t
                            INNER JOIN Employees e
                                ON t.employee_id_fk = e.id
@@ -40,7 +40,7 @@ class TransactionModel {
                        AND (t.transaction_date >= CURDATE()
                        AND t.transaction_date < DATE_ADD(CURDATE(), INTERVAL 1 DAY))`;
         const [result] = await pool.execute(query, [id]);
-        return result.length === 0 || !result[0] ? null : result[0];
+        return result.length === 0 ? null : result[0];
     }
 
 }
