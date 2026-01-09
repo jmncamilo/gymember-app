@@ -307,6 +307,24 @@ class CustomersModel {
         return result.length === 0 ? null : result[0];
     }
 
+    // Get total count of renewal customers in the last 30 days for a specific gym (id)
+    static async getRenewedCustomersLastMonthByGymId(id) {
+        const query = `SELECT
+                           g.gym_name,
+                           COUNT(*) AS renewed_customers_last_month
+                       FROM Customers c
+                       INNER JOIN Transactions t
+                           ON c.id = t.customer_id_fk
+                       INNER JOIN Gym_Dev_Accounts g
+                           ON c.gym_id_fk = g.id
+                       WHERE g.id = ?
+                       AND (LOWER(t.transaction_type) IN ('renovación', 'renovacion'))
+                       AND (t.transaction_date BETWEEN DATE_SUB(NOW(), INTERVAL 1 MONTH) AND NOW())
+                       GROUP BY g.gym_name`;
+        const [result] = await pool.execute(query, [id]);
+        return result.length === 0 ? null : result[0];
+    }
+
     // Updating membership status to active
     static async membershipStatusToActive(connection = null, data) {
         const executor = connection || pool;
