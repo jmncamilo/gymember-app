@@ -326,7 +326,7 @@ class CustomersModel {
     }
 
     // Get count of customers with specific membership status for a specific gym (id)
-    static async getCountByMembershipStatusAndByGymId(id, status = 'pending', columnCountName = 'memberships_pending_payment') {
+    static async getCountByMembershipStatusAndByGymId(id, status = 'pending', columnCountName = 'pending_payments') {
         const query = `SELECT
                            g.gym_name,
                            COUNT(*) AS ${columnCountName}
@@ -339,6 +339,25 @@ class CustomersModel {
                        AND cm.status = ?
                        GROUP BY g.gym_name`;
         const [result] = await pool.execute(query, [id, status]);
+        return result.length === 0 ? null : result[0];
+    }
+
+    // Get percentage of active customers by gender for a specific gym (id)
+    static async getActiveCustomersGenderPercentageByGymId(gender, id, columnCountName) {
+        const query = `SELECT
+                           g.gym_name,
+                           ROUND((COUNT(CASE WHEN cd.gender = ? THEN 1 END) / COUNT(*)) * 100, 0) AS ${columnCountName}
+                       FROM Customers c
+                       INNER JOIN Gym_Dev_Accounts g
+                           ON c.gym_id_fk = g.id
+                       INNER JOIN Customers_Details cd
+                           ON c.id = cd.customer_id_fk
+                       INNER JOIN Customers_Memberships cm
+                           ON c.id = cm.customer_id_fk
+                       WHERE g.id = ?
+                       AND cm.status IN ('active', 'trial')
+                       GROUP BY g.gym_name`;
+        const [result] = await pool.execute(query, [gender, id]);
         return result.length === 0 ? null : result[0];
     }
 
