@@ -96,6 +96,11 @@ class CustomersController {
         }
     }
 
+    // TODO: crear endpoint y handler para consumir desde el front la data que necesita el dashboard para mostrar sus métricas
+    async getDashboardData(req, res) {
+        console.log(req);
+    }
+
     async atomicUpdateCustomerInfo(req, res) {
         // This method is used to partial update customer info in all tables related to customer information
 

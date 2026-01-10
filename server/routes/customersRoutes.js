@@ -4,6 +4,7 @@ const customersController = require("../controllers/customersController.js");
 
 router.get('/', customersController.getAllCustomers);
 router.get('/expired', customersController.getCustomersExpired);
+router.get('/dashboard', customersController.getDashboardData);
 router.get('/find/:nuip', customersController.getByNuip);
 router.post('/enroll', customersController.atomicEnrollCustomer);
 router.post('/transaction', customersController.atomicTransactionCustomer);
