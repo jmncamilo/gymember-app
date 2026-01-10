@@ -361,6 +361,22 @@ class CustomersModel {
         return result.length === 0 ? null : result[0];
     }
 
+    // Get average age of total customers registered in a specific gym (id)
+    static async getAverageCustomerAgeByGymId(id) {
+        const query = `SELECT
+                           g.gym_name,
+                           ROUND(AVG(cd.age), 0) AS avg_customers_age
+                       FROM Customers c
+                       INNER JOIN Gym_Dev_Accounts g
+                           ON c.gym_id_fk = g.id
+                       INNER JOIN Customers_Details cd
+                           ON c.id = cd.customer_id_fk
+                       WHERE g.id = ?
+                       GROUP BY g.gym_name`;
+        const [result] = await pool.execute(query, [id]);
+        return result.length === 0 ? null : result[0];
+    }
+
     // Updating membership status to active
     static async membershipStatusToActive(connection = null, data) {
         const executor = connection || pool;
