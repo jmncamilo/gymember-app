@@ -325,6 +325,23 @@ class CustomersModel {
         return result.length === 0 ? null : result[0];
     }
 
+    // Get count of customers with specific membership status for a specific gym (id)
+    static async getCountByMembershipStatusAndByGymId(id, status = 'pending', columnCountName = 'memberships_pending_payment') {
+        const query = `SELECT
+                           g.gym_name,
+                           COUNT(*) AS ${columnCountName}
+                       FROM Customers c
+                       INNER JOIN Gym_Dev_Accounts g
+                           ON c.gym_id_fk = g.id
+                       INNER JOIN Customers_Memberships cm
+                           ON c.id = cm.customer_id_fk
+                       WHERE g.id = ?
+                       AND cm.status = ?
+                       GROUP BY g.gym_name`;
+        const [result] = await pool.execute(query, [id, status]);
+        return result.length === 0 ? null : result[0];
+    }
+
     // Updating membership status to active
     static async membershipStatusToActive(connection = null, data) {
         const executor = connection || pool;
