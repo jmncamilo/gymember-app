@@ -107,7 +107,6 @@ class CustomersController {
         }
     }
 
-    // TODO: crear endpoint y handler para consumir desde el front la data que necesita el dashboard para mostrar sus métricas
     async getDashboardData(req, res) {
         // This method retrieves all dashboard data required to the frontend
         try {
