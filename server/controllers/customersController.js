@@ -114,22 +114,6 @@ class CustomersController {
             // Get gym id
             const gym_id = req.gym.id;
             // Execute queries and build fallback
-                /* TESTING CJ
-                const [
-                    todayTotalRevenue,
-                    countMembershipsGrantedToday,
-                    activeCustomersCount,
-                    expiringMembershipsToday,
-                    expiringMembershipsSoon,
-                    lastMonthCustomers,
-                    renewedCustomersLastMonth,
-                    percentageActiveWomen,
-                    percentageActiveMen,
-                    averageCustomersAge,
-                    cancelledMembershipsLast3Months,
-                    pendingPaymentsCount
-                ] =
-            * */
             const results = await Promise.all([
                 getTodayTotalRevenueByGymId(gym_id),
                 getCountMembershipsGrantedTodayByGymId(gym_id),
