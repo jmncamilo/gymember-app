@@ -11,12 +11,23 @@ const {
     getCustomerByNuip,
     updateCustomerMembership,
     getAllCustomersData,
-    getCustomersDataByMembershipStatus
+    getCustomersDataByMembershipStatus,
+    getCountMembershipsGrantedTodayByGymId,
+    getActiveCustomersCountByGymId,
+    getExpiringMembershipsTodayByGymId,
+    getExpiringMembershipsSoonByGymId,
+    getLastMonthCustomersByGymId,
+    getRenewedCustomersLastMonthByGymId,
+    getActiveCustomersGenderPercentageByGymId,
+    getAverageCustomersAgeByGymId,
+    getCancelledMembershipsLast3MonthsByGymId,
+    getCountByMembershipStatusAndByGymId
 } = require("../models/customersModel.js");
-const { insertCustomerTransaction } = require('../models/transactionModel.js');
+const { insertCustomerTransaction, getTodayTotalRevenueByGymId } = require('../models/transactionModel.js');
 const { groupByEntity } = require("../utils/helpers/groupByEntity.js");
 const { FIELD_ENTITY_MAP } = require("../utils/mappings/fieldEntityMap.js");
 const { customersMethods } = require("../utils/mappings/customerMethodDictionary.js");
+const DASHBOARD_KEYS = require("../constants/dashboardMetricsKeys.js");
 
 
 class CustomersController {
@@ -98,7 +109,68 @@ class CustomersController {
 
     // TODO: crear endpoint y handler para consumir desde el front la data que necesita el dashboard para mostrar sus métricas
     async getDashboardData(req, res) {
-        console.log(req);
+        // This method retrieves all dashboard data required to the frontend
+        try {
+            // Get gym id
+            const gym_id = req.gym.id;
+            // Execute queries and build fallback
+                /* TESTING CJ
+                const [
+                    todayTotalRevenue,
+                    countMembershipsGrantedToday,
+                    activeCustomersCount,
+                    expiringMembershipsToday,
+                    expiringMembershipsSoon,
+                    lastMonthCustomers,
+                    renewedCustomersLastMonth,
+                    percentageActiveWomen,
+                    percentageActiveMen,
+                    averageCustomersAge,
+                    cancelledMembershipsLast3Months,
+                    pendingPaymentsCount
+                ] =
+            * */
+            const results = await Promise.all([
+                getTodayTotalRevenueByGymId(gym_id),
+                getCountMembershipsGrantedTodayByGymId(gym_id),
+                getActiveCustomersCountByGymId(gym_id),
+                getExpiringMembershipsTodayByGymId(gym_id),
+                getExpiringMembershipsSoonByGymId(gym_id),
+                getLastMonthCustomersByGymId(gym_id),
+                getRenewedCustomersLastMonthByGymId(gym_id),
+                getActiveCustomersGenderPercentageByGymId('f', gym_id, 'percentage_active_women'),
+                getActiveCustomersGenderPercentageByGymId('m', gym_id, 'percentage_active_men'),
+                getAverageCustomersAgeByGymId(gym_id),
+                getCancelledMembershipsLast3MonthsByGymId(gym_id),
+                getCountByMembershipStatusAndByGymId(gym_id, 'pending', 'pending_payments')
+            ]);
+                // Build the data object assigning the valid value or 0 as a default for fallback
+            const data = {};
+            for (const key of DASHBOARD_KEYS) {
+                data[key] = 0;
+                for (const element of results) {
+                    if(!element || typeof element !== 'object') continue;
+                    if(!Object.hasOwn(element, key)) continue;
+                    data[key] = element[key] ?? 0;
+
+                    break;
+                }
+            }
+
+            // Send response ok with fallback
+            return res.status(200).json({
+                message: '¡Consulta de datos exitosa!',
+                success: true,
+                data
+            });
+
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error en el servidor. Vuelve a intentarlo en unos minutos...',
+                error: err?.message || err,
+                success: false
+            });
+        }
     }
 
     async atomicUpdateCustomerInfo(req, res) {
