@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import profilePicIcon from "../../assets/icons/user-nopic.png";
 import { useForm } from "../../hooks/useForm.js";
 import { INITIAL_DASHBOARD_VALUES } from "./dashboardInitialValues.js";
+import { getFirstWord } from "../../utils/formatters/getFirstWord.js";
 
 export function HomePage() {
     /* Shows current date dd/mm/yy */
@@ -42,15 +43,15 @@ export function HomePage() {
             <div className={`defaultContainer ${styles.generalContainer}`}>
                 <div className={styles.titleContainer}>
                     <div className={styles.helloDateContainer}>
-                        <h2 className={styles.titleHeading}>Hola, {data.first_name}</h2>
+                        <h2 className={styles.titleHeading}>Hola, {getFirstWord(dashboardData?.employee_name) ?? '--'}</h2>
                         <h4 className={styles.dateHeading}>{todayDate}</h4>
                     </div>
                     <div className={styles.profileContainer}>
                         <div className={styles.textProfile}>
-                            <h3 className={styles.textProfileName}>{`${data.first_name} ${data.first_last_name}`}</h3>
-                            <h3 className={styles.textProfileGym}>{data.gym_name}</h3>
+                            <h3 className={styles.textProfileName}>{dashboardData?.employee_name ?? '--'}</h3>
+                            <h3 className={styles.textProfileGym}>{dashboardData?.gym_name ?? '--'}</h3>
                         </div>
-                        <img className={styles.profilePic} src={data.logo_url ? data.logo_url : profilePicIcon} alt="profile-pic"/>
+                        <img className={styles.profilePic} src={dashboardData?.logo_url ? dashboardData.logo_url : profilePicIcon} alt="profile-pic"/>
                     </div>
                 </div>
 
@@ -68,11 +69,11 @@ export function HomePage() {
                             <h5 className={styles.cardTitle}>Ingresos Hoy</h5>
                         </div>
                         <div className={styles.firstCardContent}>
-                            <h3 className={styles.contentTitleMoney}>${data.todayIncome}</h3>
+                            <h3 className={styles.contentTitleMoney}>${dashboardData?.today_revenue ?? 9}</h3>
                         </div>
                         <div className={styles.firstCardExtraContent}>
-                            <h5 className={styles.extraContentText}>{data.membershipCount} membresía(s) otorgada(s) el día de hoy</h5>
-                            <div className={`${styles.arrowImgDefaultDecrease} ${data.membershipCount > 0 ? styles.arrowImgIncrease : ''}`}></div>
+                            <h5 className={styles.extraContentText}>{dashboardData?.today_total_memberships ?? 9} membresía(s) otorgada(s) el día de hoy</h5>
+                            <div className={`${styles.arrowImgDefaultDecrease} ${(dashboardData?.today_total_memberships ?? 9) > 0 ? styles.arrowImgIncrease : ''}`}></div>
                         </div>
                     </div>
 
@@ -90,21 +91,21 @@ export function HomePage() {
                                     <div className={styles.boxIcon}></div>
                                 </div>
                                 <div className={styles.secondCardContentText}>Total de usuarios activos</div>
-                                <div className={styles.secondCardContentValue}>{data.totalActiveUsers}</div>
+                                <div className={styles.secondCardContentValue}>{dashboardData?.total_active_customers ?? 9}</div>
                             </div>
                             <div className={styles.secondCardContentContainer}>
                                 <div className={styles.secondCardContentIcon}>
                                     <div className={`${styles.boxIcon} ${styles.boxIcon2}`}></div>
                                 </div>
                                 <div className={styles.secondCardContentText}>Membresías que vencen hoy</div>
-                                <div className={styles.secondCardContentValue}>{data.todayExpiringMemberships}</div>
+                                <div className={styles.secondCardContentValue}>{dashboardData?.today_expiring_memberships ?? 9}</div>
                             </div>
                             <div className={styles.secondCardContentContainer}>
                                 <div className={styles.secondCardContentIcon}>
                                     <div className={`${styles.boxIcon} ${styles.boxIcon3}`}></div>
                                 </div>
                                 <div className={styles.secondCardContentText}>Membresías que vencen pronto</div>
-                                <div className={styles.secondCardContentValue}>{data.soonExpiringMemberships}</div>
+                                <div className={styles.secondCardContentValue}>{dashboardData?.soon_expiring_memberships ?? 9}</div>
                             </div>
                         </div>
                     </div>
@@ -124,7 +125,7 @@ export function HomePage() {
                                     <div
                                         className={`${styles.boxInsideTextThirdCard} ${utilStyles.flexCenterAlign}`}>Últimos 30 días</div>
                                     <div
-                                        className={`${styles.boxInsideValueThirdCard} ${utilStyles.flexCenterAlign}`}>{data.totalNewUsers}</div>
+                                        className={`${styles.boxInsideValueThirdCard} ${utilStyles.flexCenterAlign}`}>{dashboardData?.new_customers_last_month ?? 9}</div>
                                 </div>
                             </div>
                             <div className={styles.thirdCardBoxInfo}>
@@ -133,7 +134,7 @@ export function HomePage() {
                                     <div
                                         className={`${styles.boxInsideTextThirdCard} ${utilStyles.flexCenterAlign}`}>Últimos 30 días</div>
                                     <div
-                                        className={`${styles.boxInsideValueThirdCard} ${utilStyles.flexCenterAlign}`}>{data.totalRenewedUsers}</div>
+                                        className={`${styles.boxInsideValueThirdCard} ${utilStyles.flexCenterAlign}`}>{dashboardData?.renewed_customers_last_month ?? 9}</div>
                                 </div>
                             </div>
                             <button className={styles.btnThirdCardNewUser} onClick={() => navigate('/registro')}>Registrar Usuario</button>
@@ -159,7 +160,7 @@ export function HomePage() {
                                         <div className={styles.tableIconFourthCard}></div>
                                     </td>
                                     <td>Promedio de mujeres inscritas</td>
-                                    <td>{data.womenPercentage}%</td>
+                                    <td>{dashboardData?.percentage_active_women ?? '-'}%</td>
                                     <td>Sobre el total de usuarios activos</td>
                                 </tr>
                                 <tr>
@@ -167,7 +168,7 @@ export function HomePage() {
                                         <div className={`${styles.tableIconFourthCard} ${styles.tableIconFourthCard2}`}></div>
                                     </td>
                                     <td>Promedio de hombres inscritos</td>
-                                    <td>{data.menPercentage}%</td>
+                                    <td>{dashboardData?.percentage_active_men ?? '-'}%</td>
                                     <td>Sobre el total de usuarios activos</td>
                                 </tr>
                                 <tr>
@@ -175,7 +176,7 @@ export function HomePage() {
                                         <div className={`${styles.tableIconFourthCard} ${styles.tableIconFourthCard3}`}></div>
                                     </td>
                                     <td>Edad promedio de usuarios</td>
-                                    <td>{data.averageAge} años</td>
+                                    <td>{dashboardData?.avg_customers_age ?? 9} años</td>
                                     <td>Sobre el histórico de usuarios</td>
                                 </tr>
                                 <tr>
@@ -183,7 +184,7 @@ export function HomePage() {
                                         <div className={`${styles.tableIconFourthCard} ${styles.tableIconFourthCard4}`}></div>
                                     </td>
                                     <td>Membresías canceladas</td>
-                                    <td>{data.cancelledMemberships}</td>
+                                    <td>{dashboardData?.cancelled_memberships_last_3_months ?? 9}</td>
                                     <td>En los últimos 3 meses</td>
                                 </tr>
                                 </tbody>
@@ -198,7 +199,7 @@ export function HomePage() {
                             Pendientes
                         </div>
                         <div className={`${styles.fourthCardContent} ${styles.fifthCardFixContent}`}>
-                            <h5 className={`${styles.extraContentText} ${styles.fifthCardFixTextContent}`}>Tienes {data.pendingPayments} pagos pendientes para gestionar hoy.</h5>
+                            <h5 className={`${styles.extraContentText} ${styles.fifthCardFixTextContent}`}>Tienes {dashboardData?.pending_payments ?? 9} pagos pendientes para gestionar hoy.</h5>
                             <button className={`${styles.btnThirdCardNewUser} ${styles.btnFifthCard}`} onClick={() => navigate('/vencimientos')}>Revisar Pagos</button>
                         </div>
                     </div>
