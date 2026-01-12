@@ -110,8 +110,12 @@ class CustomersController {
     async getDashboardData(req, res) {
         // This method retrieves all dashboard data required to the frontend
         try {
-            // Get gym id
-            const gym_id = req.gym.id;
+            // Get gym id and validation
+            const gym_id = Number(req?.gym?.id);
+            if (!Number.isInteger(gym_id) || gym_id <= 0) {
+                throw new Error('El id del gimnasio no es válido o no está presente en la solicitud.');
+            }
+
             // Execute queries and build fallback
             const results = await Promise.all([
                 getTodayTotalRevenueByGymId(gym_id),
@@ -127,7 +131,8 @@ class CustomersController {
                 getCancelledMembershipsLast3MonthsByGymId(gym_id),
                 getCountByMembershipStatusAndByGymId(gym_id, 'pending', 'pending_payments')
             ]);
-                // Build the data object assigning the valid value or 0 as a default for fallback
+                // Builds the data object using the keys from the objects returned by the queries; if a key does not
+                // exist in the results, 0 is assigned as the default fallback value
             const data = {};
             for (const key of DASHBOARD_KEYS) {
                 data[key] = 0;
@@ -139,6 +144,10 @@ class CustomersController {
                     break;
                 }
             }
+                // Add to the data object information about gym and employee
+            data.gym_name = req?.gym?.gym_name ?? 'Unnamed Gym';
+            data.employee_name = req?.employee?.employee_name ?? 'Unnamed Employee';
+            data.logo_url = req?.gym?.logo_url ?? null;
 
             // Send response ok with fallback
             return res.status(200).json({

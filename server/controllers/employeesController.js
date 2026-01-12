@@ -61,7 +61,8 @@ class EmployeesController {
             const payload = {
                 id: employeeFounded.id,
                 gym_id_fk: employeeFounded.gym_id_fk,
-                role: employeeFounded.role
+                role: employeeFounded.role,
+                employee_name: employeeFounded.employee_name
             };
             const employeeToken = generateToken(payload, { expiresIn: '1d' });
 
