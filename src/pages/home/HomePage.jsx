@@ -4,6 +4,8 @@ import utilStyles from "../../styles/utilities/utilities.module.css";
 import { useNavigate } from "react-router-dom";
 /** @type {string} */
 import profilePicIcon from "../../assets/icons/user-nopic.png";
+import { useForm } from "../../hooks/useForm.js";
+import { INITIAL_DASHBOARD_VALUES } from "./dashboardInitialValues.js";
 
 export function HomePage() {
     /* Shows current date dd/mm/yy */
@@ -11,6 +13,9 @@ export function HomePage() {
 
     // Use navigate to optimal redirection
     const navigate = useNavigate();
+
+    // Use custom hook to store api data
+    const {form: dashboardData, setFormWithObject: setDashboardObjectData} = useForm(INITIAL_DASHBOARD_VALUES);
 
     /* Simulating API */
     const data = {
