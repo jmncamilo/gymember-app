@@ -3,7 +3,7 @@ import styles from "./HomePage.module.css";
 import utilStyles from "../../styles/utilities/utilities.module.css";
 import { useNavigate } from "react-router-dom";
 /** @type {string} */
-import profilePicIcon from "../../assets/icons/user-nopic.png";
+import gymDefaultPic from "../../assets/logos/default-gym-pic.png";
 import { useForm } from "../../hooks/useForm.js";
 import { INITIAL_DASHBOARD_VALUES } from "./dashboardInitialValues.js";
 import { getFirstWord } from "../../utils/formatters/getFirstWord.js";
@@ -18,25 +18,7 @@ export function HomePage() {
     // Use custom hook to store api data
     const {form: dashboardData, setFormWithObject: setDashboardObjectData} = useForm(INITIAL_DASHBOARD_VALUES);
 
-    /* Simulating API */
-    const data = {
-        first_name: 'Bruno',
-        first_last_name: 'Jiménez',
-        gym_name: 'Biuro Performance Gym',
-        todayIncome: '99.000.000',
-        logo_url: 'https://www.shutterstock.com/image-vector/angry-dog-head-gym-barbell-600nw-2256877429.jpg',
-        membershipCount: 15,
-        totalActiveUsers: 250,
-        todayExpiringMemberships: 8,
-        soonExpiringMemberships: 15,
-        totalNewUsers: 100,
-        totalRenewedUsers: 10,
-        womenPercentage: 50,
-        menPercentage: 50,
-        averageAge: 20,
-        cancelledMemberships: 14,
-        pendingPayments: 23
-    };
+    // TODO: consumir la API y verificar que los datos se leen correctamente
 
     return (
         <>
@@ -51,7 +33,7 @@ export function HomePage() {
                             <h3 className={styles.textProfileName}>{dashboardData?.employee_name ?? '--'}</h3>
                             <h3 className={styles.textProfileGym}>{dashboardData?.gym_name ?? '--'}</h3>
                         </div>
-                        <img className={styles.profilePic} src={dashboardData?.logo_url ? dashboardData.logo_url : profilePicIcon} alt="profile-pic"/>
+                        <img className={styles.profilePic} src={dashboardData?.logo_url ? dashboardData.logo_url : gymDefaultPic} alt="profile-pic"/>
                     </div>
                 </div>
 
