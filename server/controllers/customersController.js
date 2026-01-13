@@ -151,7 +151,7 @@ class CustomersController {
 
             // Send response ok with fallback
             return res.status(200).json({
-                message: '¡Consulta de datos exitosa!',
+                message: '¡Consulta de datos exitosa para el dashboard!',
                 success: true,
                 data
             });

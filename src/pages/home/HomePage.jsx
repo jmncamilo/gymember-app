@@ -7,6 +7,10 @@ import gymDefaultPic from "../../assets/logos/default-gym-pic.png";
 import { useForm } from "../../hooks/useForm.js";
 import { INITIAL_DASHBOARD_VALUES } from "./dashboardInitialValues.js";
 import { getFirstWord } from "../../utils/formatters/getFirstWord.js";
+import { useFetchWithAuth } from "../../hooks/useFetchWithAuth.js";
+import { useEffect, useState } from "react";
+import { Loader } from "../../components/loader/Loader.jsx";
+import { getOptions } from "../../utils/misc/fetchOptions.js";
 
 export function HomePage() {
     /* Shows current date dd/mm/yy */
@@ -16,9 +20,42 @@ export function HomePage() {
     const navigate = useNavigate();
 
     // Use custom hook to store api data
-    const {form: dashboardData, setFormWithObject: setDashboardObjectData} = useForm(INITIAL_DASHBOARD_VALUES);
+    const {
+        form: dashboardData,
+        setFormWithObject: setDashboardObjectData
+    } = useForm(INITIAL_DASHBOARD_VALUES);
 
-    // TODO: consumir la API y verificar que los datos se leen correctamente
+    // State to handle loader
+    const [isLoadingDashboard, setIsLoadingDashboard] = useState(true);
+
+    // Custom hook to fetching
+    const { executeFetchWithAuth: executeFetchDashboardDataWithAuth } = useFetchWithAuth('/customers/dashboard', getOptions);
+
+    // Effect to load dashboard metrics data by executing the custom fetch hook
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await executeFetchDashboardDataWithAuth();
+                if (!result.success || !Object.keys(result?.data?.data ?? {}).length) {
+                    alert('No fue posible cargar las métricas del dashboard...');
+                    navigate("/acceso", { replace: true });
+                }
+                setDashboardObjectData(result.data.data);
+                // TESTING CJ
+                alert(result?.data.message ?? '¡Métricas cargadas!');
+                console.log(result?.data?.data ?? 'Error imprimiendo la data del dashboard...');
+            } catch (err) {
+                console.error(err);
+                navigate("/acceso", { replace: true });
+            } finally {
+                setIsLoadingDashboard(false);
+            }
+        };
+
+        fetchData().catch(() => {});
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // TODO: encontrar una mejor foto de perfil por defecto para cuando no haya logo asociado a un gym. La foto que se ha puesto actualmente es para temas de promoción de la app
 
     return (
         <>
@@ -187,6 +224,9 @@ export function HomePage() {
                     </div>
                 </div>
             </div>
+
+            {/* Controlling loader */}
+            { isLoadingDashboard && <Loader /> }
         </>
     );
 }
