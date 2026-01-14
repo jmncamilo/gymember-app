@@ -7,5 +7,6 @@ const router = express.Router();
 router.get('/token/access', masterController.checkAuth); // Helper to trigger auth middleware
 router.post('/', masterPermission, masterController.newAccount); // masterPermission allows access to create an account
 router.post('/create/employee', masterPermission, masterController.newEmployeeAccount); // masterPermission allows access to create an employee account
+router.patch('/maintenance/memberships/update-expired', masterController.updateExpiredMemberships); // Updates expired memberships in the system
 
 module.exports = router;

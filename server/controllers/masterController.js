@@ -80,6 +80,10 @@ class MasterController {
         }
     }
 
+    async updateExpiredMemberships(req, res) {
+        console.log(req);
+    }
+
 }
 
 module.exports = new MasterController();

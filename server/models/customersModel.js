@@ -406,6 +406,8 @@ class CustomersModel {
         const [result] = await executor.execute(query, [data.customer_id_fk]);
         return result?.affectedRows === 0 ? null : result;
     }
+
+    // Updating all status of expired memberships to expired
 }
 
 module.exports = CustomersModel;
