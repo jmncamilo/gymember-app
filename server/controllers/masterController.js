@@ -1,6 +1,7 @@
 const isEmptyBody = require("../utils/validators/emptyBody.js");
 const AuthModel = require("../models/authModel.js");
 const EmployeesModel = require("../models/employeesModel.js");
+const { updateStatusForExpiredMemberships } = require("../models/customersModel.js");
 
 
 class MasterController {
@@ -81,7 +82,33 @@ class MasterController {
     }
 
     async updateExpiredMemberships(req, res) {
-        console.log(req);
+        try {
+            // This method updates expired memberships to status 'expired'. The gym ID comes from the auth token, not from the request body
+
+            const gym_id = req?.gym?.id;
+            if (!gym_id) {
+                return res.status(404).json({
+                    message: 'No se encontró el ID del gimnasio. No se pudo actualizar el estado de las membresías a vencidas.'
+                });
+            }
+
+            const result = await updateStatusForExpiredMemberships(gym_id);
+
+            const message = !result
+                ? 'No hay membresías vencidas para actualizar...'
+                : 'Las membresías vencidas se actualizaron correctamente...';
+
+            return res.status(200).json({
+                message,
+                result: result ?? null
+            });
+
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error en el servidor. Vuelve a intentarlo en unos minutos...',
+                error: err?.message || err
+            });
+        }
     }
 
 }
