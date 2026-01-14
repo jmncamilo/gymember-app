@@ -408,6 +408,20 @@ class CustomersModel {
     }
 
     // Updating all status of expired memberships to expired
+    static async updateStatusForExpiredMemberships(gym_id, connection = null) {
+        const executor = connection || pool;
+        const query = `UPDATE Customers_Memberships cm
+                       INNER JOIN Customers c
+                           ON cm.customer_id_fk = c.id
+                       INNER JOIN Gym_Dev_Accounts g
+                           ON c.gym_id_fk = g.id
+                       SET cm.status = 'expired'
+                       WHERE cm.end_date < DATE(CONVERT_TZ(NOW(), 'UTC', 'America/Bogota'))
+                       AND cm.status IN ('active', 'trial')
+                       AND g.id = ?`;
+        const [result] = await executor.execute(query, [gym_id]);
+        return result?.affectedRows === 0 ? null : result;
+    }
 }
 
 module.exports = CustomersModel;
