@@ -8,10 +8,18 @@ import AccessCodeContext from "../../context/AccessCodeContext.jsx";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../../components/loader/Loader.jsx";
+import { useFetch } from "../../hooks/useFetch.js";
+
 
 export function AccessPage() {
     const { form, handlerSetForm, resetForm } = useForm({ plain_access_code: '' });
+
+    // Custom hook to perform the request that verifies the access code
     const { isLoading, executeFetchWithAuth } = useFetchWithAuth('/employees/verify-code', optionsWithBody(form, 'POST'));
+
+    // custom hook to perform the request that updates all expired membership to expired status
+    const { executeFetch } = useFetch('/master/maintenance/memberships/update-expired', optionsWithBody({}, 'PATCH'));
+
     // Get access code context
     const { setValidCodeAccess } = useContext(AccessCodeContext);
     // Hook navigate of react-router-dom
@@ -28,7 +36,7 @@ export function AccessPage() {
         }
 
         try {
-            // Start request to the server
+            // Request to the server to verify access employee code
             const response = await executeFetchWithAuth();
             if (!response.success) {
                 alert('Parece que estás intentando acceder con un código inválido, vuelve a intentarlo...');
@@ -37,17 +45,22 @@ export function AccessPage() {
                 return;
             }
 
+            // Request to update the status of all memberships that were previously expired, only if the access code is correct
+            const responseUpdateMemberships = await executeFetch();
+            console.log(responseUpdateMemberships?.message); // As hook designed, if this message prints, there was no error in the response
+
             resetForm();
             setValidCodeAccess(true);
             navigate('/');
 
         } catch (err) {
-            alert('Hubo un error solicitando el acceso, vuelve a intentarlo más tarde...');
+            alert('Hubo un error solicitando el acceso, vuelve a intentarlo más tarde...'); // Todo: modal this
             setValidCodeAccess(false);
             resetForm();
             console.error('El error es:', err);
         }
     };
+
 
     return (
         <>
