@@ -11,6 +11,7 @@ import { useFetchWithAuth } from "../../hooks/useFetchWithAuth.js";
 import { useEffect, useState } from "react";
 import { Loader } from "../../components/loader/Loader.jsx";
 import { getOptions } from "../../utils/misc/fetchOptions.js";
+import { formatColombianCurrency } from "../../utils/formatters/formatColombianCurrency.js";
 
 export function HomePage() {
     /* Shows current date dd/mm/yy */
@@ -88,7 +89,7 @@ export function HomePage() {
                             <h5 className={styles.cardTitle}>Ingresos Hoy</h5>
                         </div>
                         <div className={styles.firstCardContent}>
-                            <h3 className={styles.contentTitleMoney}>${dashboardData?.today_revenue ?? 9}</h3>
+                            <h3 className={styles.contentTitleMoney}>$ {formatColombianCurrency(dashboardData?.today_revenue ?? 9) ?? 9}</h3>
                         </div>
                         <div className={styles.firstCardExtraContent}>
                             <h5 className={styles.extraContentText}>{dashboardData?.today_total_memberships ?? 9} membresía(s) otorgada(s) el día de hoy</h5>
@@ -219,7 +220,7 @@ export function HomePage() {
                         </div>
                         <div className={`${styles.fourthCardContent} ${styles.fifthCardFixContent}`}>
                             <h5 className={`${styles.extraContentText} ${styles.fifthCardFixTextContent}`}>Tienes {dashboardData?.pending_payments ?? 9} pagos pendientes para gestionar hoy.</h5>
-                            <button className={`${styles.btnThirdCardNewUser} ${styles.btnFifthCard}`} onClick={() => navigate('/vencimientos')}>Revisar Pagos</button>
+                            <button className={`${styles.btnThirdCardNewUser} ${styles.btnFifthCard}`} onClick={() => navigate('/pagos')}>Revisar Pagos</button>
                         </div>
                     </div>
                 </div>
