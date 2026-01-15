@@ -14,7 +14,7 @@ import { getOptions } from "../../utils/misc/fetchOptions.js";
 import { formatColombianCurrency } from "../../utils/formatters/formatColombianCurrency.js";
 
 export function HomePage() {
-    /* Shows current date dd/mm/yy */
+    /* Shows current date */
     const todayDate = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 
     // Use navigate to optimal redirection

@@ -1,0 +1,45 @@
+.generalContainer {
+    color: #f0f0f0;
+    /*background-color: #692222; !* To testing proposes *!*/
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
+    overflow: hidden;
+}
+
+.contentWrapper {
+    /*background-color: #1b48f5;*/
+    width: 94%;
+    min-width: 1040px;
+    height: max(600px, 90vh);
+    display: flex;
+    gap: 2px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 2px 6px rgba(135, 108, 141, 0.6));
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f0f0f0;
+    margin-bottom: 0.5em;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.subtitle {
+    font-size: 1rem;
+    text-align: center;
+    color: #876c8d;
+}
