@@ -1,0 +1,139 @@
+.generalContainer {
+    color: #f0f0f0;
+    /*background-color: #226954; !* To testing proposes *!*/
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.modalOverlay {
+    background: rgb(37, 23, 54);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease-out;
+    box-shadow: 0 0 0 2px rgb(92, 46, 141);
+    border-radius: 16px;
+    min-width: 750px;
+}
+
+.modalContent {
+    background: rgb(37, 23, 54);
+    border-radius: 16px;
+    padding: 2rem;
+    width: 100%;
+    box-shadow: 0 8px 32px 0 rgba(130, 75, 192, 0.20), 0 2px 6px 0 rgba(0, 0, 0, 0.18);
+    animation: slideUp 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.iconContainer {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.logoutIcon {
+    width: 3.6rem;
+    height: 3.6rem;
+    color: #824bc0;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #f0f0f0;
+    text-align: center;
+    margin: 0 0 12px 0;
+}
+
+.description {
+    width: 90%;
+    font-size: 0.8rem;
+    color: #b59dc2;
+    text-align: center;
+    line-height: 1.6;
+    margin: 0 0 28px 0;
+}
+
+.buttonGroup {
+    display: flex;
+    gap: 12px;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.cancelButton,
+.logoutButton {
+    flex: 1;
+    padding: 12px 24px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 1;
+}
+
+.cancelButton {
+    background-color: #f3f4f6;
+    color: #0d0c0e;
+}
+
+.cancelButton:hover {
+    background-color: #e5e7eb;
+    transform: translateY(-1px);
+}
+
+.logoutButton {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #f0f0f0;
+}
+
+.logoutButton:hover {
+    background-color: #824bc0;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(151, 68, 239, 0.4);
+}
+
+.cancelButton:active,
+.logoutButton:active {
+    transform: translateY(0);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}

@@ -15,6 +15,7 @@ import { EnrollPage } from "./pages/enroll/EnrollPage.jsx";
 import { ExpirationsPage } from "./pages/expirations/ExpirationsPage.jsx";
 import { PaymentsPage } from "./pages/payments/PaymentsPage.jsx";
 import { SettingsPage } from "./pages/settings/SettingsPage.jsx";
+import { LogoutPage } from "./pages/logout/LogoutPage.jsx";
 
 function App() {
 
@@ -45,6 +46,7 @@ function App() {
                                         <Route path={'vencimientos'} element={<ExpirationsPage/>}/>
                                         <Route path={'pagos'} element={<PaymentsPage/>}/>
                                         <Route path={'config'} element={<SettingsPage/>}/>
+                                        <Route path={'logout'} element={<LogoutPage/>}/>
                                     </Route>
                                 </Route>
                             </Route>
