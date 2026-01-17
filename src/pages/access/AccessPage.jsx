@@ -61,7 +61,6 @@ export function AccessPage() {
         }
     };
 
-
     return (
         <>
             <div className={styles.mainWrapper}>

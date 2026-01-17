@@ -1,7 +1,48 @@
 import "../defaultStyles.css";
 import styles from "./LogoutPage.module.css";
+import { useFetch } from "../../hooks/useFetch.js";
+import { useNavigate } from "react-router-dom";
+import { getOptions } from "../../utils/misc/fetchOptions.js";
+import AuthContext from "../../context/AuthContext.jsx";
+import { useContext, useEffect } from "react";
+
 
 export function LogoutPage() {
+    // Hook to consume the auth context
+    const { isAuth, setAuth } = useContext(AuthContext);
+
+    // Hook to navigate
+    const navigate = useNavigate();
+
+    // Custom hook to fetch logout endpoint
+    const { executeFetch } = useFetch('/auth/logout', getOptions);
+
+    // Handler function to process the logout request
+    const handlerLogout = async () => {
+        try {
+            const result = await executeFetch();
+            if (!result?.success) {
+                alert(result?.message || 'No se ha podido cerrar la sesión... intenta de nuevo.'); // Modal this
+                navigate('/acceso', { replace: true });
+                return;
+            }
+
+            // alert('Cerrando sesión correctamente...');
+            setAuth(false);
+
+        } catch (err) {
+            console.error(err);
+            navigate('/acceso', { replace: true });
+        }
+    };
+
+    // Handles navigation based in auth context
+    useEffect(() => {
+        if (!isAuth) {
+            navigate('/login', { replace: true });
+        }
+    }, [isAuth]); // eslint-disable-line react-hooks/exhaustive-deps
+
     return(
         <>
             <div className={`defaultContainer ${styles.generalContainer}`}>
@@ -19,10 +60,16 @@ export function LogoutPage() {
                             Al cerrar sesión, se te solicitará de nuevo tu cuenta de gimnasio y código de empleado para ingresar.
                         </p>
                         <div className={styles.buttonGroup}>
-                            <button className={styles.cancelButton}>
+                            <button
+                                className={styles.cancelButton}
+                                onClick={() => navigate('/')}
+                            >
                                 Cancelar
                             </button>
-                            <button className={styles.logoutButton}>
+                            <button
+                                className={styles.logoutButton}
+                                onClick={handlerLogout}
+                            >
                                 Cerrar Sesión
                             </button>
                         </div>
