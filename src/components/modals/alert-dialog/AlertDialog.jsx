@@ -1,4 +1,5 @@
 import styles from "./AlertDialog.module.css";
+import { MainButton } from "../../buttons/heading/MainButton.jsx";
 
 export function AlertDialog({ image, title, description, onClose, isOpen }) {
     if (!isOpen) return null;
@@ -29,12 +30,10 @@ export function AlertDialog({ image, title, description, onClose, isOpen }) {
                 </div>
 
                 <div className={styles.footer}>
-                    <button
-                        className={styles.acceptButton}
+                    <MainButton
                         onClick={onClose}
-                    >
-                        Aceptar
-                    </button>
+                        btnText={'Aceptar'}
+                    />
                 </div>
             </div>
         </div>

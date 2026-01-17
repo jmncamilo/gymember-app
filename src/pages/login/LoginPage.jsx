@@ -8,7 +8,7 @@ import { useForm } from "../../hooks/useForm.js";
 import { useFetchWithAuth } from "../../hooks/useFetchWithAuth.js";
 import { optionsWithBody } from "../../utils/misc/fetchOptions.js";
 import { checkRequestData } from "../../utils/misc/miscHelpers.js";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import AuthContext from "../../context/AuthContext.jsx";
 import { AlertDialog } from "../../components/modals/alert-dialog/AlertDialog.jsx";
 import megaphone from "../../assets/3d-icons/megaphone.png";
@@ -16,14 +16,22 @@ import { useObjectState } from "../../hooks/useObjectState.js";
 
 export function LoginPage() {
     const { form, handlerSetForm } = useForm({ nit: '', plain_pass: '' });
+
     // Define the custom fetch hook in memory with the authentication wrapper (don't use the wrapper here since this is the login)
     const { executeFetch } = useFetchWithAuth('/auth', optionsWithBody(form, 'POST'));
 
     // Get auth context
     const { setAuth } = useContext(AuthContext);
 
-    // State to handles messages in the alert dialog
-
+    // Custom hook to handles messages in the alert dialog
+    const { updateStateByKey, objectData: dialogSettings } = useObjectState({
+        status: false,
+        closeDialog: () => updateStateByKey('status', false),
+        openDialog: () => updateStateByKey('status', true),
+        image: megaphone,
+        title: '',
+        description: ''
+    });
 
     // Login handler
     const handleLogin = async () => {
@@ -36,14 +44,20 @@ export function LoginPage() {
             alert(data?.message);
             // Validate data it was response by status ok (it should contain id)
             if (!data.data.id) {
-                alert('No se pudieron validar las credenciales, inténtalo de nuevo...');
+                updateStateByKey('title', '¡Credenciales inválidas!');
+                updateStateByKey('description', 'Tus credenciales no son válidas, inténtalo de nuevo...');
+                updateStateByKey('status', true);
+                // alert('No se pudieron validar las credenciales, inténtalo de nuevo...');
                 setAuth(false);
                 return;
             }
             // If response was ok, then credentials are valid
             setAuth(true);
         } catch (err) {
-            alert('Hubo un error, vuelve a intentarlo más tarde...');
+            // alert('Hubo un error, vuelve a intentarlo más tarde...');
+            updateStateByKey('title', '¡Credenciales inválidas!');
+            updateStateByKey('description', 'Tus credenciales no son válidas, inténtalo de nuevo...');
+            updateStateByKey('status', true);
             setAuth(false);
             console.error(err);
         }
@@ -69,6 +83,14 @@ export function LoginPage() {
                     </div>
                 </main>
             </div>
+
+            <AlertDialog
+                image={dialogSettings.image}
+                title={dialogSettings.title}
+                description={dialogSettings.description}
+                isOpen={dialogSettings.status}
+                onClose={dialogSettings.closeDialog}
+            />
         </>
     );
 }

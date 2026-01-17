@@ -1,3 +1,8 @@
+/*
+ * A custom React hook for managing object-based state with utility functions
+ * to update specific keys, reset, clear, or replace the entire data object.
+ */
+
 import { useState } from "react";
 
 export function useObjectState(initialValues = {}) {
@@ -18,7 +23,6 @@ export function useObjectState(initialValues = {}) {
 
     return {
         objectData,
-        setObjectData,
         updateStateByKey,
         resetData,
         cleanData,
