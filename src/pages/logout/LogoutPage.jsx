@@ -27,7 +27,6 @@ export function LogoutPage() {
                 return;
             }
 
-            // alert('Cerrando sesión correctamente...');
             setAuth(false);
 
         } catch (err) {

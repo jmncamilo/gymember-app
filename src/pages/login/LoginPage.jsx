@@ -8,15 +8,22 @@ import { useForm } from "../../hooks/useForm.js";
 import { useFetchWithAuth } from "../../hooks/useFetchWithAuth.js";
 import { optionsWithBody } from "../../utils/misc/fetchOptions.js";
 import { checkRequestData } from "../../utils/misc/miscHelpers.js";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import AuthContext from "../../context/AuthContext.jsx";
+import { AlertDialog } from "../../components/modals/alert-dialog/AlertDialog.jsx";
+import megaphone from "../../assets/3d-icons/megaphone.png";
+import { useObjectState } from "../../hooks/useObjectState.js";
 
 export function LoginPage() {
     const { form, handlerSetForm } = useForm({ nit: '', plain_pass: '' });
     // Define the custom fetch hook in memory with the authentication wrapper (don't use the wrapper here since this is the login)
     const { executeFetch } = useFetchWithAuth('/auth', optionsWithBody(form, 'POST'));
+
     // Get auth context
     const { setAuth } = useContext(AuthContext);
+
+    // State to handles messages in the alert dialog
+
 
     // Login handler
     const handleLogin = async () => {
