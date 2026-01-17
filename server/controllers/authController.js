@@ -167,6 +167,26 @@ class AuthController {
         }
 
     }
+
+    async logout(req, res) {
+        try {
+            res.clearCookie('accessToken');
+            res.clearCookie('refreshToken');
+            res.clearCookie('employeeToken');
+
+            return res.status(200).json({
+                message: '¡Credenciales invalidadas correctamente!',
+                success: true
+            });
+
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Error en el servidor. Vuelve a intentarlo en unos minutos...',
+                error: err?.message || err,
+                success: false
+            });
+        }
+    }
 }
 
 module.exports = new AuthController();
