@@ -11,7 +11,8 @@ import { checkRequestData } from "../../utils/misc/miscHelpers.js";
 import { useContext } from "react";
 import AuthContext from "../../context/AuthContext.jsx";
 import { AlertDialog } from "../../components/modals/alert-dialog/AlertDialog.jsx";
-import megaphone from "../../assets/3d-icons/megaphone.png";
+import megaphone from "../../assets/3d-icons/megaphone-secondv.png";
+import castleForbiddenAccess from "../../assets/3d-icons/castle-forbidden.png";
 import { useObjectState } from "../../hooks/useObjectState.js";
 
 export function LoginPage() {
@@ -28,7 +29,7 @@ export function LoginPage() {
         status: false,
         closeDialog: () => updateStateByKey('status', false),
         openDialog: () => updateStateByKey('status', true),
-        image: megaphone,
+        image: null,
         title: '',
         description: ''
     });
@@ -38,25 +39,30 @@ export function LoginPage() {
         try {
             console.log('Login starting process...'); // Testing CJ
             // Verify that the data sent to the backend is not empty (as an extra layer of security)
-            if(!checkRequestData(form)) return alert('Debes ingresar datos...');
+            if(!checkRequestData(form)) {
+                updateStateByKey('image', megaphone);
+                updateStateByKey('title', '¡Datos incompletos!');
+                updateStateByKey('description', 'Por favor completa todos los campos para continuar con el inicio de sesión.');
+                updateStateByKey('status', true);
+                return;
+            }
             // If there is data to send, we begin the fetching process and consume the corresponding endpoints
             const data = await executeFetch();
-            alert(data?.message);
             // Validate data it was response by status ok (it should contain id)
-            if (!data.data.id) {
-                updateStateByKey('title', '¡Credenciales inválidas!');
-                updateStateByKey('description', 'Tus credenciales no son válidas, inténtalo de nuevo...');
+            if (!data?.data?.id) {
+                updateStateByKey('image', castleForbiddenAccess);
+                updateStateByKey('title', '¡Alto ahí!');
+                updateStateByKey('description', 'Tu NIT o contraseña no son válidos. Verifica e intenta de nuevo.');
                 updateStateByKey('status', true);
-                // alert('No se pudieron validar las credenciales, inténtalo de nuevo...');
                 setAuth(false);
                 return;
             }
             // If response was ok, then credentials are valid
             setAuth(true);
         } catch (err) {
-            // alert('Hubo un error, vuelve a intentarlo más tarde...');
-            updateStateByKey('title', '¡Credenciales inválidas!');
-            updateStateByKey('description', 'Tus credenciales no son válidas, inténtalo de nuevo...');
+            updateStateByKey('image', castleForbiddenAccess);
+            updateStateByKey('title', '¡Alto ahí!');
+            updateStateByKey('description', 'Tu NIT o contraseña no son válidos. Verifica e intenta de nuevo.');
             updateStateByKey('status', true);
             setAuth(false);
             console.error(err);
