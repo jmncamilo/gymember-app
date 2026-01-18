@@ -11,7 +11,7 @@ import { checkRequestData } from "../../utils/misc/miscHelpers.js";
 import { useContext } from "react";
 import AuthContext from "../../context/AuthContext.jsx";
 import { AlertDialog } from "../../components/modals/alert-dialog/AlertDialog.jsx";
-import megaphone from "../../assets/3d-icons/megaphone-secondv.png";
+import megaphone from "../../assets/3d-icons/megaphone-thirdv.png";
 import castleForbiddenAccess from "../../assets/3d-icons/castle-forbidden.png";
 import { useObjectState } from "../../hooks/useObjectState.js";
 

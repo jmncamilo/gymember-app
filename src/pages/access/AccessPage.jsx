@@ -1,4 +1,5 @@
 import styles from "./AccessPage.module.css";
+/** @type {string} */
 import logo from "../../assets/logos/logo_complete_base.png";
 import { MainInput } from "../../components/inputs/heading/MainInput.jsx";
 import { useForm } from "../../hooks/useForm.js";
@@ -9,7 +10,11 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../../components/loader/Loader.jsx";
 import { useFetch } from "../../hooks/useFetch.js";
-
+import { useObjectState } from "../../hooks/useObjectState.js";
+import { AlertDialog } from "../../components/modals/alert-dialog/AlertDialog.jsx";
+import genericError from "../../assets/3d-icons/error-generic.png";
+import lockAccess from "../../assets/3d-icons/lock-access.png";
+import siren from "../../assets/3d-icons/siren-security.png";
 
 export function AccessPage() {
     const { form, handlerSetForm, resetForm } = useForm({ plain_access_code: '' });
@@ -22,8 +27,19 @@ export function AccessPage() {
 
     // Get access code context
     const { setValidCodeAccess } = useContext(AccessCodeContext);
+
     // Hook navigate of react-router-dom
     const navigate = useNavigate();
+
+    // Custom hook to handles messages in the alert dialog
+    const { updateStateByKey, objectData: dialogSettings } = useObjectState({
+        status: false,
+        closeDialog: () => updateStateByKey('status', false),
+        openDialog: () => updateStateByKey('status', true),
+        image: null,
+        title: '',
+        description: ''
+    });
 
     // Handler to send request and verify access code
     const handleAccess = async () => {
@@ -31,7 +47,10 @@ export function AccessPage() {
         const validatorAccessCode = /^\d{6}$/;
         const isValidAccessCodeFormat = validatorAccessCode.test(form.plain_access_code);
         if (!isValidAccessCodeFormat) {
-            alert('El código de acceso no sigue el formato requerido... vuelve a intentarlo.');
+            updateStateByKey('image', genericError);
+            updateStateByKey('title', '¡Código de acceso inválido!');
+            updateStateByKey('description', 'El formato ingresado no es válido. Debes ingresar exactamente 6 dígitos numéricos.');
+            updateStateByKey('status', true);
             return;
         }
 
@@ -39,7 +58,10 @@ export function AccessPage() {
             // Request to the server to verify access employee code
             const response = await executeFetchWithAuth();
             if (!response.success) {
-                alert('Parece que estás intentando acceder con un código inválido, vuelve a intentarlo...');
+                updateStateByKey('image', lockAccess);
+                updateStateByKey('title', '¡Acceso denegado!');
+                updateStateByKey('description', 'El código ingresado no es válido, vuelve a intentarlo.');
+                updateStateByKey('status', true);
                 setValidCodeAccess(false);
                 resetForm();
                 return;
@@ -54,10 +76,13 @@ export function AccessPage() {
             navigate('/');
 
         } catch (err) {
-            alert('Hubo un error solicitando el acceso, vuelve a intentarlo más tarde...'); // Todo: modal this
+            updateStateByKey('image', siren);
+            updateStateByKey('title', '¡Ups! Algo salió mal');
+            updateStateByKey('description', 'No pudimos procesar tu solicitud en este momento. Intenta nuevamente.');
+            updateStateByKey('status', true);
             setValidCodeAccess(false);
             resetForm();
-            console.error('El error es:', err);
+            console.error('El error es:', err); // TESTING CJ
         }
     };
 
@@ -93,7 +118,17 @@ export function AccessPage() {
                 </footer>
             </div>
 
+            {/* Controlling loader */}
             {isLoading && <Loader/>}
+
+            {/* Controlling dialogs */}
+            <AlertDialog
+                image={dialogSettings.image}
+                title={dialogSettings.title}
+                description={dialogSettings.description}
+                isOpen={dialogSettings.status}
+                onClose={dialogSettings.closeDialog}
+            />
         </>
     );
 }
