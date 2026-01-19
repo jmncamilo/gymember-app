@@ -12,6 +12,10 @@ import { useEffect, useState } from "react";
 import { Loader } from "../../components/loader/Loader.jsx";
 import { getOptions } from "../../utils/misc/fetchOptions.js";
 import { formatColombianCurrency } from "../../utils/formatters/formatColombianCurrency.js";
+import { AlertDialog } from "../../components/modals/alert-dialog/AlertDialog.jsx";
+import { useObjectState } from "../../hooks/useObjectState.js";
+import genericError from "../../assets/3d-icons/error-generic.png";
+
 
 export function HomePage() {
     /* Shows current date */
@@ -32,19 +36,34 @@ export function HomePage() {
     // Custom hook to fetching
     const { executeFetchWithAuth: executeFetchDashboardDataWithAuth } = useFetchWithAuth('/customers/dashboard', getOptions);
 
+    // Custom hook to handles messages in the alert dialog
+    const { updateStateByKey, objectData: dialogSettings } = useObjectState({
+        status: false,
+        closeDialog: () => {
+            updateStateByKey('status', false);
+            navigate("/acceso", { replace: true });
+        },
+        openDialog: () => updateStateByKey('status', true),
+        image: null,
+        title: '',
+        description: ''
+    });
+
     // Effect to load dashboard metrics data by executing the custom fetch hook
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const result = await executeFetchDashboardDataWithAuth();
-                if (!result.success || !Object.keys(result?.data?.data ?? {}).length) {
-                    alert('No fue posible cargar las métricas del dashboard...');
-                    navigate("/acceso", { replace: true });
+                if (!result?.success || !Object.keys(result?.data?.data ?? {}).length) {
+                    updateStateByKey('image', genericError);
+                    updateStateByKey('title', '¡Ups! Algo salió mal');
+                    updateStateByKey('description', 'No se pudieron cargar los datos del dashboard. Inténtalo una vez más.');
+                    updateStateByKey('status', true);
+                    return;
                 }
                 setDashboardObjectData(result.data.data);
-                // TESTING CJ
-                alert(result?.data.message ?? '¡Métricas cargadas!');
-                console.log(result?.data?.data ?? 'Error imprimiendo la data del dashboard...');
+
+                console.log(result?.data?.data ?? 'Error imprimiendo la data del dashboard...'); // TESTING CJ
             } catch (err) {
                 console.error(err);
                 navigate("/acceso", { replace: true });
@@ -228,6 +247,15 @@ export function HomePage() {
 
             {/* Controlling loader */}
             { isLoadingDashboard && <Loader /> }
+
+            {/* Controlling dialogs */}
+            <AlertDialog
+                image={dialogSettings.image}
+                title={dialogSettings.title}
+                description={dialogSettings.description}
+                isOpen={dialogSettings.status}
+                onClose={dialogSettings.closeDialog}
+            />
         </>
     );
 }
