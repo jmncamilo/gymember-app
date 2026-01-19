@@ -34,6 +34,11 @@ import {
     validateRequiredFields
 } from "../../utils/misc/miscHelpers.js";
 import { API_FIELDS } from "../../utils/constants/apiFields.js";
+import { AlertDialog } from "../../components/modals/alert-dialog/AlertDialog.jsx";
+import { useObjectState } from "../../hooks/useObjectState.js";
+import genericError from "../../assets/3d-icons/error-generic.png";
+import emptyInformation from "../../assets/3d-icons/empty-result.png";
+import okThumb from "../../assets/3d-icons/thumb-up.png";
 
 
 export function UsersPage() {
@@ -46,7 +51,7 @@ export function UsersPage() {
         generalLoading: false
     });
 
-    // TODO: renombrar esto a fallbackData y modificar el nombre donde es llamado en este archivo...
+    // TODO: refactor de renombre a fallbackData
     // Fallback API data
     const data = {
         total_customers: 0,
@@ -87,7 +92,7 @@ export function UsersPage() {
         setFormWithObject(data); // Load customer data into form
         setSelectedCustomer(data); // Set current customer
         setModalFormStatus(true); // Open modal
-        console.log('Seteando la data del cliente al abrir el modal', data);
+        console.log('Seteando la data del cliente al abrir el modal', data); // TESTING CJ
     };
 
     // Custom hook to fetch customers data
@@ -95,20 +100,36 @@ export function UsersPage() {
         // Counter to trigger customer data reload after a successful update
     const [reloadCustomers, setReloadCustomers] = useState(0);
 
+    // Custom hook to handles messages in the alert dialog
+    const { updateStateByKey, objectData: dialogSettings } = useObjectState({
+        status: false,
+        closeDialog: () => updateStateByKey('status', false),
+        openDialog: () => updateStateByKey('status', true),
+        image: null,
+        title: '',
+        description: ''
+    });
+
     // Effect to load all customers data by executing the custom fetch hook
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const result = await executeCustomersFetchWithAuth();
                 if (!result.success) {
-                    alert('No se pudo cargar la información de los clientes...');
+                    updateStateByKey('image', genericError);
+                    updateStateByKey('title', 'Error cargando datos');
+                    updateStateByKey('description', 'No se pudo cargar la información de los clientes. Intenta nuevamente.');
+                    updateStateByKey('status', true);
                     navigate("/acceso", { replace: true });
                 }
-                // TESTING CJ
-                alert(result?.data.message ?? '¡Clientes encontrados!');
-                console.log(result?.data?.data ?? 'Error imprimiendo la data de los clientes...');
+
+                console.log(result?.data?.data ?? 'Error imprimiendo la data de los clientes...'); // TESTING CJ
             } catch (err) {
-                console.error(err);
+                updateStateByKey('image', genericError);
+                updateStateByKey('title', 'Error cargando datos');
+                updateStateByKey('description', 'No se pudo cargar la información de los clientes. Intenta nuevamente.');
+                updateStateByKey('status', true);
+                console.error(err); // TESTING CJ
                 navigate("/acceso", { replace: true });
             } finally {
                 setLoadingState(prev => ({
@@ -139,7 +160,6 @@ export function UsersPage() {
             // Compare which keys have actually changed compared to the existing customer data and create a new object
             const diffObj = getDiffObject(selectedCustomer, filterFormObj);
             if (!diffObj || !Object?.keys(diffObj)?.length) {
-                alert('No hay información del cliente para actualizar');
                 setModalFormStatus(false);
                 return;
             }
@@ -147,9 +167,15 @@ export function UsersPage() {
             const requestPayload = normalizeObjectFields(diffObj, Object.keys(diffObj));
             // Final payload validation before sending to the backend
             const isValidRequest = validateRequiredFields(requestPayload, Object.keys(requestPayload));
-            if (!isValidRequest) return alert('No está listo el objeto para actualizar la información del cliente...');
+            if (!isValidRequest) {
+                updateStateByKey('image', emptyInformation);
+                updateStateByKey('title', 'Campos inválidos o incompletos');
+                updateStateByKey('description', '¡Ups! Algunos campos están vacíos o tienen errores. ¿Podrías revisarlos para continuar?');
+                updateStateByKey('status', true);
+                return;
+            }
 
-            console.log('Customer update info:', requestPayload);
+            console.log('Customer update info:', requestPayload); // TESTING CJ
 
             // Start fetching... manual fetch here because the custom hook does not support dynamic URLs for this operation
             const apiUrl = import.meta.env.VITE_API_URL; // Backend url
@@ -160,19 +186,28 @@ export function UsersPage() {
             );
             const dataFetch = await res.json();
             if (!res.ok) {
-                alert(`${dataFetch?.message}`);
+                console.log(`${dataFetch?.message}`); // TESTING CJ
                 throw new Error(`Ocurrió un error al procesar la solicitud. ${data?.message}.`);
             }
-            alert(`${dataFetch?.message}`); // This should be in a modal
-            console.log('Actualización de información de cliente completada con éxito...');
-            setModalFormStatus(false);
+
+            updateStateByKey('image', okThumb);
+            updateStateByKey('title', '¡Información actualizada!');
+            updateStateByKey('description', dataFetch?.message ?? '¡La información del cliente se actualizó correctamente!');
+            updateStateByKey('status', true);
 
             // Load again customers info
             setReloadCustomers(prev => prev + 1);
 
+            // Close the modal
+            setModalFormStatus(false);
+
         } catch (err) {
-            console.log(err);
-            alert('Error actualizando información del cliente'); // Make this modal
+            console.log(err); // TESTING CJ
+            updateStateByKey('image', genericError);
+            updateStateByKey('title', '¡Ups! Algo salió mal');
+            updateStateByKey('description', 'Parece que hubo un problema al actualizar los datos. Por favor, intenta de nuevo.');
+            updateStateByKey('status', true);
+
         } finally {
             setLoadingState(prev => ({
                 ...prev,
@@ -377,6 +412,15 @@ export function UsersPage() {
 
             {/* Loader displayed */}
             { (loadingState.firstLoading || loadingState.generalLoading) && <Loader /> }
+
+            {/* Controlling dialogs */}
+            <AlertDialog
+                image={dialogSettings.image}
+                title={dialogSettings.title}
+                description={dialogSettings.description}
+                isOpen={dialogSettings.status}
+                onClose={dialogSettings.closeDialog}
+            />
         </>
     );
 }

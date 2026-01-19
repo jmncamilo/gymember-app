@@ -232,7 +232,7 @@ class CustomersController {
 
             // Send response ok
             return res.status(200).json({
-                message: '¡Información del cliente actualizada correctamente!',
+                message: '¡La información del cliente se actualizó correctamente!',
                 customerInfoUpdated: customerDataByEntity,
                 success: true
             });
