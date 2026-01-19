@@ -140,6 +140,11 @@
     height: 70px;
 }
 
+.navElementLogo:hover {
+    background: none !important;
+    box-shadow: none !important;
+}
+
 /* Handling the icons place inside navElement */
 .iconSidebar {
     cursor: pointer;
