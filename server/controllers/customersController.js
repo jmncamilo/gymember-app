@@ -312,7 +312,7 @@ class CustomersController {
 
             // Send response ok
             return res.status(200).json({
-                message: '¡Cliente registrado correctamente!',
+                message: '¡Registro completado con éxito! El cliente fue agregado correctamente.',
                 bodyData: enrollData, // Testing CJ
                 customerMainInfo: resultMain, // Testing CJ
                 customerDetailInfo: resultDetails, // Testing CJ

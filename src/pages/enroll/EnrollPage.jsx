@@ -13,6 +13,11 @@ import { checkRequestData } from "../../utils/misc/miscHelpers.js";
 import { useFetchWithAuth } from "../../hooks/useFetchWithAuth.js";
 import { optionsWithBody } from "../../utils/misc/fetchOptions.js";
 import { Loader } from "../../components/loader/Loader.jsx";
+import { AlertDialog } from "../../components/modals/alert-dialog/AlertDialog.jsx";
+import { useObjectState } from "../../hooks/useObjectState.js";
+import checkEnroll from "../../assets/3d-icons/check-enroll.png";
+import genericError from "../../assets/3d-icons/error-generic.png";
+
 
 export function EnrollPage() {
     // Destructuring useForm that is my custom hook to handle this page form
@@ -24,6 +29,16 @@ export function EnrollPage() {
     const [error, setError] = useState({
         status: false,
         message: ''
+    });
+
+    // Custom hook to handles messages in the alert dialog
+    const { updateStateByKey, objectData: dialogSettings } = useObjectState({
+        status: false,
+        closeDialog: () => updateStateByKey('status', false),
+        openDialog: () => updateStateByKey('status', true),
+        image: null,
+        title: '',
+        description: ''
     });
 
     // Handling the age field in the form based on the selected birthdate
@@ -63,12 +78,22 @@ export function EnrollPage() {
                 status: false,
                 message: ''
             });
-            alert(`${result.data?.message}`); // This should be in a modal
-            console.log('Enrollment process finished...');
+
+            // Display dialog
+            updateStateByKey('image', checkEnroll);
+            updateStateByKey('title', 'Registro completado');
+            updateStateByKey('description', result?.data?.message ?? 'El cliente ha sido inscrito exitosamente. Puedes consultar su información en el módulo de usuarios.');
+            updateStateByKey('status', true);
+
+            console.log('Enrollment process finished...'); // TESTING CJ
+
             resetForm();
         } catch (err) {
+            updateStateByKey('image', genericError);
+            updateStateByKey('title', '¡Error en el registro!');
+            updateStateByKey('description', 'Ocurrió un problema al registrar el cliente. Por favor, intenta nuevamente.');
+            updateStateByKey('status', true);
             console.log(err); // Testing CJ
-            alert('Pasó algo raro...'); // This should be in a modal
         }
     };
 
@@ -182,8 +207,16 @@ export function EnrollPage() {
 
                 {/* Loader making its job */}
                 {isLoading && <Loader/>}
-
             </div>
+
+            {/* Displays dialogs */}
+            <AlertDialog
+                image={dialogSettings.image}
+                title={dialogSettings.title}
+                description={dialogSettings.description}
+                isOpen={dialogSettings.status}
+                onClose={dialogSettings.closeDialog}
+            />
         </div>
     );
 }
