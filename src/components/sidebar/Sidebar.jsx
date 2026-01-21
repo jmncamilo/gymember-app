@@ -40,7 +40,7 @@ export function Sidebar({ isExpanded, handleSidebarMode }) {
                 </div>
 
                 <div className={styles.finalSidebarIcons}>
-                    <NavLink className={`${styles.navElement} ${!isExpanded ? styles.navElementCollapsed : ''}`} to="/config">
+                    <NavLink className={({ isActive }) => `${styles.navElement} ${!isExpanded ? styles.navElementCollapsed : ''} ${isActive ? styles.isActiveRouter : ''}`} to="/config">
                         <div className={`${styles.iconSidebar} ${styles.iconSettings}`}></div>
                         {isExpanded && <h4>Configuración</h4>}
                     </NavLink>
