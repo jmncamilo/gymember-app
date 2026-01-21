@@ -19,6 +19,12 @@ import {
     removeValuesFromArray
 } from "../../utils/misc/miscHelpers.js";
 import { API_FIELDS } from "../../utils/constants/apiFields.js";
+import { AlertDialog } from "../../components/modals/alert-dialog/AlertDialog.jsx";
+import { useObjectState } from "../../hooks/useObjectState.js";
+import allowPayment from "../../assets/3d-icons/allow_payment.png";
+import rejectPayment from "../../assets/3d-icons/reject_payment.png";
+import notificationBellNumber from "../../assets/3d-icons/notification-bell-number.png";
+import { Loader } from "../../components/loader/Loader.jsx";
 
 
 export function PaymentsPage() {
@@ -60,6 +66,16 @@ export function PaymentsPage() {
     const [error, setError] = useState({
         status: false,
         message: ''
+    });
+
+    // Custom hook to handles messages in the alert dialog
+    const { updateStateByKey, objectData: dialogSettings } = useObjectState({
+        status: false,
+        closeDialog: () => updateStateByKey('status', false),
+        openDialog: () => updateStateByKey('status', true),
+        image: null,
+        title: '',
+        description: ''
     });
 
     // Handler to calc end_date through start date
@@ -144,9 +160,12 @@ export function PaymentsPage() {
 
         } catch (err) {
             console.log(err); // Testing CJ
+            updateStateByKey('image', notificationBellNumber);
+            updateStateByKey('title', 'Error en la búsqueda');
+            updateStateByKey('description', 'Hubo un problema buscado al cliente... intenta de nuevo.');
+            updateStateByKey('status', true);
             setCustomerStatusInfo(INITIAL_CUSTOMER_STATUS_VALUES);
             resetForm();
-            alert('Pasó algo raro...'); // This should be in a modal
         }
     };
 
@@ -165,21 +184,34 @@ export function PaymentsPage() {
             const requestPayload = normalizeObjectFields(filterFormObj, ['customer_id_fk']);
             // Final validation of the object before sending it to the API
             const isValidRequest = validateRequiredFields(requestPayload, removeValuesFromArray(API_FIELDS.FIRST_TRANSACTION, ['description']));
-            if (!isValidRequest) return alert('No está listo el objeto para enviar la solicitud de primer pago...');
-            console.log('Primer pago' ,requestPayload);
+            if (!isValidRequest) {
+                updateStateByKey('image', notificationBellNumber);
+                updateStateByKey('title', 'Algo no está bien...');
+                updateStateByKey('description', 'Por favor, diligencia correctamente todos los campos antes de procesar la transacción.');
+                updateStateByKey('status', true);
+                return;
+            }
+            console.log('Primer pago', requestPayload); // TESTING CJ
 
             // Fetching process
             const result = await executeFirstPaymentFetchWithAuth(optionsWithBody(requestPayload, 'POST'));
                 // If the request is successful this happens. If not, the flow is redirected to the catch block due to the executeFetch design
-            alert(`${result?.message}`); // This should be in a modal
-            console.log('Proceso de primer pago finalizado...');
+            updateStateByKey('image', allowPayment);
+            updateStateByKey('title', '¡Pago registrado exitosamente!');
+            updateStateByKey('description', 'La inscripción se ha completado y el cliente está ahora activo en el sistema.');
+            updateStateByKey('status', true);
+            console.log('Proceso de primer pago finalizado...'); // TESTING CJ
             resetForm();
 
         } catch (err) {
-            console.log(err);
+            updateStateByKey('image', rejectPayment);
+            updateStateByKey('title', '¡Pago rechazado!');
+            updateStateByKey('description', 'La inscripción ha sido rechazada. Verifica los datos proporcionados e intenta nuevamente.');
+            updateStateByKey('status', true);
+            console.log(err); // TESTING CJ
             setError({
                 status: true,
-                message: '❌ ¡Oops, algo salió mal! Intenta de nuevo...'
+                message: '❌ ¡Ups, algo salió mal! Intenta de nuevo...'
             });
         }
     };
@@ -199,25 +231,37 @@ export function PaymentsPage() {
             const requestPayload = normalizeObjectFields(filterFormObj, ['customer_id_fk']);
             // Final validation of the object before sending it to the API
             const isValidRequest = validateRequiredFields(requestPayload, removeValuesFromArray(API_FIELDS.RENEW_TRANSACTION, ['description']));
-            if (!isValidRequest) return alert('No está listo el objeto para enviar la solicitud de pago por renovación...');
-            console.log('Renovación', requestPayload);
+            if (!isValidRequest) {
+                updateStateByKey('image', notificationBellNumber);
+                updateStateByKey('title', 'Algo no está bien...');
+                updateStateByKey('description', 'Por favor, diligencia correctamente todos los campos antes de procesar la renovación.');
+                updateStateByKey('status', true);
+                return;
+            }
+            console.log('Renovación', requestPayload); // TESTING CJ
 
             // Fetching process
             const result = await executeRenewalPaymentFetchWithAuth(optionsWithBody(requestPayload, 'POST'));
-            alert(`${result?.message}`); // This should be in a modal
-            console.log('Proceso de pago por renovación finalizado...');
+            updateStateByKey('image', allowPayment);
+            updateStateByKey('title', '¡Pago registrado exitosamente!');
+            updateStateByKey('description', 'La renovación se ha completado y el cliente está ahora activo en el sistema.');
+            updateStateByKey('status', true);
+            console.log('Proceso de pago por renovación finalizado...'); // TESTING CJ
             resetForm();
 
         } catch (err) {
-            console.log(err);
+            updateStateByKey('image', rejectPayment);
+            updateStateByKey('title', '¡Pago rechazado!');
+            updateStateByKey('description', 'La renovación ha sido rechazada. Verifica los datos proporcionados e intenta nuevamente.');
+            updateStateByKey('status', true);
+            console.log(err); // TESTING CJ
             setError({
                 status: true,
-                message: '❌ ¡Oops, algo salió mal! Intenta de nuevo la renovación...'
+                message: '❌ ¡Ups, algo salió mal! Intenta de nuevo la renovación...'
             });
         }
     };
 
-    // TODO: Crear el modal reutilizable para cuando se ejecuten procesos correctamente...
 
     return (
         <>
@@ -325,6 +369,18 @@ export function PaymentsPage() {
 
                 </div>
             </div>
+
+            {/* Controlling loader */}
+            { (isLoadingFirstPayment || isLoadingRenewalPayment) && <Loader /> }
+
+            {/* Controlling dialogs */}
+            <AlertDialog
+                image={dialogSettings.image}
+                title={dialogSettings.title}
+                description={dialogSettings.description}
+                isOpen={dialogSettings.status}
+                onClose={dialogSettings.closeDialog}
+            />
         </>
     );
 }
