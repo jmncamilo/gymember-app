@@ -23,8 +23,8 @@ export function ExpirationsPage() {
     const fallbackData = {
         // Queries data -> membership_type = expired
             // Cambiar los nombres de estas propiedades cuando haya conexión real a la API...
-        clientes_vencidos_total: 99,
-        clientes_vencidos_recientemente: 99,
+        clientes_vencidos_total: '0',
+        clientes_vencidos_recientemente: '0',
         // Customer info data
         nuip: '0000000000',
         first_name: 'Unnamed',
@@ -54,14 +54,12 @@ export function ExpirationsPage() {
             try {
                 const result = await executeCustomersExpiredFetchWithAuth();
                 if (!result.success) {
-                    alert('No se pudo cargar la información de los clientes vencidos...');
-                    navigate("/acceso", { replace: true });
+                    return;
                 }
-                // TESTING CJ
-                alert(result?.data.message ?? '¡Clientes vencidos encontrados!');
-                console.log(result?.data ?? 'Error imprimiendo los datos de los clientes vencidos...');
+
+                console.log(result?.data ?? 'Error imprimiendo los datos de los clientes vencidos...'); // TESTING CJ
             } catch (err) {
-                console.error(err);
+                console.error(err); // TESTING CJ
                 navigate("/acceso", { replace: true });
             } finally {
                 setLoadingState(prev => ({

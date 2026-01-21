@@ -20,6 +20,7 @@ import {
 } from "../../utils/misc/miscHelpers.js";
 import { API_FIELDS } from "../../utils/constants/apiFields.js";
 
+
 export function PaymentsPage() {
     // Destructuring useForm custom hook to handle this page form
     const { form, resetForm, handlerSetForm, customSetForm } = useForm(INITIAL_FORM_VALUES);
@@ -55,7 +56,7 @@ export function PaymentsPage() {
         setAmountFormat(formatCurrency(form.amount));
     };
 
-    // Handling dynamic error. SetError is already unused 'cause there is no function calling it
+    // Handling dynamic errors
     const [error, setError] = useState({
         status: false,
         message: ''
@@ -169,7 +170,7 @@ export function PaymentsPage() {
 
             // Fetching process
             const result = await executeFirstPaymentFetchWithAuth(optionsWithBody(requestPayload, 'POST'));
-                // If the request is successful this happens. If not, the flow is redirected to the catch block due to the executeFetch design.
+                // If the request is successful this happens. If not, the flow is redirected to the catch block due to the executeFetch design
             alert(`${result?.message}`); // This should be in a modal
             console.log('Proceso de primer pago finalizado...');
             resetForm();
