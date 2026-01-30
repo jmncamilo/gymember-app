@@ -16,6 +16,7 @@ import { ExpirationsPage } from "./pages/expirations/ExpirationsPage.jsx";
 import { PaymentsPage } from "./pages/payments/PaymentsPage.jsx";
 import { SettingsPage } from "./pages/settings/SettingsPage.jsx";
 import { LogoutPage } from "./pages/logout/LogoutPage.jsx";
+import { NotFoundPage } from "./pages/not-found/NotFoundPage.jsx";
 
 function App() {
 
@@ -50,6 +51,7 @@ function App() {
                                     </Route>
                                 </Route>
                             </Route>
+                            <Route path="*" element={<NotFoundPage/>}/>
                         </Routes>
                     </AccessCodeProvider>
                 </AuthProvider>
