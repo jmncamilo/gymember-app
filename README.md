@@ -50,7 +50,20 @@ Gymember sigue una arquitectura cliente-servidor con separación clara de respon
 - Middleware de protección de rutas
 - Separación de accesos entre empleados, administradores y modo desarrollador
 
-## Instalación y ejecución
+## ⚡ Requisitos previos
+
+- Node.js >= 22.x
+- npm >= 9.x
+- MySQL >= 8.x
+
+## 👨‍💻 Instalación y ejecución
+
+### Clonar el repositorio
+
+```bash
+git clone https://github.com/jmncamilo/gymember-app.git
+cd gymember-app
+```
 
 ### Backend (Express.js)
 
@@ -84,6 +97,7 @@ DB_PORT=your_db_port
 NODE_ENV=development
 ```
 
+> **Nota:** para producción, `NODE_ENV` debe ser igual a `production`.
 
 ### Frontend (React + Vite)
 
@@ -108,6 +122,20 @@ Gymember se encuentra en **desarrollo activo**.
 La versión actual implementa el flujo completo de autenticación, acceso mediante código de empleado y un **dashboard operativo funcional** para la gestión diaria del gimnasio.
 
 Adicionalmente, incluye los módulos para inscripción de clientes y asignación de membresías, lista de clientes y actualización de datos, gestión de transacciones y renovación de membresías, control de vencimientos con feedback visual y cierre de sesión.
+
+### Demo
+
+Puedes probar Gymember en la siguiente URL:
+
+🔗 **[Gymember Demo](https://gymember.vercel.app)**
+
+#### Credenciales de acceso:
+
+- NIT: `999999999-9`
+- Contraseña: `pass`
+- Código de acceso: `888888`
+
+> **Nota:** esta es una instancia de demostración con datos de prueba y con módulos limitados.
 
 ## 🌱 Misión
 Gymember busca fortalecer a los pequeños y medianos gimnasios del país, fomentando la gestión de sus membresías de forma clara, profesional, segura y eficiente, dejando atrás las hojas de papel, los libros contables manipulables y contribuyendo a los procesos de auditoría interna de la empresa para entender el comportamiento del negocio.
