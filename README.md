@@ -101,6 +101,8 @@ NODE_ENV=development
 
 ### Frontend (React + Vite)
 
+_Desde la carpeta raíz:_
+
 ```bash
 npm install
 npm run dev
