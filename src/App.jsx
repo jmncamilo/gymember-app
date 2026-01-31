@@ -23,7 +23,7 @@ function App() {
     /* Sidebar mode */
     const [sidebarExpanded, setSidebarExpanded] = useState(true);
 
-    /* Function to handle sidebar mode */
+    /* Handling sidebar mode */
     function handleSidebarMode() {
         setSidebarExpanded(actualValue => !actualValue);
     }
