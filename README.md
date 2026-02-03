@@ -70,8 +70,8 @@ cd gymember-app
 
 Dentro de la [carpeta`server/db`](./server/db) encontrarás dos archivos esenciales para la gestión de la base de datos MySQL:
 
-- `server/db/schema.sql`: contiene la estructura y creación de la base de datos y todas las tablas necesarias.
-- `server/db/seed.sql`: incluye datos de ejemplo para poblar las tablas creadas.
+- `server/db/schema.sql`: define la estructura y las tablas de la base de datos
+- `server/db/seed.sql`: incluye datos de ejemplo para poblar las tablas creadas
 
 Puedes ejecutar estos scripts utilizando la herramienta de tu preferencia (CLI, MySQL Workbench, DataGrip, etc.), siguiendo el orden: primero `schema.sql` y luego `seed.sql`.
 
