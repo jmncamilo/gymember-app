@@ -18,6 +18,7 @@ Muchos gimnasios _pyme_ en Colombia gestionan sus membresías con hojas de cálc
 Gymember centraliza y automatiza la gestión de membresías, ofreciendo control de vencimientos, seguridad por roles y una experiencia clara para empleados y administradores.
 
 ## 🛠️ Stack tecnológico
+
 - **Frontend:** React.js ⚛️
 - **Backend:** Node.js + Express.js 🚀
 - **Base de datos:** MySQL 🗄️
@@ -28,9 +29,9 @@ Gymember centraliza y automatiza la gestión de membresías, ofreciendo control 
 
 Gymember sigue una arquitectura cliente-servidor con separación clara de responsabilidades:
 
-- **Frontend (React SPA):** Interfaz de usuario, gestión de estado y comunicación con la API mediante peticiones HTTP autenticadas.
-- **Backend (Express REST API):** Lógica de negocio, control de acceso, validaciones, generación de reportes y comunicación con la base de datos.
-- **Base de datos (MySQL):** Persistencia de datos relacionales para gimnasios, empleados, clientes, membresías y transacciones.
+- **Frontend (React SPA):** Interfaz de usuario, gestión de estado y comunicación con la API mediante peticiones HTTP autenticadas
+- **Backend (Express REST API):** Lógica de negocio, control de acceso, validaciones, generación de reportes y comunicación con la base de datos
+- **Base de datos (MySQL):** Persistencia de datos relacionales para gimnasios, empleados, clientes, membresías y transacciones
 
 ## 🧩 Funcionalidades principales
 
@@ -52,9 +53,9 @@ Gymember sigue una arquitectura cliente-servidor con separación clara de respon
 
 ## ⚡ Requisitos previos
 
-- Node.js >= 22.x
-- npm >= 9.x
-- MySQL >= 8.x
+- **Node.js** >= 22.x
+- **npm** >= 9.x
+- **MySQL** >= 8.x
 
 ## 👨‍💻 Instalación y ejecución
 
@@ -64,6 +65,17 @@ Gymember sigue una arquitectura cliente-servidor con separación clara de respon
 git clone https://github.com/jmncamilo/gymember-app.git
 cd gymember-app
 ```
+
+### Configuración de la base de datos (MySQL)
+
+Dentro de la [carpeta`server/db`](./server/db) encontrarás dos archivos esenciales para la gestión de la base de datos MySQL:
+
+- `server/db/schema.sql`: contiene la estructura y creación de la base de datos y todas las tablas necesarias.
+- `server/db/seed.sql`: incluye datos de ejemplo para poblar las tablas creadas.
+
+Puedes ejecutar estos scripts utilizando la herramienta de tu preferencia (CLI, MySQL Workbench, DataGrip, etc.), siguiendo el orden: primero `schema.sql` y luego `seed.sql`.
+
+Después de crear la base de datos, configura las variables de entorno del backend con los datos de conexión correspondientes para asegurar el funcionamiento de la aplicación. A continuación se explica cómo hacerlo.
 
 ### Backend (Express.js)
 
@@ -75,7 +87,7 @@ npm run dev
 
 #### Variables de entorno (`.env`)
 
-_Crear un archivo `.env` en la carpeta `server` con las siguientes variables:_
+_Crea un archivo `.env` en la carpeta `server` con las siguientes variables:_
 
 ```env
 # Configuración del servidor
@@ -101,7 +113,7 @@ NODE_ENV=development
 
 ### Frontend (React + Vite)
 
-_Desde la carpeta raíz:_
+Desde la carpeta raíz:
 
 ```bash
 npm install
@@ -110,7 +122,7 @@ npm run dev
 
 #### Variables de entorno (`.env`)
 
-_Crear un archivo `.env` en la raíz del frontend:_
+_Crea un archivo `.env` en la raíz del frontend:_
 
 ```env
 VITE_API_URL=http://localhost:6500
@@ -140,6 +152,7 @@ Puedes probar Gymember en la siguiente URL:
 > **Nota:** esta es una instancia de demostración con datos de prueba y con módulos limitados.
 
 ## 🌱 Misión
+
 Gymember busca fortalecer a los pequeños y medianos gimnasios del país, fomentando la gestión de sus membresías de forma clara, profesional, segura y eficiente, dejando atrás las hojas de papel, los libros contables manipulables y contribuyendo a los procesos de auditoría interna de la empresa para entender el comportamiento del negocio.
 
 ---
