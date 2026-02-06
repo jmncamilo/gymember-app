@@ -198,7 +198,7 @@ export function PaymentsPage() {
                 // If the request is successful this happens. If not, the flow is redirected to the catch block due to the executeFetch design
             updateStateByKey('image', allowPayment);
             updateStateByKey('title', '¡Pago registrado exitosamente!');
-            updateStateByKey('description', 'La inscripción se ha completado y el cliente está ahora activo en el sistema.');
+            updateStateByKey('description', 'La inscripción se ha completado y el cliente ahora está activo en el sistema.');
             updateStateByKey('status', true);
             console.log('Proceso de primer pago finalizado...'); // TESTING CJ
             resetForm();
@@ -244,7 +244,7 @@ export function PaymentsPage() {
             const result = await executeRenewalPaymentFetchWithAuth(optionsWithBody(requestPayload, 'POST'));
             updateStateByKey('image', allowPayment);
             updateStateByKey('title', '¡Pago registrado exitosamente!');
-            updateStateByKey('description', 'La renovación se ha completado y el cliente está ahora activo en el sistema.');
+            updateStateByKey('description', 'La renovación se ha completado y el cliente ahora está activo en el sistema.');
             updateStateByKey('status', true);
             console.log('Proceso de pago por renovación finalizado...'); // TESTING CJ
             resetForm();
