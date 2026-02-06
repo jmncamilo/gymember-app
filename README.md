@@ -6,6 +6,10 @@ Gymember es una aplicación web fullstack diseñada para transformar la administ
 
 La plataforma permite gestionar el ciclo de vida completo de las membresías, desde la inscripción de clientes hasta el monitoreo de vencimientos, ofreciendo transparencia operativa y herramientas de análisis para la toma de decisiones.
 
+![gymember-app.gif](media/gymember-app.gif)
+
+[![Demo Live](https://img.shields.io/badge/Demo-Live-brightgreen)](https://gymember-demo.vercel.app)
+
 ## ✨ ¿Qué problema resuelve?
 
 Muchos gimnasios _pyme_ en Colombia gestionan sus membresías con hojas de cálculo o registros manuales, lo que genera:
@@ -141,7 +145,7 @@ Adicionalmente, incluye los módulos para inscripción de clientes y asignación
 
 Puedes probar Gymember en la siguiente URL:
 
-🔗 **[Gymember Demo](https://gymember.vercel.app)**
+🔗 **[Gymember Demo](https://gymember-demo.vercel.app)**
 
 #### Credenciales de acceso:
 
