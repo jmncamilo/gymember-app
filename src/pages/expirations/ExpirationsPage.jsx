@@ -23,8 +23,8 @@ export function ExpirationsPage() {
     const fallbackData = {
         // Queries data -> membership_type = expired
             // Cambiar los nombres de estas propiedades cuando haya conexión real a la API...
-        clientes_vencidos_total: '0',
-        clientes_vencidos_recientemente: '0',
+        total_expired_customers_fallback: '0',
+        recently_expired_customers_fallback: '0',
         // Customer info data
         nuip: '0000000000',
         first_name: 'Unnamed',
@@ -57,9 +57,9 @@ export function ExpirationsPage() {
                     return;
                 }
 
-                console.log(result?.data ?? 'Error imprimiendo los datos de los clientes vencidos...'); // TESTING CJ
+                console.debug(result?.data ?? 'Error imprimiendo los datos de los clientes vencidos...'); // TESTING FIRST VERSION
             } catch (err) {
-                console.error(err); // TESTING CJ
+                console.error(err); // TESTING FIRST VERSION
                 navigate("/acceso", { replace: true });
             } finally {
                 setLoadingState(prev => ({
@@ -78,13 +78,13 @@ export function ExpirationsPage() {
                 <div className={styles.contentAreaWrapper}>
 
                     <header>
-                        <h1>Clientes Vencidos ({customersExpiredData?.expiredCustomersMetrics?.total_expired_customers ?? fallbackData.clientes_vencidos_total})</h1>
+                        <h1>Clientes Vencidos ({customersExpiredData?.expiredCustomersMetrics?.total_expired_customers ?? fallbackData.total_expired_customers_fallback})</h1>
                     </header>
 
                     <main>
                         <div className={styles.mainSectionWrapper}>
                             <div className={styles.mainSubtitle}>
-                                <h3>Clientes Vencidos Recientemente ({customersExpiredData?.expiredCustomersMetrics?.recently_expired_customers ?? fallbackData.clientes_vencidos_recientemente})</h3>
+                                <h3>Clientes Vencidos Recientemente ({customersExpiredData?.expiredCustomersMetrics?.recently_expired_customers ?? fallbackData.recently_expired_customers_fallback})</h3>
                                 <div className={styles.containerInput}>
                                     <input
                                         title={'Buscar cliente'}
@@ -137,7 +137,7 @@ export function ExpirationsPage() {
 
                         <div className={styles.mainSectionWrapper}>
                             <div className={styles.mainSubtitle}>
-                                <h3>Historial de Vencimientos ({customersExpiredData?.expiredCustomersMetrics?.total_expired_customers ?? fallbackData.clientes_vencidos_total})</h3>
+                                <h3>Historial de Vencimientos ({customersExpiredData?.expiredCustomersMetrics?.total_expired_customers ?? fallbackData.total_expired_customers_fallback})</h3>
                                 <div className={styles.containerInput}>
                                     <input
                                         title={'Buscar cliente'}

@@ -155,8 +155,8 @@ class AuthController {
             return res.status(200).json({
                 message: 'Credenciales validadas correctamente. Accediendo...',
                 data: result,
-                accessToken, // Testing CJ
-                refreshToken // Testing CJ
+                accessToken, // TESTING FIRST VERSION
+                refreshToken // TESTING FIRST VERSION
             });
 
         } catch (err) {

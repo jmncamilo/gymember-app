@@ -69,7 +69,7 @@ export function AccessPage() {
 
             // Request to update the status of all memberships that were previously expired, only if the access code is correct
             const responseUpdateMemberships = await executeFetch();
-            console.log(responseUpdateMemberships?.message); // As hook designed, if this message prints, there was no error in the response
+            console.debug(responseUpdateMemberships?.message); // As custom hook designed, if this message prints, there was no error in the response. TESTING FIRST VERSION
 
             resetForm();
             setValidCodeAccess(true);
@@ -82,7 +82,7 @@ export function AccessPage() {
             updateStateByKey('status', true);
             setValidCodeAccess(false);
             resetForm();
-            console.error('El error es:', err); // TESTING CJ
+            console.debug('El error es:', err); // TESTING FIRST VERSION
         }
     };
 

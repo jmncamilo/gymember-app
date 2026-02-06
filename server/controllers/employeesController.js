@@ -78,8 +78,8 @@ class EmployeesController {
             return res.status(200).json({
                 message: '¡Acceso otorgado al empleado para navegar dentro de la aplicacion!',
                 access: true,
-                employeeToken, // Testing CJ
-                employeeFounded // Testing CJ
+                employeeToken, // TESTING FIRST VERSION
+                employeeFounded // TESTING FIRST VERSION
             });
 
         } catch (err) {

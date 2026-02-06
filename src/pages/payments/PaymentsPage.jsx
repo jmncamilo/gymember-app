@@ -159,7 +159,7 @@ export function PaymentsPage() {
             customSetForm('customer_id_fk', result?.data?.data?.id_customer || '');
 
         } catch (err) {
-            console.log(err); // Testing CJ
+            console.debug(err); // TESTING FIRST VERSION
             updateStateByKey('image', notificationBellNumber);
             updateStateByKey('title', 'Error en la búsqueda');
             updateStateByKey('description', 'Hubo un problema buscado al cliente... intenta de nuevo.');
@@ -191,8 +191,6 @@ export function PaymentsPage() {
                 updateStateByKey('status', true);
                 return;
             }
-            console.log('Primer pago', requestPayload); // TESTING CJ
-
             // Fetching process
             const result = await executeFirstPaymentFetchWithAuth(optionsWithBody(requestPayload, 'POST'));
                 // If the request is successful this happens. If not, the flow is redirected to the catch block due to the executeFetch design
@@ -200,7 +198,7 @@ export function PaymentsPage() {
             updateStateByKey('title', '¡Pago registrado exitosamente!');
             updateStateByKey('description', 'La inscripción se ha completado y el cliente ahora está activo en el sistema.');
             updateStateByKey('status', true);
-            console.log('Proceso de primer pago finalizado...'); // TESTING CJ
+            // console.debug('Proceso de primer pago finalizado...'); // TESTING CJ
             resetForm();
 
         } catch (err) {
@@ -208,7 +206,7 @@ export function PaymentsPage() {
             updateStateByKey('title', '¡Pago rechazado!');
             updateStateByKey('description', 'La inscripción ha sido rechazada. Verifica los datos proporcionados e intenta nuevamente.');
             updateStateByKey('status', true);
-            console.log(err); // TESTING CJ
+            console.debug(err); // TESTING FIRST VERSION
             setError({
                 status: true,
                 message: '❌ ¡Ups, algo salió mal! Intenta de nuevo...'
@@ -238,15 +236,13 @@ export function PaymentsPage() {
                 updateStateByKey('status', true);
                 return;
             }
-            console.log('Renovación', requestPayload); // TESTING CJ
-
             // Fetching process
             const result = await executeRenewalPaymentFetchWithAuth(optionsWithBody(requestPayload, 'POST'));
             updateStateByKey('image', allowPayment);
             updateStateByKey('title', '¡Pago registrado exitosamente!');
             updateStateByKey('description', 'La renovación se ha completado y el cliente ahora está activo en el sistema.');
             updateStateByKey('status', true);
-            console.log('Proceso de pago por renovación finalizado...'); // TESTING CJ
+            // console.debug('Proceso de pago por renovación finalizado...'); // TESTING CJ
             resetForm();
 
         } catch (err) {
@@ -254,7 +250,7 @@ export function PaymentsPage() {
             updateStateByKey('title', '¡Pago rechazado!');
             updateStateByKey('description', 'La renovación ha sido rechazada. Verifica los datos proporcionados e intenta nuevamente.');
             updateStateByKey('status', true);
-            console.log(err); // TESTING CJ
+            console.debug(err); // TESTING FIRST VERSION
             setError({
                 status: true,
                 message: '❌ ¡Ups, algo salió mal! Intenta de nuevo la renovación...'

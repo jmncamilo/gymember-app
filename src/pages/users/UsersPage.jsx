@@ -92,7 +92,6 @@ export function UsersPage() {
         setFormWithObject(data); // Load customer data into form
         setSelectedCustomer(data); // Set current customer
         setModalFormStatus(true); // Open modal
-        console.log('Seteando la data del cliente al abrir el modal', data); // TESTING CJ
     };
 
     // Custom hook to fetch customers data
@@ -123,13 +122,13 @@ export function UsersPage() {
                     navigate("/acceso", { replace: true });
                 }
 
-                console.log(result?.data?.data ?? 'Error imprimiendo la data de los clientes...'); // TESTING CJ
+                // console.debug(result?.data?.data ?? 'Error imprimiendo la data de los clientes...'); // TESTING CJ
             } catch (err) {
                 updateStateByKey('image', genericError);
                 updateStateByKey('title', 'Error cargando datos');
                 updateStateByKey('description', 'No se pudo cargar la información de los clientes. Intenta nuevamente.');
                 updateStateByKey('status', true);
-                console.error(err); // TESTING CJ
+                console.debug(err); // TESTING FIRST VERSION
                 navigate("/acceso", { replace: true });
             } finally {
                 setLoadingState(prev => ({
@@ -175,7 +174,7 @@ export function UsersPage() {
                 return;
             }
 
-            console.log('Customer update info:', requestPayload); // TESTING CJ
+            console.debug('Customer update info:', requestPayload); // TESTING FIRST VERSION
 
             // Start fetching... manual fetch here because the custom hook does not support dynamic URLs for this operation
             const apiUrl = import.meta.env.VITE_API_URL; // Backend url
@@ -186,8 +185,7 @@ export function UsersPage() {
             );
             const dataFetch = await res.json();
             if (!res.ok) {
-                console.log(`${dataFetch?.message}`); // TESTING CJ
-                throw new Error(`Ocurrió un error al procesar la solicitud. ${data?.message}.`);
+                throw new Error(`Ocurrió un error al procesar la solicitud. ${dataFetch?.message}.`);
             }
 
             updateStateByKey('image', okThumb);
@@ -202,7 +200,7 @@ export function UsersPage() {
             setModalFormStatus(false);
 
         } catch (err) {
-            console.log(err); // TESTING CJ
+            console.debug(err); // TESTING FIRST VERSION
             updateStateByKey('image', genericError);
             updateStateByKey('title', '¡Ups! Algo salió mal');
             updateStateByKey('description', 'Parece que hubo un problema al actualizar los datos. Por favor, intenta de nuevo.');

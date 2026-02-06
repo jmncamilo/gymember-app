@@ -37,7 +37,6 @@ export function LoginPage() {
     // Login handler
     const handleLogin = async () => {
         try {
-            console.log('Login starting process...'); // Testing CJ
             // Verify that the data sent to the backend is not empty (as an extra layer of security)
             if(!checkRequestData(form)) {
                 updateStateByKey('image', megaphone);
@@ -65,7 +64,7 @@ export function LoginPage() {
             updateStateByKey('description', 'Tu NIT o contraseña no son válidos. Verifica e intenta de nuevo.');
             updateStateByKey('status', true);
             setAuth(false);
-            console.error(err);
+            console.debug(err); // TESTING FIRST VERSION
         }
     };
 

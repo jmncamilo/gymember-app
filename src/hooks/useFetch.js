@@ -8,7 +8,7 @@ export function useFetch(url, options = {}) {
     const [isLoading, setIsLoading] = useState(autoFetch);
 
     const executeFetch = async (overrideOptions = {}) => {
-        console.log('Requested endpoint:', apiUrl + url) // Testing CJ
+        // console.log('Requested endpoint:', apiUrl + url) // Testing CJ
         setError(null);
         setIsLoading(true);
         try {
@@ -31,7 +31,7 @@ export function useFetch(url, options = {}) {
 
             // This throws an error if the response is negative when attempting to verify the tokens
             if (!res.ok) {
-                console.log(`¡Error HTTP detectado! Status: ${res.status}`);
+                console.debug(`¡Error HTTP detectado! Status: ${res.status}`); // TESTING FIRST VERSION
                 throw new Error('Ocurrió un error al procesar la solicitud. Vuelve a intentarlo.');
             }
 
@@ -40,7 +40,7 @@ export function useFetch(url, options = {}) {
             return data;
 
         } catch (err) {
-            console.log('useFetch executeFetch error:', err);
+            console.debug('useFetch executeFetch error:', err); // TESTING FIRST VERSION
             setError(err);
             throw err;
         } finally {

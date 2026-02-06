@@ -55,8 +55,6 @@ export function EnrollPage() {
     const handleEnroll = async () => {
         // Verify that the data sent to the backend is not empty (as an extra layer of security)
         try {
-            console.log('Starting enrollment process...'); // Testing CJ
-            console.log(form);
             if(!checkRequestData(form)) {
                 setError({
                     status: true,
@@ -85,15 +83,13 @@ export function EnrollPage() {
             updateStateByKey('description', result?.data?.message ?? 'El cliente ha sido inscrito exitosamente. Puedes consultar su información en el módulo de usuarios.');
             updateStateByKey('status', true);
 
-            console.log('Enrollment process finished...'); // TESTING CJ
-
             resetForm();
         } catch (err) {
             updateStateByKey('image', genericError);
             updateStateByKey('title', '¡Error en el registro!');
             updateStateByKey('description', 'Ocurrió un problema al registrar el cliente. Por favor, intenta nuevamente.');
             updateStateByKey('status', true);
-            console.log(err); // Testing CJ
+            console.debug(err); // TESTING FIRST VERSION
         }
     };
 

@@ -63,9 +63,9 @@ export function HomePage() {
                 }
                 setDashboardObjectData(result.data.data);
 
-                console.log(result?.data?.data ?? 'Error imprimiendo la data del dashboard...'); // TESTING CJ
+                // console.log(result?.data?.data ?? 'Error imprimiendo la data del dashboard...'); // TESTING CJ
             } catch (err) {
-                console.error(err); // TESTING CJ
+                console.error(err); // TESTING IN FIRST VERSION
                 updateStateByKey('image', genericError);
                 updateStateByKey('title', '¡Ups! Algo salió mal');
                 updateStateByKey('description', 'No se pudieron cargar los datos del dashboard. Inténtalo una vez más.');

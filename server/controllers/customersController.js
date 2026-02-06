@@ -313,10 +313,10 @@ class CustomersController {
             // Send response ok
             return res.status(200).json({
                 message: '¡Registro completado con éxito! El cliente fue agregado correctamente.',
-                bodyData: enrollData, // Testing CJ
-                customerMainInfo: resultMain, // Testing CJ
-                customerDetailInfo: resultDetails, // Testing CJ
-                membershipInfo: resultMembership, // Testing CJ
+                bodyData: enrollData, // TESTING FIRST VERSION
+                customerMainInfo: resultMain, // TESTING FIRST VERSION
+                customerDetailInfo: resultDetails, // TESTING FIRST VERSION
+                membershipInfo: resultMembership, // TESTING FIRST VERSION
                 success: true
             });
         } catch (err) {
@@ -381,9 +381,9 @@ class CustomersController {
             // Send response ok
             return res.status(200).json({
                 message: 'Pago registrado correctamente. ¡Cliente activo!',
-                bodyData: transactionData, // Testing CJ
-                transactionInfo: resultTransaction, // Testing CJ
-                statusChangeInfo: resultStatusChange, // Testing CJ
+                bodyData: transactionData, // TESTING FIRST VERSION
+                transactionInfo: resultTransaction, // TESTING FIRST VERSION
+                statusChangeInfo: resultStatusChange, // TESTING FIRST VERSION
                 success: true
             });
 
@@ -455,10 +455,10 @@ class CustomersController {
             // Send response ok
             return res.status(200).json({
                 message: 'Pago registrado correctamente. ¡El cliente ha sido renovado!',
-                bodyData: transactionData, // Testing CJ
-                updateMembershipInfo: resultUpdateMembership, // Testing CJ
-                transactionInfo: resultTransaction, // Testing CJ
-                statusChangeInfo: resultStatusChange, // Testing CJ
+                bodyData: transactionData, // TESTING FIRST VERSION
+                updateMembershipInfo: resultUpdateMembership, // TESTING FIRST VERSION
+                transactionInfo: resultTransaction, // TESTING FIRST VERSION
+                statusChangeInfo: resultStatusChange, // TESTING FIRST VERSION
                 success: true
             });
 
