@@ -170,9 +170,17 @@ class AuthController {
 
     async logout(req, res) {
         try {
-            res.clearCookie('accessToken');
-            res.clearCookie('refreshToken');
-            res.clearCookie('employeeToken');
+            // Configuration object for cookie deletion
+            const cookieOptions = {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                path: '/'
+            };
+
+            res.clearCookie('accessToken', cookieOptions);
+            res.clearCookie('refreshToken', cookieOptions);
+            res.clearCookie('employeeToken', cookieOptions);
 
             return res.status(200).json({
                 message: '¡Credenciales invalidadas correctamente!',
