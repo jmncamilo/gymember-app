@@ -6,7 +6,7 @@ Gymember es una aplicación web fullstack diseñada para transformar la administ
 
 La plataforma permite gestionar el ciclo de vida completo de las membresías, desde la inscripción de clientes hasta el monitoreo de vencimientos, ofreciendo transparencia operativa y herramientas de análisis para la toma de decisiones.
 
-![gymember-app.gif](media/gymember-app.gif)
+![Gymember](media/gymember-app-gif.gif)
 
 [![Demo Live](https://img.shields.io/badge/Demo-Live-brightgreen)](https://gymember-demo.vercel.app)
 
