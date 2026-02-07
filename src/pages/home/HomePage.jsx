@@ -78,7 +78,7 @@ export function HomePage() {
         fetchData().catch(() => {});
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // TODO: encontrar una mejor foto de perfil por defecto para cuando no haya logo asociado a un gym. La foto que se ha puesto actualmente es para temas de promoción de la app
+    // TODO: Buscar una imagen de perfil predeterminada más adecuada para gimnasios sin logo. La actual se utiliza únicamente con fines promocionales de la aplicación.
 
     return (
         <>

@@ -51,7 +51,6 @@ export function UsersPage() {
         generalLoading: false
     });
 
-    // TODO: refactor de renombre a fallbackData
     // Fallback API data
     const data = {
         total_customers: 0,
