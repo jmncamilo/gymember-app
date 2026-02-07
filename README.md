@@ -81,6 +81,8 @@ Puedes ejecutar estos scripts utilizando la herramienta de tu preferencia (CLI, 
 
 Después de crear la base de datos, configura las variables de entorno del backend con los datos de conexión correspondientes para asegurar el funcionamiento de la aplicación. A continuación se explica cómo hacerlo.
 
+> **Nota:** las credenciales de desarrollo son las mismas que las de la demo.
+
 ### Backend (Express.js)
 
 ```bash
