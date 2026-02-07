@@ -78,7 +78,7 @@ export function HomePage() {
         fetchData().catch(() => {});
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // TODO: Buscar una imagen de perfil predeterminada más adecuada para gimnasios sin logo. La actual se utiliza únicamente con fines promocionales de la aplicación.
+    // TODO: Find a more suitable default profile image for gyms without a logo. The current one is used only for promotional purposes of the application
 
     return (
         <>
